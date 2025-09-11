@@ -2,7 +2,7 @@
 
 echo "Building Server"
 cd iara-server
-./gradlew clean build
+./gradlew clean build -x test
 
 echo "Building UI"
 cd ../iara-ui

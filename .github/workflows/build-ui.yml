@@ -1,0 +1,28 @@
+name: Build UI
+
+on: [workflow_dispatch]
+
+jobs:
+  test-ui:
+    name: Test
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+      - run: cd iara-ui/
+      - run: npm test
+  
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+      - run: cd iara-ui/
+      - run: npm run build
