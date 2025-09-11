@@ -7,7 +7,7 @@ services:
     ports:
       - "9090:80"
     environment:
-      - VITE_API_URL=http://backend:8080/
+      - VITE_API_URL=http://localhost:8080
     depends_on:
       - backend
 
@@ -16,3 +16,6 @@ services:
     image: iara-server:latest
     ports:
       - "8080:8080"
+    environment:
+      - JWT_SECRET=cXS8WsBnuGGPGiuYJpNDaBhhrwCOwyk1iv7XeRW52tStOlt1kq
+      - CLIENT_URL=http://localhost:9090

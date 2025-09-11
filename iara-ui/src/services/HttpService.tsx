@@ -2,8 +2,6 @@ import { toast } from "react-toastify";
 
 export class HttpService {
 
-    static API_URL = window.__APP_ENV__.VITE_API_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
     static async doGet<T>(uri: string, params?: any, page?: number, size?: number): Promise<T> {
         return fetch(this.getUrl(uri, params, page, size), {
             headers: {
@@ -106,7 +104,15 @@ export class HttpService {
             search.set('limit', String(size));
         }
 
-        const finalUrl = new URL(this.API_URL + "/" + uri);
+
+        let baseUrl = import.meta.env.VITE_LOCAL_API_URL;
+
+        if (window.__APP_ENV__ && window.__APP_ENV__.VITE_API_URL) {
+            baseUrl = window.__APP_ENV__.VITE_API_URL;
+        }
+        console.log(baseUrl);
+
+        const finalUrl = new URL(baseUrl + "/" + uri);
         finalUrl.search = search.toString();
         return finalUrl.toString();
     }
