@@ -8,6 +8,7 @@
     "start": "vite",
     "start:container": "vite --mode container",
     "build": "tsc -b && vite build --base=/",
+    "build:noEmit": "tsc -b && vite build --base=/ --noEmit",
     "lint": "eslint .",
     "preview": "vite preview"
   },
