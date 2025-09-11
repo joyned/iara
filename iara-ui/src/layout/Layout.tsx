@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { FaCaretDown } from "react-icons/fa";
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { CgLogOut } from "react-icons/cg";
+import { IoIosSettings } from "react-icons/io";
+import { useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
-import Logo from '../assets/logo-name-white.svg?react';
-import Nobody from '../assets/nobody.svg?react';
-import Button from "../components/Button";
-import Dropdown from "../components/Dropdown";
 import Loading from "../components/Loading";
 import { Modal } from "../components/Modal";
 import Select from "../components/Select";
@@ -21,16 +18,13 @@ import type { Namespace } from "../types/Namespace";
 import type { Page } from "../types/Page";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
-import { hasAccessTo } from "../utils/PermissionUtils";
-import { CgLogOut } from "react-icons/cg";
-import { IoIosSettings } from "react-icons/io";
+import SideMenu from "./SideMenu";
+import TopMenu from "./TopMenu";
 
 export default function Layout() {
     const userService = new UserService();
     const { fetch: originalFetch } = window;
     const navigate = useNavigate();
-    const location = useLocation();
-    const currentPath = location.pathname;
     const envModalRef = useRef<any>(null);
 
     const namespaceService = new NamespaceService();
@@ -46,13 +40,11 @@ export default function Layout() {
 
     const [name, setName] = useState<string>();
     const [picture, setPicture] = useState<string>();
+    const [roles, setRoles] = useState<Role[]>([]);
 
-    const [hasNamespace, setHasNamespace] = useState<boolean>(false);
-    const [hasUsers, setHasUsers] = useState<boolean>(false);
-    const [hasPolicy, setHasPolicy] = useState<boolean>(false);
-    const [hasRoles, setHasRoles] = useState<boolean>(false);
-    const [hasTokens, setHasTokens] = useState<boolean>(false);
-    const [hasGeneral, setHasGeneral] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(() => {
+        return window.innerWidth < 1548;
+    })
 
     const [dropdownMenu, _] = useState<any>([
         {
@@ -75,16 +67,21 @@ export default function Layout() {
         userService.me().then((res: User) => {
             setName(res.name);
             setPicture(res.picture);
-            res.roles.forEach((role: Role) => {
-                setHasNamespace(prev => prev || hasAccessTo(role, '#NAMESPACES'));
-                setHasUsers(prev => prev || hasAccessTo(role, '#USERS'));
-                setHasPolicy(prev => prev || hasAccessTo(role, '#POLICY'));
-                setHasRoles(prev => prev || hasAccessTo(role, '#ROLES'));
-                setHasTokens(prev => prev || hasAccessTo(role, '#TOKENS'));
-                setHasGeneral(prev => prev || hasAccessTo(role, '#GENERAL'));
-            })
+            setRoles(res.roles);
         });
+
+        const handleResize = () => {
+            setIsMobile(() => window.innerWidth < 1548);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+
     }, [])
+
 
     const onEnvModalOpen = () => {
         if (namespace && namespace.id) {
@@ -134,7 +131,6 @@ export default function Layout() {
                     navigate('/login')
                 }
             }
-
             return response;
         } catch (error) {
             console.log(error)
@@ -146,79 +142,22 @@ export default function Layout() {
         <>
             <ToastContainer />
             {loading && <Loading />}
-            <div className="flex justify-between items-center w-full bg-primary-color p-1 h-[60px]">
-                <div className="flex items-center gap-10 text-white">
-                    <Logo className="w-[100px] h-[40px] cursor-pointer" onClick={() => navigate('/kv')} />
-                    <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/kv' && 'bg-primary-darker-color'}`}
-                        onClick={() => navigate('/kv')}>
-                        K/V
-                    </span>
-                    <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/secrets' && 'bg-primary-darker-color'}`}
-                        onClick={() => navigate('/secrets')}>
-                        Secrets
-                    </span>
-                    {(hasNamespace || hasUsers || hasPolicy || hasRoles || hasTokens || hasGeneral) &&
-                        <>
-                            <span className={`pl-3 pr-3 pt-1 pb-1 rounded-sm`}>
-                                |
-                            </span>
-                            {hasNamespace &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/namespaces' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/namespaces')}>
-                                    Namespaces
-                                </span>
-                            }
-                            {hasUsers &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/users' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/users')}>
-                                    Users
-                                </span>
-                            }
-                            {hasPolicy &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/policies' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/policies')}>
-                                    Policies
-                                </span>
-                            }
-                            {hasRoles &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/roles' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/roles')}>
-                                    Roles
-                                </span>
-                            }
-                            {hasTokens &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/tokens' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/tokens')}>
-                                    Tokens
-                                </span>
-                            }
-                            {hasGeneral &&
-                                <span className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/general' && 'bg-primary-darker-color'}`}
-                                    onClick={() => navigate('/admin/general')}>
-                                    General
-                                </span>
-                            }
-                        </>
-                    }
-                </div>
-                <div className="flex gap-4 justify-between text-white min-w-96">
-                    <Button onClick={onEnvModalOpen}>Change Namespace / Environment</Button>
-                    <Dropdown items={dropdownMenu}>
-                        <div className="flex items-center gap-2">
-                            {picture ? <img src={picture} alt="user-profile-picture" className="w-[40px]" /> : <Nobody className="w-[40px]" />}
-                            <span>{name}</span>
-                            <FaCaretDown />
-                        </div>
-                    </Dropdown>
-                </div>
-            </div >
-            <main className="p-6">
-                <div className="flex flex-col gap-5">
-                    <div>
-                        <Outlet></Outlet>
-                    </div>
-                </div>
-            </main>
+            {!isMobile &&
+                <TopMenu name={name}
+                    picture={picture}
+                    roles={roles}
+                    onEnvModalOpen={onEnvModalOpen}
+                    dropdownMenu={dropdownMenu}
+                />
+            }
+            {isMobile &&
+                <SideMenu name={name}
+                    picture={picture}
+                    roles={roles}
+                    onEnvModalOpen={onEnvModalOpen}
+                    dropdownMenu={dropdownMenu}
+                />
+            }
             <Modal title="Select your Environment" ref={envModalRef} onSave={beforeSaveModal} >
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-1">
