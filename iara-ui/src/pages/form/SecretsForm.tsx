@@ -57,7 +57,7 @@ export default function SecretsForm() {
 
     const onFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!id) {
+        if (!id && environment && namespace) {
             const newSecret: Secret = {
                 id: undefined,
                 name: name,
