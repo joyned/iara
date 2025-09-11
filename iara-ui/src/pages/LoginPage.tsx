@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Logo from "../assets/logo-name-white.svg?react";
@@ -11,8 +11,14 @@ export default function LoginPage() {
     const service = new LoginService();
     const navigate = useNavigate();
 
+    const [isGoogleSSOEnabled, setIsGoogleSSOEnabled] = useState<boolean>(false);
+
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    useEffect(() => {
+        service.isGoogleSSOEnabled().then((res: boolean) => setIsGoogleSSOEnabled(res));
+    }, [])
 
     const doLogin = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -20,7 +26,7 @@ export default function LoginPage() {
         service.doLogin(email, password).then((res: Authentication) => {
             localStorage.setItem('access_token', res.access_token);
             navigate('/kv');
-        })
+        });
     }
 
     return (
@@ -44,12 +50,14 @@ export default function LoginPage() {
                         </div>
                     </form>
                 </div>
-                <div className="w-full flex justify-center">
-                    <span className="flex items-center bg-red-500 text-white gap-5 p-2 rounded-sm cursor-pointer hover:bg-red-600">
-                        <FaGoogle></FaGoogle>
-                        <span>Sign-in with Google SSO</span>
-                    </span>
-                </div>
+                {isGoogleSSOEnabled &&
+                    <div className="w-full flex justify-center">
+                        <span className="flex items-center bg-red-500 text-white gap-5 p-2 rounded-sm cursor-pointer hover:bg-red-600">
+                            <FaGoogle></FaGoogle>
+                            <span>Sign-in with Google SSO</span>
+                        </span>
+                    </div>
+                }
             </div>
         </div>
     )
