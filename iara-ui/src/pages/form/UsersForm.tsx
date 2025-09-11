@@ -48,7 +48,7 @@ export default function UsersForm() {
                 setRoles(res.content[0].roles);
             }).finally(() => setLoading(false));
         }
-    }, [params.id, service, setLoading]);
+    }, [params.id, setLoading]);
 
     const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

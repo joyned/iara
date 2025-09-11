@@ -44,7 +44,7 @@ export default function UserSettingsPage() {
             setName(res.name);
             setEmail(res.email);
         }).finally(() => setLoading(false));
-    }, [userService, setLoading])
+    }, [setLoading])
 
     const onOpenTokens = () => {
         setLoading(true)

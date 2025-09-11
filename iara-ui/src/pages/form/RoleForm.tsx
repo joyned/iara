@@ -48,7 +48,7 @@ export default function RoleForm() {
                 setPolicies(body.policies);
             }).finally(() => setLoading(false));
         }
-    }, [params.id, service, setLoading])
+    }, [params.id, setLoading])
 
     const onFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();

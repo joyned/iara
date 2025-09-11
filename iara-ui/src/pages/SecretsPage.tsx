@@ -33,7 +33,7 @@ export default function SecretsPage() {
             setPage(res.page);
             setTotalPages(res.totalPages);
         }).finally(() => setLoading(false));
-    }, [service, setLoading]);
+    }, [setLoading]);
 
     return (
         <>

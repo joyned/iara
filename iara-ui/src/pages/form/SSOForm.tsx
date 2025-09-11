@@ -33,7 +33,7 @@ export default function SSOForm() {
                 }
             }
         })
-    }, [service])
+    }, [])
 
     return (
         <Card title="Sign-in options" subtitle="Enable or disable sign-in options.">
