@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Namespace } from "../types/Namespace";
 
 interface NamespaceType {
-    namespace: Namespace;
-    setNamespace: (namespace: Namespace) => void;
+    namespace: Namespace | undefined;
+    setNamespace: (namespace: Namespace | undefined) => void;
 }
 
 const NamespaceContext = createContext<NamespaceType>({
@@ -27,8 +27,14 @@ interface NamespaceProviderProps {
 export const NamespaceProvider: React.FC<NamespaceProviderProps> = ({
     children,
 }) => {
-    const [namespace, setNamespaceState] = useState<Namespace>(JSON.parse(atob(localStorage.getItem('namespace') || '') || '{}'));
-    const setNamespace = (newValue: Namespace) => {
+    const [namespace, setNamespaceState] = useState<Namespace | undefined>(() => {
+        if (localStorage.getItem('namespace') && atob(localStorage.getItem('namespace') || '') !== 'undefined') {
+            return JSON.parse(atob(localStorage.getItem('namespace') || ''))
+        }
+
+        return undefined;
+    });
+    const setNamespace = (newValue: Namespace | undefined) => {
         setNamespaceState(newValue);
         localStorage.setItem('namespace', btoa(JSON.stringify(newValue)));
     };

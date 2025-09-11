@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import type { Environment } from "../types/Environment";
 
 interface EnvironmentType {
-    environment: Environment;
-    setEnvironment: (environment: Environment) => void;
+    environment: Environment | undefined;
+    setEnvironment: (environment: Environment | undefined) => void;
 }
 
 const EnvironmentContext = createContext<EnvironmentType>({
@@ -27,8 +27,14 @@ interface EnvironmentProviderProps {
 export const EnvironmentProvider: React.FC<EnvironmentProviderProps> = ({
     children,
 }) => {
-    const [environment, setEnvironmentState] = useState<Environment>(JSON.parse(atob(localStorage.getItem('environment') || '') || '{}'));
-    const setEnvironment = (newValue: Environment) => {
+    const [environment, setEnvironmentState] = useState<Environment | undefined>(() => {
+        if (localStorage.getItem('environment') && atob(localStorage.getItem('environment') || '') !== 'undefined') {
+            return JSON.parse(atob(localStorage.getItem('environment') || ''))
+        }
+
+        return undefined;
+    });
+    const setEnvironment = (newValue: Environment | undefined) => {
         setEnvironmentState(newValue);
         localStorage.setItem('environment', btoa(JSON.stringify(newValue)));
     };

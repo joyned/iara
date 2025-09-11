@@ -117,6 +117,10 @@ export default function Layout() {
 
     const logout = () => {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('namespace');
+        localStorage.removeItem('environment');
+        setNamespace(undefined);
+        setEnvironment(undefined);
         navigate('/login')
     }
 
