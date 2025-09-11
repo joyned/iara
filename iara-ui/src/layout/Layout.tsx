@@ -45,7 +45,7 @@ export default function Layout() {
         return window.innerWidth < 1548;
     })
 
-    const [dropdownMenu, _] = useState<any>([
+    const [dropdownMenu] = useState<any>([
         {
             icon: <IoIosSettings />,
             name: 'Settings',

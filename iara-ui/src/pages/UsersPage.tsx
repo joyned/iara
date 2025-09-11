@@ -22,7 +22,7 @@ export default function UsersPage() {
         service.search().then((res: Page<User>) => {
             setUsers(res.content);
         }).finally(() => setLoading(false));
-    }, [])
+    }, [service, setLoading])
 
     return (
         <>

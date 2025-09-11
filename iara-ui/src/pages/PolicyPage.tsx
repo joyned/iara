@@ -21,7 +21,7 @@ export default function PolicyPage() {
         service.search().then((res: Page<Policy>) => {
             setPolicies(res.content);
         }).finally(() => setLoading(false));
-    }, [])
+    }, [service, setLoading])
 
     return (
         <>

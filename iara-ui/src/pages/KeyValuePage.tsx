@@ -49,7 +49,7 @@ export default function KeyValuePage() {
         return () => {
             eventBus.off('namespaceEnvironmentChange', listenToNamespaceEnvChange);
         };
-    }, [])
+    }, [environment, namespace, search])
 
 
     return (

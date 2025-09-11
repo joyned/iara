@@ -54,9 +54,13 @@ export default function KeyValueForm() {
                 service.history(id).then((res: KeyValueHistory[]) => setHistory(res));
             }
         }
-    }, [])
+    }, [params.key, service, setLoading])
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+        if (!environment || !namespace) {
+            return;
+        }
+
         event.preventDefault();
         const kv: KeyValue = {
             id: id,

@@ -42,7 +42,7 @@ export default function PolicyForm() {
                 setRule(body.rule);
             }).finally(() => setLoading(false));
         }
-    }, []);
+    }, [params.id, service, setLoading]);
 
     const onFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();

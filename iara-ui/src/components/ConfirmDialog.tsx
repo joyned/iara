@@ -13,7 +13,7 @@ interface Props {
 
 
 export const ConfirmDialog: FC<Props> = forwardRef((props: Props, ref) => {
-    const [modalId, _] = useState<string>(uuid());
+    const [modalId] = useState<string>(uuid());
     const [open, setOpen] = useState<boolean>(false);
 
     useImperativeHandle(ref, () => ({

@@ -14,7 +14,7 @@ export class UserService implements BaseService<User> {
     delete(id: string): Promise<void> {
         return HttpService.doDelete(`v1/user/${id}`);
     }
-    resetPassword(id: string): Promise<any> {
+    resetPassword(id: string): Promise<void> {
         return HttpService.doPost(`v1/user/${id}/reset-password`, {});
     }
     me(): Promise<User> {

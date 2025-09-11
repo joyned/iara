@@ -44,7 +44,7 @@ export default function ApplicationPageToken() {
 
     useEffect(() => {
         search()
-    }, [])
+    }, [search])
 
     const onCreateClick = () => {
         setLoading(true);

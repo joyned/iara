@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const Modal = forwardRef(({ title, saveText = "Save", cancelText = "Cancel", onSave, beforeClose, children, hasSave = true }: Props, ref) => {
-    const [modalId, _] = useState<string>(v1());
+    const [modalId] = useState<string>(v1());
     const [open, setOpen] = useState<boolean>(false);
 
     useImperativeHandle(ref, () => ({

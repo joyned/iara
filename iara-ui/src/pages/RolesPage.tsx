@@ -22,7 +22,7 @@ export default function RolesPage() {
         service.search().then((res: Page<Role>) => {
             setRoles(res.content);
         }).finally(() => setLoading(false));
-    }, [])
+    }, [service, setLoading])
 
     return (
         <>

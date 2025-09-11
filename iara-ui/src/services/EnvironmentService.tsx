@@ -7,10 +7,10 @@ export class EnvironmentService implements BaseService<Environment> {
     search(params?: Partial<Environment> | undefined, page?: number, size?: number): Promise<Page<Environment>> {
         return HttpService.doGet('v1/environment', params, page, size);
     }
-    persist(_: Environment): Promise<Environment> {
+    persist(): Promise<Environment> {
         throw new Error("Method not implemented.");
     }
-    delete(_: string): Promise<void> {
+    delete(): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

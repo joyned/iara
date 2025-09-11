@@ -21,7 +21,7 @@ export default function NamespacesPage() {
         service.search().then((res: Page<Namespace>) => {
             setNamespaces(res.content);
         }).finally(() => setLoading(false));
-    }, [])
+    }, [service, setLoading])
 
     return (
         <>

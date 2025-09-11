@@ -50,7 +50,7 @@ export default function NamespacesForm() {
                 })
             }).finally(() => setLoading(false));
         }
-    }, [])
+    }, [envService, params.id, service, setLoading])
 
     const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

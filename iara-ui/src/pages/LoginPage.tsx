@@ -18,7 +18,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         service.isGoogleSSOEnabled().then((res: boolean) => setIsGoogleSSOEnabled(res));
-    }, [])
+    }, [service])
 
     const doLogin = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
