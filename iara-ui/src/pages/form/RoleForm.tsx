@@ -16,6 +16,7 @@ import { Modal } from "../../components/Modal";
 import Select from "../../components/Select";
 import { toast } from "react-toastify";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
+import { uuid } from "../../utils/UUID";
 
 export default function RoleForm() {
     const params = useParams();
@@ -144,7 +145,7 @@ export default function RoleForm() {
                         </div>
                         {policies && policies.map((policy: Policy) => {
                             return (
-                                <ListItem name={policy.name} onDelete={() => onRemovePolicy(policy)} />
+                                <ListItem name={policy.name} onDelete={() => onRemovePolicy(policy)} key={uuid()} />
                             )
                         })}
                     </div>

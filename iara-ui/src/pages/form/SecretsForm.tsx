@@ -18,6 +18,7 @@ import { SecretService } from "../../services/SecretService";
 import type { Page } from "../../types/Page";
 import type { Secret } from "../../types/Secret";
 import type { SecretVersion } from "../../types/SecretVersion";
+import { uuid } from "../../utils/UUID";
 
 export default function SecretsForm() {
     const params = useParams();
@@ -169,7 +170,7 @@ export default function SecretsForm() {
                             <FormLabel required>Versions</FormLabel>
                             {versions && versions.map((version: SecretVersion) => {
                                 return (
-                                    <ListItem name={`# ${version.version}`} onClick={() => onViewVersion(version)}>
+                                    <ListItem name={`# ${version.version}`} onClick={() => onViewVersion(version)} key={uuid()}>
                                         {(version.disabled && !version.destroyed) && <TiDeleteOutline className="text-yellow-500 text-3xl" />}
                                         {version.destroyed && <TiDeleteOutline className="text-red-500 text-3xl" />}
                                     </ListItem>

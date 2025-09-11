@@ -15,6 +15,7 @@ import { UserService } from "../../services/UserService";
 import type { Page } from "../../types/Page";
 import type { Role } from "../../types/Role";
 import type { User } from "../../types/User";
+import { uuid } from "../../utils/UUID";
 
 export default function UsersForm() {
     const navigate = useNavigate();
@@ -143,7 +144,7 @@ export default function UsersForm() {
                         </div>
                         {roles && roles.map((role: Role) => {
                             return (
-                                <ListItem name={role.name}></ListItem>
+                                <ListItem name={role.name} key={uuid()}></ListItem>
                             )
                         })}
                     </div>

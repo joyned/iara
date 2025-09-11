@@ -14,6 +14,7 @@ import { PolicyService } from "../services/PolicyService";
 import type { ApplicationToken } from "../types/ApplicationToken";
 import type { Page } from "../types/Page";
 import type { Policy } from "../types/Policy";
+import { uuid } from "../utils/UUID";
 
 export default function ApplicationPageToken() {
     const service = new ApplicationTokenService();
@@ -117,7 +118,7 @@ export default function ApplicationPageToken() {
                 <>
                     {tokens && tokens.map((token: ApplicationToken) => {
                         return (
-                            <ListItem name={token.name} onDelete={() => token.id && onDelete(token.id)}></ListItem>
+                            <ListItem name={token.name} onDelete={() => token.id && onDelete(token.id)} key={uuid()}></ListItem>
                         )
                     })}
                     <div className="flex mt-5">

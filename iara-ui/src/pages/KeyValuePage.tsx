@@ -13,6 +13,7 @@ import eventBus from "../services/EventBusService";
 import { KeyValueService } from "../services/KeyValueService";
 import type { KeyValue } from "../types/KeyValue";
 import type { Page } from "../types/Page";
+import { uuid } from "../utils/UUID";
 
 export default function KeyValuePage() {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function KeyValuePage() {
                     {keyValues.map((kv: KeyValue) => {
                         return (
                             <div className="flex justify-between items-center border-b border-b-gray-200 p-4 cursor-pointer hover:bg-gray-100"
-                                onClick={() => navigate(`/kv/${kv.id}`)}>
+                                onClick={() => navigate(`/kv/${kv.id}`)} key={uuid()}>
                                 <span className="flex items-center gap-4">
                                     <HiOutlineNewspaper />
                                     {kv.key}

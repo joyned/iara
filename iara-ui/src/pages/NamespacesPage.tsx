@@ -7,6 +7,7 @@ import type { Page } from "../types/Page";
 import { useNavigate } from "react-router";
 import Button from "../components/Button";
 import { useLoading } from "../providers/LoadingProvider";
+import { uuid } from "../utils/UUID";
 
 export default function NamespacesPage() {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function NamespacesPage() {
                 <>
                     {namespaces && namespaces.map((namespace: Namespace) => {
                         return (
-                            <ListItem name={namespace.name} onClick={() => navigate(`/admin/namespaces/${namespace.id}`)}></ListItem>
+                            <ListItem name={namespace.name} onClick={() => navigate(`/admin/namespaces/${namespace.id}`)} key={uuid()} />
                         )
                     })}
                     <div className="flex mt-5">

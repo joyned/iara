@@ -11,6 +11,7 @@ import { SecretService } from "../services/SecretService";
 import type { Page } from "../types/Page";
 import type { Secret } from "../types/Secret";
 import Pageable from "../components/Pageable";
+import { uuid } from "../utils/UUID";
 
 export default function SecretsPage() {
     const navigate = useNavigate();
@@ -40,7 +41,7 @@ export default function SecretsPage() {
             <Card title="Secrets">
                 {secrets && secrets.map((secret: Secret) => {
                     return (
-                        <ListItem name={secret.name} onClick={() => navigate(`/secrets/${secret.id}`)} />
+                        <ListItem name={secret.name} onClick={() => navigate(`/secrets/${secret.id}`)} key={uuid()} />
                     )
                 })}
                 <div className="flex justify-between mt-5">

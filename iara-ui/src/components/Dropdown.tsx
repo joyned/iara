@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
+import { uuid } from "../utils/UUID";
 
 interface Item {
     icon?: ReactNode;
@@ -35,7 +36,7 @@ export default function Dropdown(props: Props) {
             <div className={`fade-in absolute flex flex-col gap-2 w-fit bg-primary-color p-2 rounded z-50 right-0 ${!isOpen && 'hidden'}`}>
                 {props.items.map((item: Item) => {
                     return (
-                        <div className="flex gap-2 items-center p-4">
+                        <div className="flex gap-2 items-center p-4" key={uuid()}>
                             <div className="text-2xl">
                                 {item.icon && item.icon}
                             </div>

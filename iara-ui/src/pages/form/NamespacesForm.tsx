@@ -16,6 +16,7 @@ import type { Page } from "../../types/Page";
 import FormLabel from "../../components/FormLabel";
 import TextArea from "../../components/TextArea";
 import { useLoading } from "../../providers/LoadingProvider";
+import { uuid } from "../../utils/UUID";
 
 export default function NamespacesForm() {
     const navigate = useNavigate();
@@ -161,7 +162,7 @@ export default function NamespacesForm() {
                         </div>
                         {(environments && environments.length > 0) && environments.map((env: Environment) => {
                             return (
-                                <ListItem name={env.name} onClick={() => onEdit(env)}
+                                <ListItem name={env.name} onClick={() => onEdit(env)} key={uuid()}
                                     onDelete={() => onDeleteEnvironment(env)} />
                             )
                         })}

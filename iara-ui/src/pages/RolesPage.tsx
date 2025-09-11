@@ -7,6 +7,7 @@ import { RoleService } from "../services/RoleService";
 import type { Role } from "../types/Role";
 import { useLoading } from "../providers/LoadingProvider";
 import type { Page } from "../types/Page";
+import { uuid } from "../utils/UUID";
 
 export default function RolesPage() {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function RolesPage() {
             <Card title="Roles">
                 {roles.length > 0 && roles.map((role: Role) => {
                     return (
-                        <ListItem name={role.name} onClick={() => navigate(`/admin/roles/${role.id}`)} />
+                        <ListItem name={role.name} onClick={() => navigate(`/admin/roles/${role.id}`)} key={uuid()} />
                     )
                 })}
                 <div className="flex mt-5">

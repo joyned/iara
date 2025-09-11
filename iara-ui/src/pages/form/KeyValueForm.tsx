@@ -16,6 +16,7 @@ import { KeyValueService } from "../../services/KeyValueService";
 import type { KeyValue } from "../../types/KeyValue";
 import type { KeyValueHistory } from "../../types/KeyValueHistory";
 import type { Page } from "../../types/Page";
+import { uuid } from "../../utils/UUID";
 
 export default function KeyValueForm() {
     const service = new KeyValueService();
@@ -120,7 +121,7 @@ export default function KeyValueForm() {
             <Card title="History" closeable>
                 {history.length > 0 && history.map((h: KeyValueHistory) => {
                     return <>
-                        <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} />
+                        <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} key={uuid()} />
                     </>
                 })}
                 {history.length === 0 && <span>No history found.</span>}

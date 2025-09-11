@@ -7,6 +7,7 @@ import { useLoading } from "../providers/LoadingProvider";
 import { PolicyService } from "../services/PolicyService";
 import type { Page } from "../types/Page";
 import type { Policy } from "../types/Policy";
+import { uuid } from "../utils/UUID";
 
 export default function PolicyPage() {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function PolicyPage() {
                 <>
                     {policies && policies.map((policy: Policy) => {
                         return (
-                            <ListItem name={policy.name} onClick={() => navigate(`/admin/policies/${policy.id}`)}></ListItem>
+                            <ListItem name={policy.name} onClick={() => navigate(`/admin/policies/${policy.id}`)} key={uuid()} />
                         )
                     })}
                     <div className="flex mt-5">
