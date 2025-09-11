@@ -10,6 +10,7 @@ import { uuid } from '../utils/UUID';
 import { MdOutlineCloseFullscreen } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { GrConfigure } from 'react-icons/gr';
+import Dropdown from '../components/Dropdown';
 
 interface Props {
     onEnvModalOpen: () => void;
@@ -62,10 +63,12 @@ export default function SideMenu(props: Props) {
                     <div className='mb-10 flex flex-col gap-5 items-center'>
                         {isMenuOpen && <Button onClick={props.onEnvModalOpen}>Change Namespace / Environment</Button>}
                         {!isMenuOpen && <GrConfigure className='text-2xl text-white' onClick={props.onEnvModalOpen} />}
-                        <div className="flex items-center gap-2">
-                            {props.picture ? <img src={props.picture} alt="user-profile-picture" className="w-[40px]" /> : <Nobody className="w-[40px]" />}
-                            {isMenuOpen && <span className='text-white'>{props.name}</span>}
-                        </div>
+                        <Dropdown items={props.dropdownMenu} side='top'>
+                            <div className="flex items-center gap-2">
+                                {props.picture ? <img src={props.picture} alt="user-profile-picture" className="w-[40px]" /> : <Nobody className="w-[40px]" />}
+                                {isMenuOpen && <span className='text-white'>{props.name}</span>}
+                            </div>
+                        </Dropdown>
                         {!isMenuOpen &&
                             <div className='flex justify-center text-white'>
                                 <MdOutlineCloseFullscreen className='cursor-pointer text-2xl'
