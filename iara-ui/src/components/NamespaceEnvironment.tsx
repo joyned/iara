@@ -12,7 +12,7 @@ export default function NamespaceEnvironment() {
                 <div className="w-fit flex items-center gap-1 bg-primary-color p-2 rounded text-white">
                     <span className="font-semibold">{namespace.name}</span>
                     <IoArrowForward />
-                    <span className="font-semibold">{environment.name}</span>
+                    <span className="font-semibold">{environment?.name}</span>
                 </div>
             )}
             {JSON.stringify(environment) === '{}' && (

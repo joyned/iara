@@ -110,7 +110,6 @@ export class HttpService {
         if (window.__APP_ENV__ && window.__APP_ENV__.VITE_API_URL) {
             baseUrl = window.__APP_ENV__.VITE_API_URL;
         }
-        console.log(baseUrl);
 
         const finalUrl = new URL(baseUrl + "/" + uri);
         finalUrl.search = search.toString();

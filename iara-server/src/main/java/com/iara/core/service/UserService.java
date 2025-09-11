@@ -9,6 +9,8 @@ public interface UserService extends BaseService<User> {
 
     void resetPassword(String id) throws IllegalArgumentException;
 
+    void changePassword(String oldPassword, String newPassword);
+
     Optional<User> findByEmail(String email);
 
     User me(Claims claims);

@@ -5,7 +5,6 @@ import com.iara.core.exception.OperationNotPermittedException;
 import com.iara.core.repository.ApplicationParamsRepository;
 import com.iara.core.service.ApplicationParamsService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,10 +31,6 @@ public class ApplicationParamsServiceImpl implements ApplicationParamsService {
 
     @Override
     public ApplicationParams persist(ApplicationParams entity) {
-        if (StringUtils.isBlank(entity.getId())) {
-            throw new OperationNotPermittedException("You cannot create new params.");
-        }
-
         return repository.save(entity);
     }
 

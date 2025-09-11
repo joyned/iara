@@ -3,6 +3,7 @@ package com.iara.rest.controller;
 import com.iara.core.entity.specification.UserSpecification;
 import com.iara.core.service.AuthenticationService;
 import com.iara.core.service.UserService;
+import com.iara.rest.dto.ChangePasswordDTO;
 import com.iara.rest.dto.UserDTO;
 import com.iara.rest.mapper.UserMapper;
 import io.jsonwebtoken.Claims;
@@ -50,6 +51,12 @@ public class UserController {
     @PreAuthorize("hasAuthority('#*:WRITE') or hasAuthority('#USERS:WRITE')")
     public ResponseEntity<Void> resetPassword(@PathVariable String id) {
         service.resetPassword(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDTO dto) {
+        service.changePassword(dto.getOldPassword(), dto.getNewPassword());
         return ResponseEntity.noContent().build();
     }
 }

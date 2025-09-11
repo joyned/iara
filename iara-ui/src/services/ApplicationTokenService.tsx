@@ -13,5 +13,13 @@ export class ApplicationTokenService implements BaseService<ApplicationToken> {
     delete(id: string): Promise<void> {
         return HttpService.doDelete(`v1/application-token/${id}`);
     }
-
+    createUserToken(entity: ApplicationToken): Promise<ApplicationToken> {
+        return HttpService.doPost('v1/application-token/user-tokens', entity);
+    }
+    deleteUserToken(id: string): Promise<void> {
+        return HttpService.doDelete(`v1/application-token/user-tokens/${id}`);
+    }
+    userToken(): Promise<Page<ApplicationToken>> {
+        return HttpService.doGet('v1/application-token/user-tokens');
+    }
 }

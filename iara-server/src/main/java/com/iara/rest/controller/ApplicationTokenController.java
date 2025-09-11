@@ -37,4 +37,20 @@ public class ApplicationTokenController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user-tokens")
+    public ResponseEntity<Page<ApplicationTokenDTO>> userTokens(Pageable pageable) {
+        return ResponseEntity.ok(service.userTokens(pageable).map(mapper::toDTO));
+    }
+
+    @PostMapping("/user-tokens")
+    public ResponseEntity<ApplicationTokenDTO> userTokens(@RequestBody ApplicationTokenDTO dto) {
+        return ResponseEntity.ok(mapper.toDTO(service.persistUserToken(mapper.toEntity(dto))));
+    }
+
+    @DeleteMapping("/user-tokens/{id}")
+    public ResponseEntity<Void> deleteUserToken(@PathVariable String id) {
+        service.deleteUserToken(id);
+        return ResponseEntity.noContent().build();
+    }
 }

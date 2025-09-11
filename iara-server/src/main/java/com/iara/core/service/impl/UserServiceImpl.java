@@ -1,6 +1,7 @@
 package com.iara.core.service.impl;
 
 import com.iara.core.entity.User;
+import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.UserModificationException;
 import com.iara.core.exception.UserNotFoundException;
 import com.iara.core.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +67,24 @@ public class UserServiceImpl implements UserService {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
             repository.save(user);
+        }
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> optionalUser = findByEmail(userEmail);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                throw new InvalidCredentialsException("Old password does not match.");
+            }
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encodedPassword);
+            repository.save(user);
+        } else {
+            throw new UserNotFoundException("There was a problem finding user %s.", userEmail);
         }
     }
 

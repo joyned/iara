@@ -5,6 +5,7 @@ interface Props {
     title?: string;
     subtitle?: string;
     closeable?: boolean;
+    onOpen?: () => void;
     children: ReactNode;
 }
 
@@ -19,6 +20,15 @@ export default function Card(props: Props) {
         }
     }, [props.closeable])
 
+    const handleOpen = () => {
+        if (closeable) {
+            setIsOpen(!isOpen);
+            if (isOpen && props.onOpen) {
+                props.onOpen();
+            }
+        }
+    }
+
     return (
         <>
             <div className="flex shadow-2xl border border-stone-200 rounded-sm w-full">
@@ -26,7 +36,7 @@ export default function Card(props: Props) {
                     {props.title &&
                         <div className="flex justify-between items-center"
                             style={{ cursor: closeable ? 'pointer' : '' }}
-                            onClick={() => closeable && setIsOpen(!isOpen)}>
+                            onClick={handleOpen}>
                             <h1>{props.title}</h1>
                             {closeable &&
                                 <>

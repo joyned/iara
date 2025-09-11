@@ -20,5 +20,8 @@ export class UserService implements BaseService<User> {
     me(): Promise<User> {
         return HttpService.doGet('v1/user/me');
     }
+    changePassword(old: string, newPwd: string): Promise<void> {
+        return HttpService.doPost('v1/user/change-password', { oldPassword: old, newPassword: newPwd });
+    }
 
 }

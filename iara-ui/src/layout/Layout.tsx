@@ -23,7 +23,6 @@ import TopMenu from "./TopMenu";
 
 export default function Layout() {
     const userService = new UserService();
-    const { fetch: originalFetch } = window;
     const navigate = useNavigate();
     const envModalRef = useRef<any>(null);
 
@@ -123,24 +122,6 @@ export default function Layout() {
         setEnvironment(undefined);
         navigate('/login')
     }
-
-    window.fetch = async (...args) => {
-        try {
-            const response = await originalFetch(...args);
-
-            if (response.status === 401) {
-                const body = await response.json();
-                if (body.key === "UNAUTHORIZED") {
-                    localStorage.removeItem('access_token')
-                    navigate('/login')
-                }
-            }
-            return response;
-        } catch (error) {
-            console.log(error)
-            throw error;
-        }
-    };
 
     return (
         <>

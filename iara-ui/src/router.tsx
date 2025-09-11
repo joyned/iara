@@ -16,6 +16,7 @@ import UsersPage from "./pages/UsersPage";
 import GeneralSettings from "./pages/GeneralSettingsPage";
 import GuardComponent from "./guard/GuardComponent";
 import ApplicationPageToken from "./pages/ApplicationTokenPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
 
 export const router = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
             {
                 path: "secrets/:id",
                 element: <SecretsForm />
+            },
+            {
+                path: "user/settings",
+                element: <UserSettingsPage />
             },
             {
                 path: "admin/general",
