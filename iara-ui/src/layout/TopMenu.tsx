@@ -30,7 +30,7 @@ export default function TopMenu(props: Props) {
                         return (
                             <div key={uuid()}>
                                 {hasAccessToBatch(props.roles, item.key) &&
-                                    <div className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === '/admin/namespaces' && 'bg-primary-darker-color'}`}
+                                    <div className={`cursor-pointer pl-3 pr-3 pt-1 pb-1 rounded-sm hover:bg-primary-darker-color ${currentPath === item.to && 'bg-primary-darker-color'}`}
                                         onClick={() => navigate(item.to)} key={uuid()}>
                                         {item.name}
                                     </div>
