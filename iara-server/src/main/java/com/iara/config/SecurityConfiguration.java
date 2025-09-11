@@ -39,6 +39,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/v1/authentication/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/v1/authentication/**").permitAll();
                     req.anyRequest().authenticated();
                 }
         );

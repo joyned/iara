@@ -1,10 +1,7 @@
 package com.iara.config;
 
 import com.iara.core.entity.*;
-import com.iara.core.service.NamespaceService;
-import com.iara.core.service.PolicyService;
-import com.iara.core.service.RoleService;
-import com.iara.core.service.UserService;
+import com.iara.core.service.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -23,6 +21,7 @@ public class IaraConfiguration {
     private final NamespaceService namespaceService;
     private final PolicyService policyService;
     private final RoleService roleService;
+    private final ApplicationParamsService applicationParamsService;
     private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
@@ -36,6 +35,8 @@ public class IaraConfiguration {
             log.info("Default Admin Policy & Role created.");
             createAdminUser(adminRole);
             log.info("Default Admin User created.");
+            createDefaultApplicationParams();
+            log.info("Application Parameters created.");
         } else {
             log.info("Iara configurations already exists.");
         }
@@ -88,6 +89,15 @@ public class IaraConfiguration {
         admin.setIsSSO(false);
         admin.setRoles(List.of(adminRole));
         userService.persist(admin);
+    }
+
+    protected void createDefaultApplicationParams() {
+        List<ApplicationParams> applicationParams = new ArrayList<>();
+        applicationParams.add(new ApplicationParams(null, "GOOGLE_SSO_ENABLED", Boolean.FALSE.toString(), false));
+        applicationParams.add(new ApplicationParams(null, "GOOGLE_SSO_CLIENT_ID", null, false));
+        applicationParams.add(new ApplicationParams(null, "GOOGLE_SSO_CLIENT_SECRET", null, true));
+
+        applicationParams.forEach(applicationParamsService::persist);
     }
 
 }

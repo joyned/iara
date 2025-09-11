@@ -1,13 +1,11 @@
 package com.iara.core.service.impl;
 
-import com.iara.core.entity.ApplicationToken;
-import com.iara.core.entity.Policy;
-import com.iara.core.entity.Role;
-import com.iara.core.entity.User;
+import com.iara.core.entity.*;
 import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.InvalidIaraTokenException;
 import com.iara.core.exception.InvalidJwtException;
 import com.iara.core.model.Authentication;
+import com.iara.core.service.ApplicationParamsService;
 import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.AuthenticationService;
 import com.iara.core.service.UserService;
@@ -39,6 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final ApplicationTokenService applicationTokenService;
+    private final ApplicationParamsService applicationParamsService;
 
     @Override
     public Authentication doLogin(String email, String password) {
@@ -121,6 +120,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return response;
         }
         throw new InvalidIaraTokenException("This token is not valid.");
+    }
+
+    @Override
+    public boolean isGoogleSSOEnabled() {
+        ApplicationParams applicationParams = applicationParamsService.findByKey("GOOGLE_SSO_ENABLED");
+        return Boolean.parseBoolean(applicationParams.getValue());
     }
 
     protected Set<String> convertPoliciesIntoScopes(User user) {

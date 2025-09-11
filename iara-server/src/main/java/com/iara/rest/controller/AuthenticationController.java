@@ -16,6 +16,11 @@ public class AuthenticationController {
     private final AuthenticationService service;
     private final AuthenticationMapper mapper;
 
+    @GetMapping("/google-sso")
+    public ResponseEntity<Boolean> isGoogleSSOEnabled() {
+        return ResponseEntity.ok(service.isGoogleSSOEnabled());
+    }
+
     @PostMapping
     public ResponseEntity<AuthenticationDTO> login(@RequestBody LoginDTO dto) {
         return ResponseEntity.ok(mapper.toDTO(service.doLogin(dto.getEmail(), dto.getPassword())));

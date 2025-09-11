@@ -17,4 +17,6 @@ public interface AuthenticationService {
     Claims validateToken(String token);
 
     Map<String, Object> validateAndGetScopesFromIaraToken(String iaraToken);
+
+    boolean isGoogleSSOEnabled();
 }
