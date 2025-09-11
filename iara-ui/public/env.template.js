@@ -1,0 +1,4 @@
+window.__APP_ENV__ = {
+    REACT_APP_API_URL: '${REACT_APP_API_URL}',
+    REACT_APP_OTHER_VAR: '${REACT_APP_OTHER_VAR}'
+};
