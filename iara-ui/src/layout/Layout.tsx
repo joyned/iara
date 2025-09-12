@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { CgLogOut } from "react-icons/cg";
+import { GrConfigure } from "react-icons/gr";
 import { IoIosSettings } from "react-icons/io";
-import { useNavigate } from "react-router";
+import { MdOutlineCloseFullscreen } from "react-icons/md";
+import { Outlet, useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
+import LogoName from '../assets/logo-name-white.svg?react';
+import Logo from '../assets/logo-white.svg?react';
+import Button from "../components/Button";
 import Loading from "../components/Loading";
 import { Modal } from "../components/Modal";
 import Select from "../components/Select";
@@ -18,8 +23,9 @@ import type { Namespace } from "../types/Namespace";
 import type { Page } from "../types/Page";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
-import SideMenu from "./SideMenu";
-import TopMenu from "./TopMenu";
+import { hasAccessToBatch } from "../utils/PermissionUtils";
+import { uuid } from "../utils/UUID";
+import { IaraMenu } from "./IaraMenu";
 
 export default function Layout() {
     const userService = new UserService();
@@ -37,26 +43,14 @@ export default function Layout() {
 
     const { loading } = useLoading();
 
-    const [name, setName] = useState<string>();
-    const [picture, setPicture] = useState<string>();
-    const [roles, setRoles] = useState<Role[]>([]);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     const [isMobile, setIsMobile] = useState<boolean>(() => {
         return window.innerWidth < 1548;
     })
 
-    const [dropdownMenu] = useState<any>([
-        {
-            icon: <IoIosSettings />,
-            name: 'Settings',
-            to: '/user/settings'
-        },
-        {
-            icon: <CgLogOut />,
-            name: 'Logout',
-            onClick: () => logout()
-        }
-    ])
+    const [name, setName] = useState<string>();
+    const [roles, setRoles] = useState<Role[]>([]);
 
     useEffect(() => {
         if (!namespace) {
@@ -65,7 +59,6 @@ export default function Layout() {
 
         userService.me().then((res: User) => {
             setName(res.name);
-            setPicture(res.picture);
             setRoles(res.roles);
         });
 
@@ -78,7 +71,6 @@ export default function Layout() {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-
     }, [])
 
 
@@ -127,22 +119,67 @@ export default function Layout() {
         <>
             <ToastContainer />
             {loading && <Loading />}
-            {!isMobile &&
-                <TopMenu name={name}
-                    picture={picture}
-                    roles={roles}
-                    onEnvModalOpen={onEnvModalOpen}
-                    dropdownMenu={dropdownMenu}
-                />
-            }
-            {isMobile &&
-                <SideMenu name={name}
-                    picture={picture}
-                    roles={roles}
-                    onEnvModalOpen={onEnvModalOpen}
-                    dropdownMenu={dropdownMenu}
-                />
-            }
+            <div className="min-w-screen max-w-screen h-screen">
+                <div className={`fixed h-screen bg-primary-color z-50 ${isMenuOpen ? 'w-[250px]' : 'w-[70px]'}`}
+                    style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)' }}>
+                    <div className="flex flex-col gap-2 justify-between h-full">
+                        <div>
+                            {isMenuOpen &&
+                                <div className='flex justify-end pr-4 pt-2 text-white'>
+                                    <MdOutlineCloseFullscreen className='cursor-pointer' onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                                </div>
+                            }
+                            <div className="flex justify-center items-center h-[120px]">
+                                {isMenuOpen ? <LogoName className='h-[100px]' /> : <Logo className='h-[100px]' />}
+                            </div>
+                            <div className="flex flex-col gap-5 p-3">
+                                {IaraMenu.map((item: any) => {
+                                    return (
+                                        <div key={uuid()}>
+                                            {hasAccessToBatch(roles, item.key) &&
+                                                <div className={`flex gap-2 text-white p-2 hover:bg-primary-darker-color hover:rounded hover:cursor-pointer ${!isMenuOpen && 'text-2xl'}`}
+                                                    onClick={() => {
+                                                        navigate(item.to);
+                                                        setIsMenuOpen(false);
+                                                    }} key={uuid()}>
+                                                    {isMenuOpen ? item.name : item.icon}
+                                                </div>
+                                            }
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                        <div className='mb-10 flex flex-col gap-5 items-center'>
+                            {isMenuOpen && <Button onClick={onEnvModalOpen}>Change Namespace / Environment</Button>}
+                            {!isMenuOpen && <GrConfigure className='text-2xl text-white' onClick={onEnvModalOpen} />}
+
+                            {isMenuOpen &&
+                                <div className="flex">
+                                    <span className='text-white'>{name}</span>
+                                </div>
+                            }
+                            <div className={`flex items-center gap-5 ${!isMenuOpen && 'flex-col'}`}>
+                                <div className="flex items-center gap-2 text-3xl cursor-pointer" onClick={() => navigate('/user/settings')}>
+                                    <IoIosSettings className='text-white' />
+                                </div>
+                                <div className="flex items-center gap-2 text-3xl cursor-pointer" onClick={logout}>
+                                    <CgLogOut className='text-white' />
+                                </div>
+                            </div>
+                            {!isMenuOpen &&
+                                <div className='flex justify-center text-white'>
+                                    <MdOutlineCloseFullscreen className='cursor-pointer text-2xl'
+                                        onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <main className={`p-6 ${isMobile ? 'ml-[80px]' : isMenuOpen ? 'ml-[270px]' : 'ml-[80px]'}`}>
+                    <Outlet></Outlet>
+                </main>
+            </div>
             <Modal title="Select your Environment" ref={envModalRef} onSave={beforeSaveModal} >
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-1">
