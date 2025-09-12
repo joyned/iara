@@ -11,6 +11,7 @@ import Button from "../components/Button";
 import Loading from "../components/Loading";
 import { Modal } from "../components/Modal";
 import Select from "../components/Select";
+import Tooltip from "../components/Tooltip";
 import { useEnvironment } from "../providers/EnvironmentProvider";
 import { useLoading } from "../providers/LoadingProvider";
 import { useNamespace } from "../providers/NamespaceProvider";
@@ -142,7 +143,11 @@ export default function Layout() {
                                                         navigate(item.to);
                                                         setIsMenuOpen(false);
                                                     }} key={uuid()}>
-                                                    {isMenuOpen ? item.name : item.icon}
+                                                    {isMenuOpen ? item.name :
+                                                        <Tooltip text={item.name}>
+                                                            {item.icon}
+                                                        </Tooltip>
+                                                    }
                                                 </div>
                                             }
                                         </div>
