@@ -15,9 +15,8 @@ public class DateConverter implements AttributeConverter<Date, String> {
     public String convertToDatabaseColumn(Date date) {
         Calendar calendar = Calendar.getInstance();
         if (Objects.isNull(date)) {
-            date = new Date();
+            return null;
         }
-        calendar.setTime(date);
         return String.valueOf(calendar.getTimeInMillis());
     }
 

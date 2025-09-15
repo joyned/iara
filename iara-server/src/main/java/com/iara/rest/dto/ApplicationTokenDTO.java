@@ -16,5 +16,5 @@ public class ApplicationTokenDTO {
     private Date createdAt;
     private Date expiresAt;
     private String createdBy;
-    private PolicyDTO policy;
+    private List<PolicyDTO> policies;
 }

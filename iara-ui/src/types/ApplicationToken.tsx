@@ -7,5 +7,5 @@ export interface ApplicationToken {
     createdAt?: Date;
     createdBy?: string;
     expiresAt?: Date;
-    policy?: Policy;
+    policies?: Policy[];
 }

@@ -37,7 +37,10 @@ public class ApplicationToken implements Serializable {
     @Column(name = "expires_at")
     private Date expiresAt;
 
-    @ManyToOne
-    @JoinColumn(name = "policy_id")
-    private Policy policy;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "application_token_policy",
+            joinColumns = @JoinColumn(name = "application_token_id"),
+            inverseJoinColumns = @JoinColumn(name = "policy_id")
+    )
+    private List<Policy> policies;
 }

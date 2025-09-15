@@ -114,7 +114,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new InvalidIaraTokenException("This token is expired.");
             }
 
-            convertPolicyIntoSet(applicationToken.getPolicy(), scopes);
+            for (Policy policy : applicationToken.getPolicies()) {
+                convertPolicyIntoSet(policy, scopes);
+            }
             response.put("name", applicationToken.getName());
             response.put("scopes", scopes);
             return response;

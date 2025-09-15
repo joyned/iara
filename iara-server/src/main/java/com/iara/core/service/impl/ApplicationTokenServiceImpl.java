@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,9 +58,10 @@ public class ApplicationTokenServiceImpl implements ApplicationTokenService {
             User user = optionalUser.get();
             List<Policy> policies = new ArrayList<>();
             user.getRoles().forEach(role -> policies.addAll(role.getPolicies()));
-            token.setPolicy(policies.getFirst());
+            token.setPolicies(policies);
             token.setCreatedBy(email);
             token.setToken(PasswordGenerator.generateSecurePasswordWithOutSpecials(150));
+            token.setCreatedAt(new Date());
             return repository.save(token);
         }
         return null;

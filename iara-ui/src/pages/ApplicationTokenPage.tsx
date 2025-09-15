@@ -81,7 +81,7 @@ export default function ApplicationPageToken() {
         const newToken: ApplicationToken = {
             name: name,
             expiresAt: neverExpires ? undefined : expiresAt,
-            policy: policy
+            policies: [policy]
         }
 
         setLoading(true);
