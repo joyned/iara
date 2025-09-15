@@ -5,7 +5,6 @@ import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.UserModificationException;
 import com.iara.core.exception.UserNotFoundException;
 import com.iara.core.repository.UserRepository;
-import com.iara.core.service.AuthenticationService;
 import com.iara.core.service.UserService;
 import com.iara.utils.PasswordGenerator;
 import io.jsonwebtoken.Claims;
@@ -18,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User persist(User entity) {
         if (StringUtils.isNotBlank(entity.getId())) {
             Optional<User> optionalUser = repository.findById(entity.getId());

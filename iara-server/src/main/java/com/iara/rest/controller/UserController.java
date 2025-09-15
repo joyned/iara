@@ -1,6 +1,7 @@
 package com.iara.rest.controller;
 
 import com.iara.core.entity.specification.UserSpecification;
+import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.AuthenticationService;
 import com.iara.core.service.UserService;
 import com.iara.rest.dto.ChangePasswordDTO;
@@ -21,6 +22,7 @@ public class UserController {
 
     private final UserService service;
     private final AuthenticationService authenticationService;
+    private final ApplicationTokenService applicationTokenService;
     private final UserMapper mapper;
 
     @GetMapping
@@ -44,7 +46,9 @@ public class UserController {
     @PostMapping
     @PreAuthorize("hasAuthority('#*:WRITE') or hasAuthority('#USERS:WRITE')")
     public ResponseEntity<UserDTO> persist(@RequestBody UserDTO dto) {
-        return ResponseEntity.ok(mapper.toDTO(service.persist(mapper.toEntity(dto))));
+        UserDTO response = mapper.toDTO(service.persist(mapper.toEntity(dto)));
+        applicationTokenService.updateUserTokensPolicies(mapper.toEntity(response));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/reset-password")

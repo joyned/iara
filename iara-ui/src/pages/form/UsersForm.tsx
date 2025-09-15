@@ -106,9 +106,22 @@ export default function UsersForm() {
             const toUpdate = [...roles];
             toUpdate.push(selectedRole);
             setRoles(toUpdate);
-            toast.warn("Role added. Don't forget to save the user to persist the new policy.")
+            toast.warn("Role added. Don't forget to save the user to persist the new role.")
         }
         addRoleModal.current.setOpen(false);
+    }
+
+    const onDeleteRole = (role: Role) => {
+        const toUpdate = [...roles];
+
+        if (toUpdate.length > 0) {
+            const index = toUpdate.findIndex((r: Role) => r.id === role.id);
+            if (index !== -1) {
+                toUpdate.splice(index, 1);
+                setRoles(toUpdate);
+                toast.warn("Role removed. Don't forget to save the user to persist the removal.")
+            }
+        }
     }
 
     return (
@@ -144,7 +157,7 @@ export default function UsersForm() {
                         </div>
                         {roles && roles.map((role: Role) => {
                             return (
-                                <ListItem name={role.name} key={uuid()}></ListItem>
+                                <ListItem name={role.name} key={uuid()} onDelete={() => onDeleteRole(role)}></ListItem>
                             )
                         })}
                     </div>

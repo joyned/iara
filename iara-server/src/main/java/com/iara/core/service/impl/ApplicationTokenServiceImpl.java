@@ -9,7 +9,6 @@ import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.UserService;
 import com.iara.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.LifecycleState;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +30,13 @@ public class ApplicationTokenServiceImpl implements ApplicationTokenService {
     private final UserService userService;
 
     @Override
-    public Optional<ApplicationToken> findById(String id) {
-        return repository.findById(id);
+    public void saveAll(List<ApplicationToken> applicationTokens) {
+        repository.saveAll(applicationTokens);
+    }
+
+    @Override
+    public List<ApplicationToken> findByOwner(String owner) {
+        return repository.findByCreatedBy(owner);
     }
 
     @Override
@@ -65,6 +69,16 @@ public class ApplicationTokenServiceImpl implements ApplicationTokenService {
             return repository.save(token);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void updateUserTokensPolicies(User user) {
+        List<Policy> policies = new ArrayList<>();
+        user.getRoles().forEach(role -> policies.addAll(role.getPolicies()));
+        List<ApplicationToken> userTokens = findByOwner(user.getEmail());
+        userTokens.forEach(token -> token.setPolicies(policies));
+        saveAll(userTokens);
     }
 
     @Override
