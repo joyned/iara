@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { CgLogOut } from "react-icons/cg";
 import { GrConfigure } from "react-icons/gr";
 import { IoIosSettings } from "react-icons/io";
-import { MdOutlineCloseFullscreen } from "react-icons/md";
+import { RiExpandLeftLine, RiExpandRightLine } from "react-icons/ri";
 import { Outlet, useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
 import LogoName from '../assets/logo-name-white.svg?react';
@@ -128,16 +128,17 @@ export default function Layout() {
         <>
             <ToastContainer />
             {loading && <Loading />}
-            <div className="min-w-screen max-w-screen h-screen">
-                <div className={`fixed h-screen bg-primary-color z-50 ${isMenuOpen ? 'w-[250px]' : 'w-[70px]'}`}
+            <div className="relative min-w-screen max-w-screen h-screen">
+                <div className={`absolute text-lg z-50 p-1 bg-primary-color text-white rounded left-[55px] top-[5px] cursor-pointer 
+                    ${isMenuOpen ? 'left-[235px]' : 'left-[55px]'}`}
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)' }}>
+                    {isMenuOpen ? <RiExpandLeftLine /> : <RiExpandRightLine />}
+                </div>
+                <div className={`fixed h-screen bg-primary-color z-40 ${isMenuOpen ? 'w-[250px]' : 'w-[70px]'}`}
                     style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)' }}>
                     <div className="flex flex-col gap-2 justify-between h-full">
                         <div>
-                            {isMenuOpen &&
-                                <div className='flex justify-end pr-4 pt-2 text-white'>
-                                    <MdOutlineCloseFullscreen className='cursor-pointer' onClick={() => setIsMenuOpen(!isMenuOpen)} />
-                                </div>
-                            }
                             <div className="flex justify-center items-center h-[120px]">
                                 {isMenuOpen ? <LogoName className='h-[100px]' /> : <Logo className='h-[100px]' />}
                             </div>
@@ -182,12 +183,6 @@ export default function Layout() {
                                     <CgLogOut className='text-white' />
                                 </div>
                             </div>
-                            {!isMenuOpen &&
-                                <div className='flex justify-center text-white'>
-                                    <MdOutlineCloseFullscreen className='cursor-pointer text-2xl'
-                                        onClick={() => setIsMenuOpen(!isMenuOpen)} />
-                                </div>
-                            }
                         </div>
                     </div>
                 </div>
