@@ -33,7 +33,7 @@ public class KeyValueServiceImpl implements KeyValueService {
 
     @Override
     public Page<Kv> search(Specification<Kv> spec, Pageable pageable) {
-        spec = policyExecutorService.buildNamespacedSpec((BaseNamespacedSpecification<Kv>) spec);
+        spec = policyExecutorService.buildNamespacedSpec(spec);
         return repository.findAll(spec, pageable);
     }
 

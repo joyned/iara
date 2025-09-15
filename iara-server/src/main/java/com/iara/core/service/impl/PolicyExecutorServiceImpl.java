@@ -108,8 +108,13 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
         for (String scope : scopes) {
             String namespace = getNamespaceFromScope(scope);
             String env = getEnvironmentFromScope(scope);
-            namespaces.add(namespace);
-            environments.add(env);
+            if (StringUtils.isNotBlank(namespace) && !namespace.startsWith("*:")) {
+                namespaces.add(namespace);
+            }
+
+            if (StringUtils.isNotBlank(env) && !env.startsWith("@*")) {
+                environments.add(env);
+            }
         }
         return root.and(((BaseNamespacedSpecification<T>) root).hasNamespaceIn(namespaces))
                 .and(((BaseNamespacedSpecification<T>) root).hasEnvironmentIn(environments));
