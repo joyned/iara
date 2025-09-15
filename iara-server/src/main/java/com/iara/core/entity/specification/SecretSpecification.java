@@ -11,9 +11,10 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Builder
-public class SecretSpecification implements Specification<Secret> {
+public class SecretSpecification implements BaseNamespacedSpecification<Secret> {
 
     private String id;
     private String name;
@@ -41,5 +42,23 @@ public class SecretSpecification implements Specification<Secret> {
         }
 
         return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+    }
+
+    public Specification<Secret> hasNamespaceIn(Set<String> namespaces) {
+        return (root, query, cb) -> {
+            if (namespaces == null || namespaces.isEmpty()) {
+                return cb.conjunction();
+            }
+            return root.get("namespace").get("name").in(namespaces);
+        };
+    }
+
+    public Specification<Secret> hasEnvironmentIn(Set<String> environments) {
+        return (root, query, cb) -> {
+            if (environments == null || environments.isEmpty()) {
+                return cb.conjunction();
+            }
+            return root.get("environment").get("name").in(environments);
+        };
     }
 }

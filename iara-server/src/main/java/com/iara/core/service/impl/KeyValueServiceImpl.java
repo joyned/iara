@@ -2,6 +2,8 @@ package com.iara.core.service.impl;
 
 import com.iara.core.entity.Kv;
 import com.iara.core.entity.KvHistory;
+import com.iara.core.entity.specification.BaseNamespacedSpecification;
+import com.iara.core.entity.specification.KvSpecification;
 import com.iara.core.exception.DuplicatedKvException;
 import com.iara.core.exception.KeyValueNotFoundException;
 import com.iara.core.repository.KeyValueHistoryRepository;
@@ -11,7 +13,6 @@ import com.iara.core.service.PolicyExecutorService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,9 +33,8 @@ public class KeyValueServiceImpl implements KeyValueService {
 
     @Override
     public Page<Kv> search(Specification<Kv> spec, Pageable pageable) {
-        Page<Kv> result = repository.findAll(spec, pageable);
-        List<Kv> resultFiltered = result.stream().filter(policyExecutorService::hasWritePermissionInKV).toList();
-        return new PageImpl<>(resultFiltered, result.getPageable(), resultFiltered.size());
+        spec = policyExecutorService.buildNamespacedSpec((BaseNamespacedSpecification<Kv>) spec);
+        return repository.findAll(spec, pageable);
     }
 
     @Override

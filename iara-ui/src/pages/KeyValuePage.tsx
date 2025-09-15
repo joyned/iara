@@ -21,18 +21,22 @@ export default function KeyValuePage() {
 
     const [keyValues, setKeyValues] = useState<KeyValue[]>([]);
     const [page, setPage] = useState<number>(0);
-    const [totalPages, setTotalPages] = useState<number>(0);
+    const [totalPages, setTotalPages] = useState<number>(1);
 
     const { namespace } = useNamespace();
     const { environment } = useEnvironment();
 
     const { setLoading } = useLoading();
 
-    const search = (params?: Partial<KeyValue>) => {
+    const search = (params?: Partial<KeyValue>, page?: number) => {
+        if (!params) {
+            params = { namespace: namespace, environment: environment };
+        }
+
         setLoading(true);
-        kvService.search(params).then((res: Page<KeyValue>) => {
+        kvService.search(params, page).then((res: Page<KeyValue>) => {
             setKeyValues(res.content);
-            setPage(res.page);
+            setPage(res.pageable.pageNumber);
             setTotalPages(res.totalPages);
         }).finally(() => setLoading(false));
     }
@@ -74,7 +78,7 @@ export default function KeyValuePage() {
                     <div className="flex gap-2">
                         <Button type="button" onClick={() => navigate(`/kv/new`)}>Create</Button>
                     </div>
-                    <Pageable totalPages={totalPages} page={page}></Pageable>
+                    {keyValues.length > 0 && <Pageable totalPages={totalPages} page={page} onPage={(page: number) => search(undefined, page)}></Pageable>}
                 </div>
             </Card>
         </>

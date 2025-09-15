@@ -4,12 +4,12 @@ import com.iara.core.entity.Environment;
 import com.iara.core.entity.Kv;
 import com.iara.core.entity.Namespace;
 import com.iara.core.entity.Policy;
+import com.iara.core.entity.specification.BaseNamespacedSpecification;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface PolicyExecutorService {
 
     void validatePolicyRule(String rule);
-
-    boolean executePolicy(Policy policy, Namespace namespace, Environment environment, String resource);
 
     boolean hasPermissionAtNamespace(Namespace namespace);
 
@@ -26,4 +26,6 @@ public interface PolicyExecutorService {
     String getNamespaceFromScope(String scope);
 
     String getEnvironmentFromScope(String scope);
+
+    <T> Specification<T> buildNamespacedSpec(Specification<T> root);
 }

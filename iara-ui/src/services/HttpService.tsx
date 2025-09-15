@@ -113,6 +113,7 @@ export class HttpService {
 
         const finalUrl = new URL(baseUrl + "/" + uri);
         finalUrl.search = search.toString();
+        
         return finalUrl.toString();
     }
 }

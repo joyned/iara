@@ -2,13 +2,14 @@ package com.iara.core.service.impl;
 
 import com.iara.core.entity.Secret;
 import com.iara.core.entity.SecretVersion;
+import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.exception.DestroyedSecretException;
 import com.iara.core.exception.DuplicatedSecretException;
 import com.iara.core.exception.SecretNotFoundException;
 import com.iara.core.repository.SecretRepository;
 import com.iara.core.repository.SecretVersionRepository;
+import com.iara.core.service.PolicyExecutorService;
 import com.iara.core.service.SecretService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -27,9 +28,11 @@ public class SecretServiceImpl implements SecretService {
 
     private final SecretRepository repository;
     private final SecretVersionRepository secretVersionRepository;
+    private final PolicyExecutorService policyExecutorService;
 
     @Override
     public Page<Secret> search(Specification<Secret> spec, Pageable pageable) {
+        spec = policyExecutorService.buildNamespacedSpec((BaseNamespacedSpecification<Secret>) spec);
         return repository.findAll(spec, pageable);
     }
 

@@ -44,11 +44,12 @@ export default function Layout() {
 
     const { loading } = useLoading();
 
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     const [isMobile, setIsMobile] = useState<boolean>(() => {
         return window.innerWidth < 1548;
     })
+
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(!isMobile);
 
     const [name, setName] = useState<string>();
     const [roles, setRoles] = useState<Role[]>([]);
@@ -116,6 +117,13 @@ export default function Layout() {
         navigate('/login')
     }
 
+    const onNavigate = (to: string) => {
+        navigate(to);
+        if (isMobile) {
+            setIsMenuOpen(false);
+        }
+    }
+
     return (
         <>
             <ToastContainer />
@@ -139,11 +147,13 @@ export default function Layout() {
                                         <div key={uuid()}>
                                             {hasAccessToBatch(roles, item.key) &&
                                                 <div className={`flex gap-2 text-white p-2 hover:bg-primary-darker-color hover:rounded hover:cursor-pointer ${!isMenuOpen && 'text-2xl'}`}
-                                                    onClick={() => {
-                                                        navigate(item.to);
-                                                        setIsMenuOpen(false);
-                                                    }} key={uuid()}>
-                                                    {isMenuOpen ? item.name :
+                                                    onClick={() => onNavigate(item.to)} key={uuid()}>
+                                                    {isMenuOpen ?
+                                                        <div className="flex items-center gap-4">
+                                                            {item.icon}
+                                                            {item.name}
+                                                        </div>
+                                                        :
                                                         <Tooltip text={item.name}>
                                                             {item.icon}
                                                         </Tooltip>
@@ -181,7 +191,8 @@ export default function Layout() {
                         </div>
                     </div>
                 </div>
-                <main className={`p-6 ${isMobile ? 'ml-[80px]' : isMenuOpen ? 'ml-[270px]' : 'ml-[80px]'}`}>
+                <main className={`p-6 ${isMobile ? 'ml-[80px]' : isMenuOpen ? 'ml-[270px]' : 'ml-[80px]'}`}
+                    style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)' }}>
                     <Outlet></Outlet>
                 </main>
             </div>

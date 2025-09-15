@@ -17,7 +17,7 @@ export default function SecretsPage() {
     const navigate = useNavigate();
     const service = new SecretService();
 
-    const [secrets, setSecrets] = useState<Secret[]>();
+    const [secrets, setSecrets] = useState<Secret[]>([]);
     const [page, setPage] = useState<number>(0);
     const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -26,20 +26,28 @@ export default function SecretsPage() {
 
     const { setLoading } = useLoading();
 
-    useEffect(() => {
+    const search = (params?: Partial<Secret>, page?: number) => {
+        if (!params) {
+            params = { namespace: namespace, environment: environment };
+        }
+
         setLoading(true);
-        service.search({ environment: environment, namespace: namespace }).then((res: Page<Secret>) => {
+        service.search(params, page).then((res: Page<Secret>) => {
             setSecrets(res.content);
-            setPage(res.page);
+            setPage(res.pageable.pageNumber);
             setTotalPages(res.totalPages);
         }).finally(() => setLoading(false));
-    }, [setLoading]);
+    }
+
+    useEffect(() => {
+        search()
+    }, []);
 
     return (
         <>
             <NamespaceEnvironment />
             <Card title="Secrets">
-                {secrets && secrets.map((secret: Secret) => {
+                {secrets.length > 0 && secrets.map((secret: Secret) => {
                     return (
                         <ListItem name={secret.name} onClick={() => navigate(`/secrets/${secret.id}`)} key={uuid()} />
                     )
@@ -48,7 +56,7 @@ export default function SecretsPage() {
                     <div className="flex gap-2">
                         <Button type="button" onClick={() => navigate(`/secrets/new`)}>Create</Button>
                     </div>
-                    <Pageable totalPages={totalPages} page={page}></Pageable>
+                    {secrets.length > 0 && <Pageable totalPages={totalPages} page={page} onPage={(page: number) => search(undefined, page)}></Pageable>}
                 </div>
             </Card>
         </>

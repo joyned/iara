@@ -3,25 +3,19 @@ package com.iara.core.service.impl;
 import com.iara.core.entity.Environment;
 import com.iara.core.entity.Kv;
 import com.iara.core.entity.Namespace;
-import com.iara.core.entity.Policy;
+import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.exception.InvalidPolicyException;
 import com.iara.core.service.PolicyExecutorService;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PolicyExecutorServiceImpl implements PolicyExecutorService {
-
-    @Override
-    public boolean executePolicy(Policy policy, Namespace namespace, Environment environment, String resource) {
-        return false;
-    }
 
     @Override
     public boolean hasPermissionAtNamespace(Namespace namespace) {
@@ -104,6 +98,21 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
             return scope.split(":")[0].split("/")[1];
         }
         return null;
+    }
+
+    @Override
+    public <T> Specification<T> buildNamespacedSpec(Specification<T> root) {
+        Set<String> namespaces = new LinkedHashSet<>();
+        Set<String> environments = new LinkedHashSet<>();
+        List<String> scopes = getScopeList();
+        for (String scope : scopes) {
+            String namespace = getNamespaceFromScope(scope);
+            String env = getEnvironmentFromScope(scope);
+            namespaces.add(namespace);
+            environments.add(env);
+        }
+        return root.and(((BaseNamespacedSpecification<T>) root).hasNamespaceIn(namespaces))
+                .and(((BaseNamespacedSpecification<T>) root).hasEnvironmentIn(environments));
     }
 
     @Override
