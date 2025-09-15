@@ -54,6 +54,9 @@ export default function Layout() {
     const [name, setName] = useState<string>();
     const [roles, setRoles] = useState<Role[]>([]);
 
+    const { fetch: originalFetch } = window;
+
+
     useEffect(() => {
         if (!namespace) {
             onEnvModalOpen();
@@ -74,6 +77,20 @@ export default function Layout() {
             window.removeEventListener('resize', handleResize);
         };
     }, [])
+
+
+    window.fetch = async (...args) => {
+        const [resource, config] = args;
+
+        const response = await originalFetch(resource, config);
+        if (response.status === 401) {
+            const body = await response.json();
+            if (body.key === 'EXPIRED_JWT') {
+                logout();
+            }
+        }
+        return response;
+    };
 
 
     const onEnvModalOpen = () => {
@@ -139,7 +156,7 @@ export default function Layout() {
                     style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)' }}>
                     <div className="flex flex-col gap-2 justify-between h-full">
                         <div>
-                            <div className="flex justify-center items-center h-[120px]">
+                            <div className="flex justify-center items-center h-[120px] cursor-pointer" onClick={() => navigate('/')}>
                                 {isMenuOpen ? <LogoName className='h-[100px]' /> : <Logo className='h-[100px]' />}
                             </div>
                             <div className="flex flex-col gap-5 p-3">
@@ -168,7 +185,13 @@ export default function Layout() {
                         </div>
                         <div className='mb-10 flex flex-col gap-5 items-center'>
                             {isMenuOpen && <Button onClick={onEnvModalOpen}>Change Namespace / Environment</Button>}
-                            {!isMenuOpen && <GrConfigure className='text-2xl text-white' onClick={onEnvModalOpen} />}
+                            {!isMenuOpen &&
+                                <div className="text-white">
+                                    <Tooltip text="Change Namespace / Environment">
+                                        <GrConfigure className='text-2xl text-white cursor-pointer' onClick={onEnvModalOpen} />
+                                    </Tooltip>
+                                </div>
+                            }
 
                             {isMenuOpen &&
                                 <div className="flex">

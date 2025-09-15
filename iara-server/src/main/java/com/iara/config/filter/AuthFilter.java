@@ -2,6 +2,7 @@ package com.iara.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iara.config.GlobalError;
+import com.iara.core.exception.BaseException;
 import com.iara.core.service.AuthenticationService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -56,11 +57,11 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request, response);
             } else {
-                unauthorized(response, "Token not found.");
+                unauthorized(response, "Token not found.", null);
             }
         } catch (Exception e) {
             log.error("Failed to authenticate.", e);
-            unauthorized(response, e.getMessage());
+            unauthorized(response, e.getMessage(), e);
         }
     }
 
@@ -70,9 +71,14 @@ public class AuthFilter extends OncePerRequestFilter {
         return path.startsWith("/v1/authentication");
     }
 
-    protected void unauthorized(HttpServletResponse response, String message) throws IOException {
-        GlobalError globalError = new GlobalError("UNAUTHORIZED", message, null, 401);
-        response.setStatus(401);
+    protected void unauthorized(HttpServletResponse response, String message, Throwable e) throws IOException {
+        GlobalError globalError;
+        if (e instanceof BaseException) {
+            globalError = new GlobalError(((BaseException) e).getKey(), e.getMessage(), null, ((BaseException) e).getStatus());
+        } else {
+            globalError = new GlobalError("UNAUTHORIZED", message, null, 401);
+        }
+        response.setStatus(globalError.getStatus());
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(new ObjectMapper().writeValueAsString(globalError));
     }

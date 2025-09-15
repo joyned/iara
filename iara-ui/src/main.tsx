@@ -3,9 +3,11 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router'
 import './index.css'
 import { EnvironmentProvider } from './providers/EnvironmentProvider'
+import { LoadingProvider } from './providers/LoadingProvider'
 import { NamespaceProvider } from './providers/NamespaceProvider'
 import { router } from './router'
-import { LoadingProvider } from './providers/LoadingProvider'
+
+
 
 
 createRoot(document.getElementById('root')!).render(

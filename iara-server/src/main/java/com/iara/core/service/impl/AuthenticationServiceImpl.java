@@ -10,6 +10,7 @@ import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.AuthenticationService;
 import com.iara.core.service.UserService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +99,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (Exception e) {
+            if (e instanceof ExpiredJwtException) {
+                throw new com.iara.core.exception.ExpiredJwtException("The given JWT is expired. Please, log in again.");
+            }
             throw new InvalidJwtException("Invalid JWT. %s", e.getMessage());
         }
     }
