@@ -16,7 +16,7 @@ public class SecretVersion {
     @UuidGenerator
     private String id;
 
-    @Column
+    @Column(name = "\"value\"")
     private String value;
 
     @Column

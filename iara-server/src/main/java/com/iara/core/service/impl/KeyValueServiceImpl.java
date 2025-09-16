@@ -6,6 +6,7 @@ import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.entity.specification.KvSpecification;
 import com.iara.core.exception.DuplicatedKvException;
 import com.iara.core.exception.KeyValueNotFoundException;
+import com.iara.core.exception.RequiredParameterException;
 import com.iara.core.repository.KeyValueHistoryRepository;
 import com.iara.core.repository.KeyValueRepository;
 import com.iara.core.service.KeyValueService;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,6 +42,14 @@ public class KeyValueServiceImpl implements KeyValueService {
     @Override
     @Transactional
     public Kv persist(Kv entity) {
+        if (StringUtils.isBlank(entity.getKey())) {
+            throw new RequiredParameterException("KV key is required to save.");
+        }
+
+        if (Objects.isNull(entity.getNamespace()) || Objects.isNull(entity.getEnvironment())) {
+            throw new RequiredParameterException("Neither Namespace and/or Environment can be null.");
+        }
+
         if (StringUtils.isBlank(entity.getId())) {
             Optional<Kv> actual = repository.findByKey(entity.getKey());
 
@@ -47,13 +57,14 @@ public class KeyValueServiceImpl implements KeyValueService {
                 throw new DuplicatedKvException("The KV with name %s already exists.", entity.getKey());
             }
         }
+
         if (StringUtils.isNotBlank(entity.getId())) {
             persistHistory(entity);
         }
         return repository.save(entity);
     }
 
-    protected void persistHistory(Kv entity) {
+    public void persistHistory(Kv entity) {
         Optional<Kv> optionalKv = repository.findById(entity.getId());
         if (optionalKv.isPresent()) {
             String user = String.valueOf(SecurityContextHolder.getContext().getAuthentication().getPrincipal());

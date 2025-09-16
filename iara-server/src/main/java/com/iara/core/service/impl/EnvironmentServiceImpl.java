@@ -2,6 +2,7 @@ package com.iara.core.service.impl;
 
 import com.iara.core.entity.Environment;
 import com.iara.core.entity.Namespace;
+import com.iara.core.exception.OperationNotPermittedException;
 import com.iara.core.repository.EnvironmentRepository;
 import com.iara.core.service.EnvironmentService;
 import com.iara.core.service.PolicyExecutorService;
@@ -35,7 +36,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
 
     @Override
     public void delete(String id) {
-
+        throw new OperationNotPermittedException("You cannot delete an Environment from here.");
     }
 
     @Override

@@ -23,13 +23,13 @@ public class KvHistory implements Serializable {
     @JoinColumn(name = "kv_id")
     private Kv keyValue;
 
-    @Column
+    @Column(name = "\"value\"")
     private String value;
 
     @Convert(converter = DateConverter.class)
     @Column(name = "updated_at", columnDefinition = "TEXT")
     private Date updatedAt;
 
-    @Column
+    @Column(name = "\"user\"")
     private String user;
 }

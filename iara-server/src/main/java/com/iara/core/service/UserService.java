@@ -13,5 +13,5 @@ public interface UserService extends BaseService<User> {
 
     Optional<User> findByEmail(String email);
 
-    User me(Claims claims);
+    User me();
 }

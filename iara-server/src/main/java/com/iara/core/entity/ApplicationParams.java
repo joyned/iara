@@ -22,10 +22,10 @@ public class ApplicationParams implements Serializable {
     @UuidGenerator
     private String id;
 
-    @Column
+    @Column(name = "\"key\"")
     private String key;
 
-    @Column
+    @Column(name = "\"value\"")
     private String value;
 
     @Column

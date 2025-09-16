@@ -135,7 +135,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     protected Set<String> convertPoliciesIntoScopes(User user) {
-        List<Role> userRoles = user.getRoles();
+        Set<Role> userRoles = user.getRoles();
 
         if (Objects.nonNull(userRoles) && !userRoles.isEmpty()) {
             Set<String> scopes = new LinkedHashSet<>();

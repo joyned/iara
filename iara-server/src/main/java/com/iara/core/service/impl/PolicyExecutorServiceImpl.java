@@ -6,6 +6,7 @@ import com.iara.core.entity.Namespace;
 import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.exception.InvalidPolicyException;
 import com.iara.core.service.PolicyExecutorService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@Slf4j
 public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
     @Override
@@ -31,6 +33,11 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
     @Override
     public boolean hasPermissionAtNamespace(String scope, Namespace namespace) {
         String namespaceName = getNamespaceFromScope(scope);
+
+        if (isAllNamespacesAndEnvironments(scope)) {
+            return true;
+        }
+
         if (StringUtils.isNotBlank(namespaceName)) {
             return namespaceName.equals(namespace.getName());
         }
@@ -51,6 +58,11 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
     @Override
     public boolean hasPermissionAtEnvironment(String scope, Environment environment) {
         String envName = getEnvironmentFromScope(scope);
+
+        if (isAllNamespacesAndEnvironments(scope)) {
+            return true;
+        }
+
         if (StringUtils.isNotBlank(envName)) {
             return envName.equals(environment.getName());
         }
@@ -68,8 +80,9 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
             boolean hasPermNamespaceAndEnv =
                     hasPermissionAtEnvironment(scope, kv.getEnvironment()) && hasPermissionAtNamespace(scope, kv.getNamespace());
             boolean hasPermInKv = scope.split(":")[1].equals("KV");
+            boolean isWrite = "WRITE".equals(scope.split(":")[scope.split(":").length - 1]);
 
-            if (hasPermNamespaceAndEnv && hasPermInKv) {
+            if (hasPermNamespaceAndEnv && hasPermInKv && isWrite) {
                 return true;
             }
         }
@@ -83,6 +96,10 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
     @Override
     public String getNamespaceFromScope(String scope) {
+        if (isAllNamespacesAndEnvironments(scope)) {
+            return "@*";
+        }
+
         if (scope.startsWith("@")) {
             return scope.split("/")[0].substring(1);
         }
@@ -91,11 +108,15 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
     @Override
     public String getEnvironmentFromScope(String scope) {
-        if (isAllNamespacesAndEnvironments(scope)) {
-            return "@*";
-        }
-        if (scope.startsWith("@")) {
-            return scope.split(":")[0].split("/")[1];
+        try {
+            if (isAllNamespacesAndEnvironments(scope)) {
+                return "@*";
+            }
+            if (scope.startsWith("@")) {
+                return scope.split(":")[0].split("/")[1];
+            }
+        } catch (Exception e) {
+            log.error("Failed to extract environment from scope {}", scope);
         }
         return null;
     }
@@ -169,18 +190,12 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
     protected int validatePermissions(String[] steps) {
         if ("READ".equals(steps[1]) && "AND".equals(steps[2]) && "WRITE".equals(steps[3])) {
-            if (steps.length < 5) {
-                throw new InvalidPolicyException("Incomplete rule after 'READ AND WRITE'");
-            }
             return 4;
         } else if ("READ".equals(steps[1]) && "WRITE".equals(steps[2]) && "AND".equals(steps[3])) {
             throw new InvalidPolicyException("Invalid permission format. Use 'READ AND WRITE' instead of 'READ WRITE AND'");
         } else if ("READ".equals(steps[1])) {
             return 2;
         } else if ("WRITE".equals(steps[1])) {
-            if (steps.length < 3) {
-                throw new InvalidPolicyException("Incomplete rule after 'WRITE'");
-            }
             return 2;
         } else {
             throw new InvalidPolicyException("Invalid permission. Must be 'READ', 'WRITE' or 'READ AND WRITE'");
@@ -199,6 +214,7 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
         }
 
         List<String> validResources = Arrays.asList("#NAMESPACES", "#USERS", "#POLICIES", "#ROLES", "#*");
+
         if (!validResources.contains(resource)) {
             throw new InvalidPolicyException("Invalid administrative resource: " + resource + ". Valid resources are: " + validResources);
         }

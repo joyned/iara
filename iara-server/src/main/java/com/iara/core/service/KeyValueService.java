@@ -10,4 +10,6 @@ public interface KeyValueService extends BaseService<Kv> {
     List<KvHistory> history(String kvId);
 
     Kv get(String namespace, String environment, String kv);
+
+    void persistHistory(Kv entity);
 }

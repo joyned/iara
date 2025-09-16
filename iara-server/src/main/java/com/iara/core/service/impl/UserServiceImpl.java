@@ -1,9 +1,7 @@
 package com.iara.core.service.impl;
 
 import com.iara.core.entity.User;
-import com.iara.core.exception.InvalidCredentialsException;
-import com.iara.core.exception.UserModificationException;
-import com.iara.core.exception.UserNotFoundException;
+import com.iara.core.exception.*;
 import com.iara.core.repository.UserRepository;
 import com.iara.core.service.UserService;
 import com.iara.utils.PasswordGenerator;
@@ -45,6 +43,16 @@ public class UserServiceImpl implements UserService {
             Optional<User> optionalUser = repository.findById(entity.getId());
             optionalUser.ifPresent(user -> entity.setPassword(user.getPassword()));
         }
+
+        if (StringUtils.isBlank(entity.getEmail()) || StringUtils.isBlank(entity.getName())) {
+            throw new InvalidUserException("Please, make sure that neither Name and/or E-mail are not blank.");
+        }
+
+        Optional<User> sameEmailUser = findByEmail(entity.getEmail());
+        if (sameEmailUser.isPresent() && !sameEmailUser.get().getId().equals(entity.getId())) {
+            throw new DuplicatedUserEmailException("This e-mail already exists.");
+        }
+
         return repository.save(entity);
     }
 
@@ -78,6 +86,11 @@ public class UserServiceImpl implements UserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+
+            if (Objects.nonNull(user.getIsSSO()) && user.getIsSSO()) {
+                throw new UserModificationException("The following user %s is a SSO user. Password cannot be reset.", user.getEmail());
+            }
+
             if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
                 throw new InvalidCredentialsException("Old password does not match.");
             }
@@ -95,8 +108,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User me(Claims claims) {
-        Optional<User> optionalUser = findByEmail(claims.getSubject());
-        return optionalUser.orElseThrow(() -> new UserNotFoundException("User %s was not found.", claims.getSubject()));
+    public User me() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> optionalUser = findByEmail(email);
+        return optionalUser.orElseThrow(() -> new UserNotFoundException("User %s was not found.", email));
     }
 }

@@ -1,16 +1,16 @@
 package com.iara.core.service.impl;
 
 import com.iara.core.entity.Policy;
+import com.iara.core.exception.RequiredParameterException;
 import com.iara.core.repository.PolicyRepository;
 import com.iara.core.service.PolicyExecutorService;
 import com.iara.core.service.PolicyService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,10 @@ public class PolicyServiceImpl implements PolicyService {
 
     @Override
     public Policy persist(Policy entity) {
+        if (StringUtils.isBlank(entity.getName()) || StringUtils.isBlank(entity.getRule())) {
+            throw new RequiredParameterException("Neither name and/or rule can be empty/null.");
+        }
+
         policyExecutorService.validatePolicyRule(entity.getRule());
         return repository.save(entity);
     }

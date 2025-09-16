@@ -7,9 +7,12 @@ import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.NumericBooleanConverter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@Table
+@Table(name = "\"USER\"")
 @Entity
 @Getter
 @Setter
@@ -40,5 +43,5 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "replication_data", indexes = {
-        @Index(name = "idx_key", columnList = "key"),
+        @Index(name = "idx_key", columnList = "\"key\""),
         @Index(name = "idx_timestamp", columnList = "timestamp")
 })
 @Getter
@@ -21,10 +21,10 @@ public class ReplicationData implements Serializable {
     @UuidGenerator
     private String id;
 
-    @Column(nullable = false)
+    @Column(name = "\"key\"", nullable = false)
     private String key;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "\"value\"", nullable = false, columnDefinition = "TEXT")
     private String value;
 
     @Column(nullable = false)

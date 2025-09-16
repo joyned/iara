@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -87,7 +88,7 @@ public class IaraConfiguration {
         admin.setEmail(adminEmail);
         admin.setPassword(passwordEncoder.encode(adminPassword));
         admin.setIsSSO(false);
-        admin.setRoles(List.of(adminRole));
+        admin.setRoles(Set.of(adminRole));
         userService.persist(admin);
     }
 

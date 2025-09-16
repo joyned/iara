@@ -32,7 +32,7 @@ public class SecretServiceImpl implements SecretService {
 
     @Override
     public Page<Secret> search(Specification<Secret> spec, Pageable pageable) {
-        spec = policyExecutorService.buildNamespacedSpec((BaseNamespacedSpecification<Secret>) spec);
+        spec = policyExecutorService.buildNamespacedSpec(spec);
         return repository.findAll(spec, pageable);
     }
 

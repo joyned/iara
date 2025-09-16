@@ -2,6 +2,7 @@ package com.iara.core.service.impl;
 
 import com.iara.core.entity.Environment;
 import com.iara.core.entity.Namespace;
+import com.iara.core.exception.InvalidNamespaceException;
 import com.iara.core.exception.NamespaceNotFoundException;
 import com.iara.core.repository.NamespaceRepository;
 import com.iara.core.service.EnvironmentService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -50,6 +52,10 @@ public class NamespaceServiceImpl implements NamespaceService {
             }
         }
 
+        if (Objects.isNull(entity.getEnvironments()) || entity.getEnvironments().isEmpty()) {
+            throw new InvalidNamespaceException("A namespace should have at least one environment.");
+        }
+
         Namespace persisted = repository.save(entity);
         entity.getEnvironments().forEach(environment -> {
             environment.setNamespace(persisted);
@@ -71,5 +77,10 @@ public class NamespaceServiceImpl implements NamespaceService {
         } else {
             throw new NamespaceNotFoundException("Namespace with ID %s not found.", id);
         }
+    }
+
+    @Override
+    public Optional<Namespace> findByName(String name) {
+        return repository.findByName(name);
     }
 }
