@@ -54,8 +54,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             Set<String> scopes = convertPoliciesIntoScopes(user);
             return generateToken(email, scopes);
+        } else {
+            throw new InvalidCredentialsException("Invalid credentials.");
         }
-        return null;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (optionalApplicationToken.isPresent()) {
             ApplicationToken applicationToken = optionalApplicationToken.get();
 
-            if (Objects.nonNull(applicationToken.getExpiresAt()) && applicationToken.getExpiresAt().getTime() > new Date().getTime()) {
+            if (Objects.nonNull(applicationToken.getExpiresAt()) && new Date().getTime() > applicationToken.getExpiresAt().getTime()) {
                 throw new InvalidIaraTokenException("This token is expired.");
             }
 

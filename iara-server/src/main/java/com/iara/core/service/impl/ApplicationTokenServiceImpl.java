@@ -4,6 +4,7 @@ import com.iara.core.entity.ApplicationToken;
 import com.iara.core.entity.Policy;
 import com.iara.core.entity.User;
 import com.iara.core.exception.OperationNotPermittedException;
+import com.iara.core.exception.UserNotFoundException;
 import com.iara.core.repository.ApplicationTokenRepository;
 import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.UserService;
@@ -68,7 +69,7 @@ public class ApplicationTokenServiceImpl implements ApplicationTokenService {
             token.setCreatedAt(new Date());
             return repository.save(token);
         }
-        return null;
+        throw new UserNotFoundException("User %s was not found.", email);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ApplicationTokenServiceImpl implements ApplicationTokenService {
             if (token.getCreatedBy().equals(user.getEmail())) {
                 delete(token.getId());
             } else {
-                throw new OperationNotPermittedException("The token with ID %s does not belong to %s", user.getEmail());
+                throw new OperationNotPermittedException("The token with ID %s does not belong to %s", id, user.getEmail());
             }
         }
     }

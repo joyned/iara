@@ -41,7 +41,7 @@ class UserServiceTest {
         user.setName("Testing");
         user.setEmail("testing@email.com");
         user.setIsSSO(false);
-        user.setPassword(passwordEncoder.encode("testing_password"));
+        user.setPassword("testing_password");
         user.setRoles(roleService.search(null, Pageable.unpaged()).stream().collect(Collectors.toSet()));
         userService.persist(user);
 

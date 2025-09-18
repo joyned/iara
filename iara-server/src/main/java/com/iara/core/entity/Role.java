@@ -6,7 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table
 @Entity
@@ -29,5 +30,5 @@ public class Role implements Serializable {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "policy_id")
     )
-    private List<Policy> policies;
+    private Set<Policy> policies = new HashSet<>();
 }

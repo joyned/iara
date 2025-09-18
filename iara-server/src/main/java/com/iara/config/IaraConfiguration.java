@@ -75,7 +75,7 @@ public class IaraConfiguration {
         Role role = new Role();
         role.setName("Admin");
         role.setDescription("Admin role with full access.");
-        role.setPolicies(List.of(persisted));
+        role.setPolicies(Set.of(persisted));
 
         return roleService.persist(role);
     }

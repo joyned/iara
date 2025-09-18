@@ -7,13 +7,12 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-public class EnvironmentSpecification implements Specification<Environment> {
+public class EnvironmentSpecification implements BaseNamespacedSpecification<Environment> {
 
     private String id;
     private String name;
@@ -37,4 +36,5 @@ public class EnvironmentSpecification implements Specification<Environment> {
 
         return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
     }
+
 }

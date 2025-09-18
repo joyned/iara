@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,7 +48,7 @@ class RoleServiceTest {
         policy.setName("Testing Policy");
         policy.setRule("ALLOW READ AND WRITE IN KV AT @*");
 
-        role.setPolicies(List.of(policy));
+        role.setPolicies(Set.of(policy));
 
         Role persisted = roleService.persist(role);
 
@@ -65,7 +66,7 @@ class RoleServiceTest {
         policy.setName("Testing Policy");
         policy.setRule("ALLOW READ AND WRITE IN KV AT @*");
 
-        role.setPolicies(List.of(policy));
+        role.setPolicies(Set.of(policy));
 
         assertThrows(RequiredParameterException.class, () -> roleService.persist(role));
     }
@@ -80,7 +81,7 @@ class RoleServiceTest {
         policy.setName("Testing Policy");
         policy.setRule("ALLOW READ AND WRITE IN KV AT @*");
 
-        role.setPolicies(List.of(policy));
+        role.setPolicies(Set.of(policy));
 
         assertThrows(RequiredParameterException.class, () -> roleService.persist(role));
     }
@@ -104,7 +105,7 @@ class RoleServiceTest {
         policy.setName("Testing Policy");
         policy.setRule("ALLOW READ AND WRITE IN KV AT @*");
 
-        role.setPolicies(List.of(policy));
+        role.setPolicies(Set.of(policy));
 
         assertThrows(DuplicatedRoleException.class, () -> roleService.persist(role));
     }
@@ -119,7 +120,7 @@ class RoleServiceTest {
         policy.setName("Testing Policy");
         policy.setRule("ALLOW READ AND WRITE IN KV AT @*");
 
-        role.setPolicies(List.of(policy));
+        role.setPolicies(Set.of(policy));
 
         Role persisted = roleService.persist(role);
 

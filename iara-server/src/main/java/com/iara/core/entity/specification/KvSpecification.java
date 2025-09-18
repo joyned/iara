@@ -8,11 +8,9 @@ import jakarta.persistence.criteria.Root;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Getter
@@ -45,24 +43,5 @@ public class KvSpecification implements BaseNamespacedSpecification<Kv> {
 
         return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
     }
-
-    public Specification<Kv> hasNamespaceIn(Set<String> namespaces) {
-        return (root, query, cb) -> {
-            if (namespaces == null || namespaces.isEmpty()) {
-                return cb.conjunction();
-            }
-            return root.get("namespace").get("name").in(namespaces);
-        };
-    }
-
-    public Specification<Kv> hasEnvironmentIn(Set<String> environments) {
-        return (root, query, cb) -> {
-            if (environments == null || environments.isEmpty()) {
-                return cb.conjunction();
-            }
-            return root.get("environment").get("name").in(environments);
-        };
-    }
-
 
 }

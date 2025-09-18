@@ -8,7 +8,6 @@ import com.iara.core.exception.InvalidPolicyException;
 import com.iara.core.service.PolicyExecutorService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -123,6 +122,10 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
     @Override
     public <T> Specification<T> buildNamespacedSpec(Specification<T> root) {
+        if (Objects.isNull(root)) {
+            return null;
+        }
+
         Set<String> namespaces = new LinkedHashSet<>();
         Set<String> environments = new LinkedHashSet<>();
         List<String> scopes = getScopeList();
@@ -137,8 +140,7 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
                 environments.add(env);
             }
         }
-        return root.and(((BaseNamespacedSpecification<T>) root).hasNamespaceIn(namespaces))
-                .and(((BaseNamespacedSpecification<T>) root).hasEnvironmentIn(environments));
+        return root.and(((BaseNamespacedSpecification<T>) root).hasPermission(namespaces, environments));
     }
 
     @Override
@@ -251,7 +253,6 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
         }
     }
 
-    @NotNull
     private static List<String> getScopeList() {
         List<String> scopes = new ArrayList<>();
         SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(grantedAuthority ->

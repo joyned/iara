@@ -155,4 +155,5 @@ class NamespaceServiceTest {
     void Given_NotExistingId_ShouldThrows() {
         assertThrows(NamespaceNotFoundException.class, () -> namespaceService.delete(UUID.randomUUID().toString()));
     }
+
 }
