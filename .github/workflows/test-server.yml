@@ -12,14 +12,11 @@ jobs:
         distribution: 'adopt'
         java-version: 21
         architecture: x64
-    - name: CD Folder
-      run: cd iara-server/ && ./gradlew clean build test
-    - name: jacoco-badge-generator
-      id: jacoco
-      uses: cicirello/jacoco-badge-generator@v2.3.0
+    - uses: cicirello/jacoco-badge-generator@v2.3.0
       with:
         jacoco-csv-file: iara-server/build/reports/jacoco/jacocoTestReport.csv
-
+    - name: Clean, Build & Test
+      run: cd iara-server/ && ./gradlew clean build test
     - name: Log coverage percentage
       run: |
-        echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+        echo "coverage = ${{ steps.outputs.coverage }}"
