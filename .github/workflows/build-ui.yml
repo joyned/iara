@@ -3,26 +3,38 @@ name: Build UI
 on: [workflow_dispatch]
 
 jobs:
-  test-ui:
-    name: Test
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '22'
-      - run: cd iara-ui/
-      - run: npm test
-  
   build:
     name: Build
     runs-on: ubuntu-latest
     environment: production
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '22'
-      - run: cd iara-ui/
-      - run: npm run build
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22'
+    
+    - name: Build Frontend
+      run: |
+        cd iara-ui/
+        npm install
+        npm run build
+
+    - name: Build Docker image for UI
+      run: |
+        cd iara-ui/
+        docker build -t $REGISTRY/$IMAGE_PREFIX/iara-ui:latest -t $REGISTRY/$IMAGE_PREFIX/iara-ui:${{ github.sha }} .
+    
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Push Docker image for UI
+      run: |
+        docker push $REGISTRY/$IMAGE_PREFIX/iara-ui:latest
+        docker push $REGISTRY/$IMAGE_PREFIX/iara-ui:${{ github.sha }}
