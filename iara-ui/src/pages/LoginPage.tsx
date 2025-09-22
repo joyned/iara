@@ -15,21 +15,37 @@ export default function LoginPage() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
+    const [errorMessage, setErrorMessage] = useState<string>();
+
     useEffect(() => {
         service.isGoogleSSOEnabled().then((res: boolean) => setIsGoogleSSOEnabled(res));
-    }, [service])
+    }, [])
 
     const doLogin = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         service.doLogin(email, password).then(() => {
             navigate('/kv');
+        }).catch(async (err: any) => {
+            const body = await err.json();
+            if (body.key === "INVALID_CREDENTIALS") {
+                setErrorMessage('Your credentials are invalid. Please, check your E-mail and Password');
+            } else {
+                setErrorMessage('An unknow error occurred. Please, if persist contact your manager.');
+            }
         });
     }
 
     return (
         <div className="flex w-screen h-screen bg-primary-color">
             <div className="w-full flex flex-col justify-center">
+                {errorMessage &&
+                    <div className="flex flex-col items-center mb-5">
+                        <div className="flex p-3 bg-red-500 rounded text-white">
+                            <span>{errorMessage}</span>
+                        </div>
+                    </div>
+                }
                 <div className="flex flex-col items-center">
                     <Logo className="w-[300px] h-[100px]" />
                 </div>
@@ -37,7 +53,8 @@ export default function LoginPage() {
                     <form className="flex flex-col gap-5 p-5 w-md" onSubmit={doLogin}>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="username" className="text-white">Email</label>
-                            <Input name="username" type="email" onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
+                            <Input name="username" type="email" className="text-white"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="password" className="text-white">Password</label>

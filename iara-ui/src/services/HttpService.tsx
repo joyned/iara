@@ -87,7 +87,7 @@ export class HttpService {
         });
     }
 
-    private static getUrl(uri: string, params?: any, page?: number, size?: number) {
+    static getUrl(uri: string, params?: any, page?: number, size?: number) {
         const search = new URLSearchParams();
         if (params) {
             const entries = new Map(Object.entries(params));
