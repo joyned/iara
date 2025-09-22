@@ -1,4 +1,4 @@
-name: Build IARA Unified
+name: Build IARA
 
 on: [workflow_dispatch]
 
@@ -25,13 +25,13 @@ jobs:
     
     - name: Build Backend
       run: |
-        cd iara-server
+        cd iara-server/
         chmod +x ./gradlew
         ./gradlew build -x test
     
     - name: Build Docker image for server
       run: |
-        cd iara-server
+        cd iara-server/
         docker build -t $REGISTRY/$IMAGE_PREFIX/iara-server:latest -t $REGISTRY/$IMAGE_PREFIX/iara-server:${{ github.sha }} .
     
     - name: Log in to Docker Hub
