@@ -1,0 +1,36 @@
+server:
+  ssl:
+    enabled: ${LOCAL_SSL:false}
+    key-store-type: PKCS12
+    key-store: classpath:iara-ssl.p12
+    key-password: ${KEYSTORE_PWD:}
+    key-store-password: ${KEYSTORE_PWD:}
+    key-alias: iara
+
+spring:
+  application:
+    name: iara-server
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.default_schema: iara
+  sql:
+    init:
+      mode: always
+
+security:
+  password:
+    minLen: 20
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 3600000
+    issuer: iara.org
