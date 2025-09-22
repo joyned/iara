@@ -23,7 +23,7 @@ jobs:
     - name: Build Frontend
       run: |
         cd iara-ui/
-        npm ci
+        npm install
         npm run build
 
     - name: Build Docker image for UI
