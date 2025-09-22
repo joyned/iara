@@ -7,7 +7,7 @@
   "scripts": {
     "start": "vite",
     "start:container": "vite --mode container",
-    "build": "tsc -b && vite build --base=/",
+    "build": "tsc -b && vite build",
     "build:noEmit": "tsc -noEmit && vite build --base=/",
     "lint": "eslint .",
     "preview": "vite preview"
