@@ -26,7 +26,7 @@ public class CookieUtils {
         cookieHeader.append(name).append('=').append(value);
         cookieHeader.append("; Path=/");
         cookieHeader.append("; Max-Age=").append(maxAge);
-        cookieHeader.append("; Domain=").append("localhost.iara.com");
+        cookieHeader.append("; Domain=").append(domain);
         cookieHeader.append("; SameSite=").append("Strict");
         cookieHeader.append("; Secure");
 

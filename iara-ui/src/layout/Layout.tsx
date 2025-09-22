@@ -85,7 +85,7 @@ export default function Layout() {
         const response = await originalFetch(resource, config);
         if (response.status === 401) {
             const body = await response.json();
-            if (body.key === 'EXPIRED_JWT') {
+            if (body.key === 'EXPIRED_JWT' || body.key === 'TOKEN_MISSING') {
                 logout();
             }
         }
