@@ -1,6 +1,5 @@
 package com.iara.rest.controller;
 
-import com.iara.core.model.Authentication;
 import com.iara.core.service.AuthenticationService;
 import com.iara.rest.dto.AuthenticationDTO;
 import com.iara.rest.dto.LoginDTO;
@@ -22,7 +21,7 @@ public class AuthenticationController {
     private final CookieUtils cookieUtils;
 
     @GetMapping("/google-sso")
-    public ResponseEntity<Boolean> isGoogleSSOEnabled() {
+    public ResponseEntity<String> isGoogleSSOEnabled() {
         return ResponseEntity.ok(service.isGoogleSSOEnabled());
     }
 
@@ -34,8 +33,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/google-sso")
-    public ResponseEntity<Void> loginSSO(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response) {
-        AuthenticationDTO authenticationDTO = mapper.toDTO(service.doLoginSSO(code));
+    public ResponseEntity<Void> loginGoogleSSO(@RequestParam("code") String code, @RequestParam("redirect_uri") String redirectUri,
+                                               HttpServletRequest request, HttpServletResponse response) {
+        AuthenticationDTO authenticationDTO = mapper.toDTO(service.doLoginGoogleSSO(code, redirectUri));
         cookieUtils.createIaraTokenCookies(request, response, authenticationDTO.getAccessToken(), String.valueOf(authenticationDTO.getExpiresIn()));
         return ResponseEntity.noContent().build();
     }

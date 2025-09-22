@@ -36,7 +36,7 @@ public class User implements Serializable {
 
     @Column(name = "is_sso")
     @Convert(converter = NumericBooleanConverter.class)
-    private Boolean isSSO;
+    private Boolean isSSO = false;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",

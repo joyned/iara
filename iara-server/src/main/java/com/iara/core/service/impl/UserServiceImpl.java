@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isNotBlank(entity.getId())) {
             Optional<User> optionalUser = repository.findById(entity.getId());
             optionalUser.ifPresent(user -> entity.setPassword(user.getPassword()));
-        } else if (Objects.isNull(entity.getIsSSO()) || !entity.getIsSSO()) {
+        } else if (!entity.getIsSSO()) {
             entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         }
 

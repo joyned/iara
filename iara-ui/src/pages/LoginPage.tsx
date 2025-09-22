@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Logo from "../assets/logo-name-white.svg?react";
@@ -17,8 +17,36 @@ export default function LoginPage() {
 
     const [errorMessage, setErrorMessage] = useState<string>();
 
+    const googleSSORef = useRef<any>(null);
+
+    const handleCredentialResponse = (response: any) => {
+        service.doLoginGoogleSSO(response.code).then(() => {
+            navigate('/kv');
+        }).catch(async (err: any) => {
+            const body = await err.json();
+            if (body.key === "ACCOUNT_NOT_FOUND") {
+                setErrorMessage("You don't have permission to access this resource. Please, contact your manager.");
+            } else {
+                setErrorMessage('An unknow error occurred. Please, if persist contact your manager.');
+            }
+        });
+    };
+
+    const [googleInstace, setGoogleInstance] = useState<any>();
+
     useEffect(() => {
-        service.isGoogleSSOEnabled().then((res: boolean) => setIsGoogleSSOEnabled(res));
+        service.isGoogleSSOEnabled().then((res: string) => {
+            setIsGoogleSSOEnabled(!!res)
+            if (res && (window as any).google) {
+                setGoogleInstance((window as any).google.accounts.oauth2.initCodeClient({
+                    client_id: res,
+                    scope: 'email profile',
+                    callback: (res: any) => {
+                        handleCredentialResponse(res);
+                    }
+                }))
+            }
+        });
     }, [])
 
     const doLogin = (e: ChangeEvent<HTMLFormElement>) => {
@@ -67,7 +95,8 @@ export default function LoginPage() {
                 </div>
                 {isGoogleSSOEnabled &&
                     <div className="w-full flex justify-center">
-                        <span className="flex items-center bg-red-500 text-white gap-5 p-2 rounded-sm cursor-pointer hover:bg-red-600">
+                        <span className="flex items-center bg-red-500 text-white gap-5 p-2 rounded-sm cursor-pointer hover:bg-red-600"
+                            ref={googleSSORef} onClick={() => googleInstace.requestCode()}>
                             <FaGoogle></FaGoogle>
                             <span>Sign-in with Google SSO</span>
                         </span>

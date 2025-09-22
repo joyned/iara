@@ -10,7 +10,7 @@ public interface AuthenticationService {
 
     Authentication doLogin(String email, String password);
 
-    Authentication doLoginSSO(String codeToken);
+    Authentication doLoginGoogleSSO(String codeToken, String redirectUri);
 
     Authentication generateToken(String email, Set<String> scopes);
 
@@ -18,5 +18,5 @@ public interface AuthenticationService {
 
     Map<String, Object> validateAndGetScopesFromIaraToken(String iaraToken);
 
-    boolean isGoogleSSOEnabled();
+    String isGoogleSSOEnabled();
 }

@@ -13,4 +13,5 @@ public class UserDTO {
     private String email;
     private String picture;
     private List<RoleDTO> roles;
+    private Boolean isSSO = false;
 }

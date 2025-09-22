@@ -16,6 +16,7 @@ import type { Page } from "../../types/Page";
 import type { Role } from "../../types/Role";
 import type { User } from "../../types/User";
 import { uuid } from "../../utils/UUID";
+import Checkbox from "../../components/Checkbox";
 
 export default function UsersForm() {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function UsersForm() {
     const [email, setEmail] = useState<string>('');
     const [picture, setPicture] = useState<string | undefined>();
     const [roles, setRoles] = useState<Role[]>([]);
+    const [isSSO, setIsSSO] = useState<boolean>(false);
 
     const [rolesOptions, setRolesOptions] = useState<Role[]>([]);
     const [selectedRole, setSelectedRole] = useState<Role>();
@@ -58,7 +60,8 @@ export default function UsersForm() {
             name: name,
             email: email,
             picture: picture,
-            roles: roles
+            roles: roles,
+            isSSO: isSSO
         }
 
         setLoading(true);
@@ -143,12 +146,18 @@ export default function UsersForm() {
                         <Input id="user-picture" name="user-picture" value={picture} type="text"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setPicture(e.target.value)} />
                     </div>
+                    {!isSSO &&
+                        <div className="flex flex-col gap-2">
+                            <FormLabel>Password</FormLabel>
+                            <ConfirmDialog onConfirm={onUserResetPassword}
+                                description="By confirming, the user password will be reset and a new one will be sent by e-mail.">
+                                <Button type="button" variant="outline">Reset Password</Button>
+                            </ConfirmDialog>
+                        </div>
+                    }
                     <div className="flex flex-col gap-2">
-                        <FormLabel>Password</FormLabel>
-                        <ConfirmDialog onConfirm={onUserResetPassword}
-                            description="By confirming, the user password will be reset and a new one will be sent by e-mail.">
-                            <Button type="button" variant="outline">Reset Password</Button>
-                        </ConfirmDialog>
+                        <FormLabel>Single Sign-On user</FormLabel>
+                        <Checkbox onChange={() => setIsSSO(!isSSO)} />
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="flex justify-between">

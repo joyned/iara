@@ -16,7 +16,21 @@ export class LoginService {
         return await Promise.reject(response);
     }
 
-    isGoogleSSOEnabled(): Promise<boolean> {
+    async doLoginGoogleSSO(code: string) {
+        const response = await fetch(HttpService.getUrl('v1/authentication/google-sso', { code: code, redirect_uri: window.location.origin }), {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include",
+            method: 'POST',
+        });
+        if (response.status === 204) {
+            return Promise.resolve();
+        }
+        return await Promise.reject(response);
+    }
+
+    isGoogleSSOEnabled(): Promise<string> {
         return HttpService.doGet('v1/authentication/google-sso');
     }
 }

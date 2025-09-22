@@ -6,4 +6,5 @@ export interface User {
     email: string;
     picture?: string;
     roles: Role[];
+    isSSO: boolean;
 }

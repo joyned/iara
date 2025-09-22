@@ -1,10 +1,12 @@
 package com.iara.core.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iara.core.entity.*;
 import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.InvalidIaraTokenException;
 import com.iara.core.exception.InvalidJwtException;
 import com.iara.core.model.Authentication;
+import com.iara.core.proxy.GoogleProxy;
 import com.iara.core.service.ApplicationParamsService;
 import com.iara.core.service.ApplicationTokenService;
 import com.iara.core.service.AuthenticationService;
@@ -39,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final ApplicationTokenService applicationTokenService;
     private final ApplicationParamsService applicationParamsService;
+    private final GoogleProxy googleProxy;
 
     @Override
     public Authentication doLogin(String email, String password) {
@@ -60,8 +63,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Authentication doLoginSSO(String codeToken) {
-        return null;
+    public Authentication doLoginGoogleSSO(String codeToken, String redirectUri) {
+        try {
+            ApplicationParams clientIdParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID");
+            ApplicationParams clientSecretParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_SECRET");
+            String googleJwt = googleProxy.exchangeCodeToJwt(clientIdParam.getValue(), clientSecretParam.getValue(), codeToken, redirectUri);
+            String email = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class).get("email").toString();
+            Optional<User> optionalUser = userService.findByEmail(email);
+
+            if (optionalUser.isEmpty()) {
+                throw new InvalidCredentialsException("You are not authorized to use this application.");
+            } else {
+                User user = optionalUser.get();
+                Set<String> scopes = convertPoliciesIntoScopes(user);
+                return generateToken(email, scopes);
+            }
+        } catch (Exception e) {
+            throw new InvalidCredentialsException("You are not authorized to use this application.");
+        }
     }
 
     @Override
@@ -130,9 +149,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean isGoogleSSOEnabled() {
+    public String isGoogleSSOEnabled() {
         ApplicationParams applicationParams = applicationParamsService.findByKey("GOOGLE_SSO_ENABLED");
-        return Boolean.parseBoolean(applicationParams.getValue());
+        if (Boolean.parseBoolean(applicationParams.getValue())) {
+            return applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID").getValue();
+        }
+        return null;
     }
 
     protected Set<String> convertPoliciesIntoScopes(User user) {
