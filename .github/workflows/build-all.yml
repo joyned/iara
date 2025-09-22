@@ -9,10 +9,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./iara-server
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -25,7 +22,6 @@ jobs:
     
     - name: Build Backend
       run: |
-        ls -la
         cd iara-server/
         chmod +x ./gradlew
         ./gradlew build -x test
