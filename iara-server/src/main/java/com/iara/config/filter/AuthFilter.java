@@ -3,9 +3,12 @@ package com.iara.config.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iara.config.GlobalError;
 import com.iara.core.exception.BaseException;
+import com.iara.core.exception.TokenMissingException;
 import com.iara.core.service.AuthenticationService;
+import com.iara.utils.CookieUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,21 +34,19 @@ public class AuthFilter extends OncePerRequestFilter {
     @SuppressWarnings("unchecked")
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
-            String token = request.getHeader("Authorization");
-
+            String token = getTokenFromCookies(request);
             if (StringUtils.isNotBlank(token)) {
-                String jwt = token.split(" ")[1];
-                Claims claims = service.validateToken(jwt);
+                Claims claims = service.validateToken(token);
                 List<String> scopes = (List<String>) claims.get("scopes");
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 List<SimpleGrantedAuthority> simpleGrantedAuthorities = new LinkedList<>();
                 scopes.forEach(s -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(s)));
-                securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(claims.getSubject(), jwt, simpleGrantedAuthorities));
+                securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(claims.getSubject(), token, simpleGrantedAuthorities));
                 SecurityContextHolder.setContext(securityContext);
 
                 filterChain.doFilter(request, response);
-            } else if (StringUtils.isNotBlank(request.getHeader("Iara-Token"))) {
-                String iaraToken = request.getHeader("Iara-Token");
+            } else if (StringUtils.isNotBlank(request.getHeader(CookieUtils.IARA_TOKEN))) {
+                String iaraToken = request.getHeader(CookieUtils.IARA_TOKEN);
                 Map<String, Object> res = service.validateAndGetScopesFromIaraToken(iaraToken);
                 Set<String> scopes = (Set<String>) res.get("scopes");
                 String name = res.get("name").toString();
@@ -81,6 +82,20 @@ public class AuthFilter extends OncePerRequestFilter {
         response.setStatus(globalError.getStatus());
         response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(new ObjectMapper().writeValueAsString(globalError));
+    }
+
+    protected String getTokenFromCookies(HttpServletRequest request) {
+        if (Objects.isNull(request.getCookies())) {
+            throw new TokenMissingException("%s was not found.", CookieUtils.IARA_TOKEN);
+        }
+
+        Optional<Cookie> opCookie = Arrays.stream(request.getCookies()).filter(cookie -> CookieUtils.IARA_TOKEN.equals(cookie.getName())).findFirst();
+
+        if (opCookie.isEmpty()) {
+            throw new TokenMissingException("%s was not found.", CookieUtils.IARA_TOKEN);
+        }
+
+        return opCookie.get().getValue();
     }
 }
 

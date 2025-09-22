@@ -6,7 +6,8 @@ export class HttpService {
         return fetch(this.getUrl(uri, params, page, size), {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            }
+            },
+            credentials: "include"
         })
             .then(async (response) => {
                 if (response.ok) {
@@ -27,6 +28,7 @@ export class HttpService {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
             },
+            credentials: "include",
             method: 'POST',
             body: JSON.stringify(body)
         }).then(async (response) => {
@@ -49,6 +51,7 @@ export class HttpService {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
                 ...headers
             },
+            credentials: "include",
             method: 'PUT',
             body: JSON.stringify(body)
         }).then(async (response) => {
@@ -69,7 +72,8 @@ export class HttpService {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            }
+            },
+            credentials: "include"
         }).then(async (response) => {
             if (response.status === 204) {
                 return;
@@ -113,7 +117,7 @@ export class HttpService {
 
         const finalUrl = new URL(baseUrl + "/" + uri);
         finalUrl.search = search.toString();
-        
+
         return finalUrl.toString();
     }
 }

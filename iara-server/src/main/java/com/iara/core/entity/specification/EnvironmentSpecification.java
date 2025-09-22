@@ -7,9 +7,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 public class EnvironmentSpecification implements BaseNamespacedSpecification<Environment> {
@@ -37,4 +39,8 @@ public class EnvironmentSpecification implements BaseNamespacedSpecification<Env
         return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
     }
 
+    @Override
+    public Specification<Environment> hasPermission(Set<String> namespaces, Set<String> environments) {
+        return BaseNamespacedSpecification.super.hasPermission(namespaces, null);
+    }
 }

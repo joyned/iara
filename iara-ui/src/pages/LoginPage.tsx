@@ -5,7 +5,6 @@ import Logo from "../assets/logo-name-white.svg?react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { LoginService } from "../services/LoginService";
-import type { Authentication } from "../types/Authentication";
 
 export default function LoginPage() {
     const service = new LoginService();
@@ -23,8 +22,7 @@ export default function LoginPage() {
     const doLogin = (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        service.doLogin(email, password).then((res: Authentication) => {
-            localStorage.setItem('access_token', res.access_token);
+        service.doLogin(email, password).then(() => {
             navigate('/kv');
         });
     }
