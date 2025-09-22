@@ -25,6 +25,7 @@ jobs:
     
     - name: Build Backend
       run: |
+        ls -la
         cd iara-server/
         chmod +x ./gradlew
         ./gradlew build -x test
