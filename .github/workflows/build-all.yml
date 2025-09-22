@@ -7,7 +7,42 @@ env:
   IMAGE_PREFIX: joyned
 
 jobs:
-  build:
+  build-ui:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22'
+    
+    - name: Build Frontend
+      run: |
+        cd iara-ui/
+        npm ci
+        npm run build
+
+    - name: Build Docker image for UI
+      run: |
+        cd iara-ui/
+        docker build -t $REGISTRY/$IMAGE_PREFIX/iara-ui:latest -t $REGISTRY/$IMAGE_PREFIX/iara-ui:${{ github.sha }} .
+    
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Push Docker image for UI
+      run: |
+        docker push $REGISTRY/$IMAGE_PREFIX/iara-ui:latest
+        docker push $REGISTRY/$IMAGE_PREFIX/iara-ui:${{ github.sha }}
+
+  build-server:
     runs-on: ubuntu-latest
     environment: production
 
@@ -27,7 +62,7 @@ jobs:
         chmod +x ./gradlew
         ./gradlew build -x test
     
-    - name: Build Docker image for server
+    - name: Build Docker image for Server
       run: |
         cd iara-server/
         docker build -t $REGISTRY/$IMAGE_PREFIX/iara-server:latest -t $REGISTRY/$IMAGE_PREFIX/iara-server:${{ github.sha }} .
@@ -38,7 +73,7 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Push Docker image for server
+    - name: Push Docker image for Server
       run: |
         docker push $REGISTRY/$IMAGE_PREFIX/iara-server:latest
         docker push $REGISTRY/$IMAGE_PREFIX/iara-server:${{ github.sha }}
