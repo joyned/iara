@@ -10,6 +10,7 @@ import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
 import ListItem from "../../components/ListItem";
 import { Modal } from "../../components/Modal";
+import NamespaceEnvironment from "../../components/NamespaceEnvironment";
 import TextArea from "../../components/TextArea";
 import { useEnvironment } from "../../providers/EnvironmentProvider";
 import { useLoading } from "../../providers/LoadingProvider";
@@ -144,6 +145,7 @@ export default function SecretsForm() {
 
     return (
         <>
+            <NamespaceEnvironment />
             <Card title={id !== undefined ? name : 'Create secret'}>
                 <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
                     {!id &&
