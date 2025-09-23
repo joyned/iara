@@ -86,7 +86,7 @@ public class IaraConfiguration {
         User admin = new User();
         admin.setName("Administrator");
         admin.setEmail(adminEmail);
-        admin.setPassword(passwordEncoder.encode(adminPassword));
+        admin.setPassword(adminPassword);
         admin.setIsSSO(false);
         admin.setRoles(Set.of(adminRole));
         userService.persist(admin);
