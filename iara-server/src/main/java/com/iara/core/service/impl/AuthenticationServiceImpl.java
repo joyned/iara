@@ -66,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public Authentication doLoginGoogleSSO(String codeToken, String redirectUri) {
         try {
             ApplicationParams clientIdParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID");
-            ApplicationParams clientSecretParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_SECRET");
+            ApplicationParams clientSecretParam = applicationParamsService.findByKeyInternal("GOOGLE_SSO_CLIENT_SECRET");
             String googleJwt = googleProxy.exchangeCodeToJwt(clientIdParam.getValue(), clientSecretParam.getValue(), codeToken, redirectUri);
             String email = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class).get("email").toString();
             Optional<User> optionalUser = userService.findByEmail(email);

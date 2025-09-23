@@ -1,9 +1,6 @@
 package com.iara.core.service;
 
-import com.iara.core.entity.Environment;
-import com.iara.core.entity.Kv;
-import com.iara.core.entity.Namespace;
-import com.iara.core.entity.Policy;
+import com.iara.core.entity.*;
 import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -21,6 +18,8 @@ public interface PolicyExecutorService {
 
     boolean hasWritePermissionInKV(Kv kv);
 
+    boolean hasWritePermissionInSecret(Secret secret);
+
     boolean isAllNamespacesAndEnvironments(String scope);
 
     String getNamespaceFromScope(String scope);
@@ -28,4 +27,6 @@ public interface PolicyExecutorService {
     String getEnvironmentFromScope(String scope);
 
     <T> Specification<T> buildNamespacedSpec(Specification<T> root);
+
+    <T> Specification<T> buildNamespacedSpecForSecrets(Specification<T> root);
 }

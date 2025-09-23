@@ -6,4 +6,6 @@ public interface ApplicationParamsService extends BaseService<ApplicationParams>
 
     ApplicationParams findByKey(String key);
 
+    ApplicationParams findByKeyInternal(String key);
+
 }

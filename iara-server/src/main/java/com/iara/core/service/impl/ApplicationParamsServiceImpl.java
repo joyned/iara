@@ -34,6 +34,11 @@ public class ApplicationParamsServiceImpl implements ApplicationParamsService {
     }
 
     @Override
+    public ApplicationParams findByKeyInternal(String key) {
+        return repository.findByKey(key).orElse(null);
+    }
+
+    @Override
     public Page<ApplicationParams> search(Specification<ApplicationParams> spec, Pageable pageable) {
         throw new UnsupportedOperationException();
     }

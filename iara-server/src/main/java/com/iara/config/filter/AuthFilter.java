@@ -86,16 +86,13 @@ public class AuthFilter extends OncePerRequestFilter {
 
     protected String getTokenFromCookies(HttpServletRequest request) {
         if (Objects.isNull(request.getCookies())) {
-            throw new TokenMissingException("%s was not found.", CookieUtils.IARA_TOKEN);
+            return null;
         }
 
         Optional<Cookie> opCookie = Arrays.stream(request.getCookies()).filter(cookie -> CookieUtils.IARA_TOKEN.equals(cookie.getName())).findFirst();
 
-        if (opCookie.isEmpty()) {
-            throw new TokenMissingException("%s was not found.", CookieUtils.IARA_TOKEN);
-        }
+        return opCookie.map(Cookie::getValue).orElse(null);
 
-        return opCookie.get().getValue();
     }
 }
 

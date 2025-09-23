@@ -6,6 +6,7 @@ import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.entity.specification.KvSpecification;
 import com.iara.core.exception.DuplicatedKvException;
 import com.iara.core.exception.KeyValueNotFoundException;
+import com.iara.core.exception.OperationNotPermittedException;
 import com.iara.core.exception.RequiredParameterException;
 import com.iara.core.repository.KeyValueHistoryRepository;
 import com.iara.core.repository.KeyValueRepository;
@@ -42,6 +43,10 @@ public class KeyValueServiceImpl implements KeyValueService {
     @Override
     @Transactional
     public Kv persist(Kv entity) {
+        if (!policyExecutorService.hasWritePermissionInKV(entity)) {
+            throw new OperationNotPermittedException("You are not authorized to perform this action.");
+        }
+
         if (StringUtils.isBlank(entity.getKey())) {
             throw new RequiredParameterException("KV key is required to save.");
         }

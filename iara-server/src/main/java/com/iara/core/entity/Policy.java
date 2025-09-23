@@ -26,7 +26,7 @@ public class Policy implements Serializable {
     @Column
     private String description;
 
-    @Column
+    @Column(columnDefinition = "varchar")
     private String rule;
 
 }

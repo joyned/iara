@@ -5,6 +5,7 @@ import com.iara.core.entity.SecretVersion;
 import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.exception.DestroyedSecretException;
 import com.iara.core.exception.DuplicatedSecretException;
+import com.iara.core.exception.OperationNotPermittedException;
 import com.iara.core.exception.SecretNotFoundException;
 import com.iara.core.repository.SecretRepository;
 import com.iara.core.repository.SecretVersionRepository;
@@ -32,12 +33,16 @@ public class SecretServiceImpl implements SecretService {
 
     @Override
     public Page<Secret> search(Specification<Secret> spec, Pageable pageable) {
-        spec = policyExecutorService.buildNamespacedSpec(spec);
+        spec = policyExecutorService.buildNamespacedSpecForSecrets(spec);
         return repository.findAll(spec, pageable);
     }
 
     @Override
     public Secret persist(Secret entity) {
+        if (!policyExecutorService.hasWritePermissionInSecret(entity)) {
+            throw new OperationNotPermittedException("You are not authorized to perform this action.");
+        }
+
         if (StringUtils.isBlank(entity.getId())) {
             Optional<Secret> existed = repository.findByName(entity.getName());
             if (existed.isPresent()) {
@@ -54,13 +59,28 @@ public class SecretServiceImpl implements SecretService {
 
     @Override
     public void delete(String id) {
-        repository.deleteById(id);
+        Optional<Secret> optionalSecret = repository.findById(id);
+
+        if (optionalSecret.isPresent()) {
+            Secret entity = optionalSecret.get();
+
+            if (!policyExecutorService.hasWritePermissionInSecret(entity)) {
+                throw new OperationNotPermittedException("You are not authorized to perform this action.");
+            }
+
+            repository.deleteById(id);
+        }
+
     }
 
     @Override
     public String getSecretVersionValue(String secretId, String secretVersionId) {
         Optional<Secret> optionalSecret = repository.findById(secretId);
         if (optionalSecret.isPresent()) {
+            if (!policyExecutorService.hasWritePermissionInSecret(optionalSecret.get())) {
+                throw new OperationNotPermittedException("You are not authorized to perform this action.");
+            }
+
             SecretVersion version = secretVersionRepository.findByIdAndSecret(secretVersionId, optionalSecret.get());
             if (version.getDestroyed()) {
                 throw new DestroyedSecretException("Secret Version #%s is destroyed.", String.valueOf(version.getVersion()));
@@ -77,6 +97,9 @@ public class SecretServiceImpl implements SecretService {
         Optional<Secret> optionalSecret = repository.findById(secretId);
 
         if (optionalSecret.isPresent()) {
+            if (!policyExecutorService.hasWritePermissionInSecret(optionalSecret.get())) {
+                throw new OperationNotPermittedException("You are not authorized to perform this action.");
+            }
             entity.setSecret(optionalSecret.get());
             SecretVersion newVersion = secretVersionRepository.save(entity);
             if (Objects.nonNull(disablePastVersion) && disablePastVersion) {
@@ -101,6 +124,9 @@ public class SecretServiceImpl implements SecretService {
         Optional<Secret> optionalSecret = repository.findById(secretId);
         if (optionalSecret.isPresent()) {
             Secret secret = optionalSecret.get();
+            if (!policyExecutorService.hasWritePermissionInSecret(secret)) {
+                throw new OperationNotPermittedException("You are not authorized to perform this action.");
+            }
             SecretVersion version = secretVersionRepository.findByVersionAndSecret(secretVersion, secret);
             version.setDisabled(true);
             secretVersionRepository.save(version);
@@ -114,6 +140,9 @@ public class SecretServiceImpl implements SecretService {
         Optional<Secret> optionalSecret = repository.findById(secretId);
         if (optionalSecret.isPresent()) {
             Secret secret = optionalSecret.get();
+            if (!policyExecutorService.hasWritePermissionInSecret(secret)) {
+                throw new OperationNotPermittedException("You are not authorized to perform this action.");
+            }
             SecretVersion version = secretVersionRepository.findByVersionAndSecret(secretVersion, secret);
             version.setDisabled(true);
             version.setDestroyed(true);

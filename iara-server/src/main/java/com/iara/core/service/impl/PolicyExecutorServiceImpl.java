@@ -3,6 +3,7 @@ package com.iara.core.service.impl;
 import com.iara.core.entity.Environment;
 import com.iara.core.entity.Kv;
 import com.iara.core.entity.Namespace;
+import com.iara.core.entity.Secret;
 import com.iara.core.entity.specification.BaseNamespacedSpecification;
 import com.iara.core.exception.InvalidPolicyException;
 import com.iara.core.service.PolicyExecutorService;
@@ -89,6 +90,26 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
     }
 
     @Override
+    public boolean hasWritePermissionInSecret(Secret secret) {
+        List<String> scopes = getScopeList();
+        for (String scope : scopes) {
+            if (isAllNamespacesAndEnvironments(scope)) {
+                return true;
+            }
+
+            boolean hasPermNamespaceAndEnv =
+                    hasPermissionAtEnvironment(scope, secret.getEnvironment()) && hasPermissionAtNamespace(scope, secret.getNamespace());
+            boolean hasPermInKv = scope.split(":")[1].equals("KV");
+            boolean isWrite = "WRITE".equals(scope.split(":")[scope.split(":").length - 1]);
+
+            if (hasPermNamespaceAndEnv && hasPermInKv && isWrite) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean isAllNamespacesAndEnvironments(String scope) {
         return scope.startsWith("@*");
     }
@@ -137,6 +158,31 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
             }
 
             if (StringUtils.isNotBlank(env) && !env.startsWith("@*")) {
+                environments.add(env);
+            }
+        }
+        return root.and(((BaseNamespacedSpecification<T>) root).hasPermission(namespaces, environments));
+    }
+
+    @Override
+    public <T> Specification<T> buildNamespacedSpecForSecrets(Specification<T> root) {
+        if (Objects.isNull(root)) {
+            return null;
+        }
+
+        Set<String> namespaces = new LinkedHashSet<>();
+        Set<String> environments = new LinkedHashSet<>();
+        List<String> scopes = getScopeList();
+
+        for (String scope : scopes) {
+            boolean isSecret = "SECRET".equals(scope.split(":")[1]);
+            String namespace = getNamespaceFromScope(scope);
+            String env = getEnvironmentFromScope(scope);
+            if (StringUtils.isNotBlank(namespace) && !namespace.startsWith("@*") && isSecret) {
+                namespaces.add(namespace);
+            }
+
+            if (StringUtils.isNotBlank(env) && !env.startsWith("@*") && isSecret) {
                 environments.add(env);
             }
         }
