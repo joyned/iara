@@ -21,7 +21,16 @@ public class ApplicationParamsServiceImpl implements ApplicationParamsService {
     @Override
     public ApplicationParams findByKey(String key) {
         Optional<ApplicationParams> optionalApplicationParams = repository.findByKey(key);
-        return optionalApplicationParams.orElse(null);
+        if (optionalApplicationParams.isEmpty()) {
+            return null;
+        }
+
+        ApplicationParams applicationParams = optionalApplicationParams.get();
+        if (applicationParams.getSecure()) {
+            applicationParams.setValue(null);
+        }
+
+        return applicationParams;
     }
 
     @Override
@@ -31,7 +40,11 @@ public class ApplicationParamsServiceImpl implements ApplicationParamsService {
 
     @Override
     public ApplicationParams persist(ApplicationParams entity) {
-        return repository.save(entity);
+        ApplicationParams persisted = repository.save(entity);
+        if (persisted.getSecure()) {
+            persisted.setValue(null);
+        }
+        return persisted;
     }
 
     @Override
