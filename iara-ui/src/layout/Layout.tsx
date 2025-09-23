@@ -14,6 +14,7 @@ import { UserService } from "../services/UserService";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
 import { hasAccessToBatch } from "../utils/PermissionUtils";
+import Footer from "../components/Footer";
 
 export default function Layout() {
     const userService = new UserService();
@@ -89,6 +90,8 @@ export default function Layout() {
                 <NamespaceEnvironment />
                 <Outlet />
             </div>
+
+            <Footer />
 
             {isMenuOpen &&
                 <div className="fixed top-16 w-[300px] h-full bg-primary-color z-50 p-5 shadow"
