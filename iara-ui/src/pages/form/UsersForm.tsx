@@ -47,6 +47,7 @@ export default function UsersForm() {
                 setEmail(res.content[0].email);
                 setPicture(res.content[0].picture)
                 setRoles(res.content[0].roles);
+                setIsSSO(res.content[0].isSSO)
             }).finally(() => setLoading(false));
         }
     }, [params.id, setLoading]);
@@ -157,7 +158,7 @@ export default function UsersForm() {
                 }
                 <div className="flex flex-col gap-2">
                     <FormLabel>Single Sign-On user</FormLabel>
-                    <Checkbox onChange={() => setIsSSO(!isSSO)} />
+                    <Checkbox value={isSSO} onChange={() => setIsSSO(!isSSO)} />
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="flex justify-between">

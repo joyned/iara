@@ -58,7 +58,7 @@ export default function NamespaceEnvironment() {
         if (!namespace) {
             onEnvModalOpen();
         }
-    })
+    }, [])
 
     return (
         <div className="mb-5">
