@@ -2,12 +2,12 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
+import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
 import ListItem from "../../components/ListItem";
 import { Modal } from "../../components/Modal";
-import NamespaceEnvironment from "../../components/NamespaceEnvironment";
+import Panel from "../../components/Panel";
 import YamlEditor from "../../components/YamlEditor";
 import { useEnvironment } from "../../providers/EnvironmentProvider";
 import { useLoading } from "../../providers/LoadingProvider";
@@ -96,53 +96,54 @@ export default function KeyValueForm() {
     }
 
     return (
-        <div className="flex flex-col gap-6">
-            <NamespaceEnvironment />
-            <Card title={!id ? 'Create new K/V' : key}>
-                <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-                    {isNew &&
-                        <div className="flex flex-col">
-                            <Input name="key" type="text" placeholder="Key"
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setKey(e.target.value)} />
-                        </div>
-                    }
-                    <div className="flex flex-col">
-                        <label htmlFor="">Value</label>
-                        <YamlEditor rows={10} resize={false} value={value}
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)} />
-                    </div>
-                    <div className="flex justify-between gap-4">
-                        <div className="flex gap-4">
-                            <Button>Save</Button>
-                            <Button variant="outline" type="button" onClick={() => navigate('/kv')}>Cancel</Button>
-                        </div>
-                        <ConfirmDialog onConfirm={onDelete}>
-                            <Button variant="danger" type="button">Delete</Button>
-                        </ConfirmDialog>
-                    </div>
-                </form>
-            </Card>
-            <Card title="History" closeable>
-                {history.length > 0 && history.map((h: KeyValueHistory) => {
-                    return <>
-                        <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} key={uuid()} />
-                    </>
-                })}
-                {history.length === 0 && <span>No history found.</span>}
-            </Card>
-            <Modal ref={modalRef} title={`History - ${new Date(selectedHistory?.updatedAt || '').toLocaleString()}`}
-                saveText="Close" onSave={(e: ChangeEvent<HTMLFormElement>) => {
-                    e.preventDefault();
-                    modalRef.current.setOpen(false);
-                }}>
-                <div className="flex flex-col gap-2">
-                    <YamlEditor rows={10} resize={false} value={selectedHistory?.value} disabled />
-                    <div className="flex gap-2">
-                        <span className="font-semibold">Author:</span>
-                        <span>{selectedHistory?.user}</span>
+        <div className="flex flex-col gap-5">
+            <h1>K/V Entry</h1>
+
+            <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+                <div className="flex flex-col">
+                    <FormLabel htmlFor="kv-key" required>Name</FormLabel>
+                    <Input name="kv-key" id="kv-key" type="text" placeholder="Key" value={key}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setKey(e.target.value)} disabled={!isNew} />
+                </div>
+                <div className="flex flex-col">
+                    <FormLabel htmlFor="kv-value" required>Value</FormLabel>
+                    <YamlEditor rows={10} resize={false} value={value} id="kv-value" name="kv-value"
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)} />
+                </div>
+                <div className="flex justify-between gap-4">
+                    <div className="flex gap-4">
+                        <Button className="w-[150px]">Save</Button>
+                        {id &&
+                            <ConfirmDialog onConfirm={onDelete}>
+                                <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
+                            </ConfirmDialog>
+                        }
                     </div>
                 </div>
-            </Modal>
+            </form>
+
+            {history.length > 0 &&
+                <Panel title="History" startClosed>
+                    {history.map((h: KeyValueHistory) => {
+                        return <>
+                            <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} key={uuid()} />
+                        </>
+                    })}
+                    <Modal ref={modalRef} title={`History - ${new Date(selectedHistory?.updatedAt || '').toLocaleString()}`}
+                        saveText="Close" onSave={(e: ChangeEvent<HTMLFormElement>) => {
+                            e.preventDefault();
+                            modalRef.current.setOpen(false);
+                        }}>
+                        <div className="flex flex-col gap-2">
+                            <YamlEditor rows={10} resize={false} value={selectedHistory?.value} disabled />
+                            <div className="flex gap-2">
+                                <span className="font-semibold">Author:</span>
+                                <span>{selectedHistory?.user}</span>
+                            </div>
+                        </div>
+                    </Modal>
+                </Panel>
+            }
         </div>
     )
 }

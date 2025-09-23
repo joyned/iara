@@ -23,6 +23,7 @@ export default function UserSettingsPage() {
 
     const [name, setName] = useState<string>();
     const [email, setEmail] = useState<string>();
+    const [isSSO, setIsSSO] = useState<boolean>(false);
 
     const [tokens, setTokens] = useState<ApplicationToken[]>([]);
 
@@ -43,6 +44,7 @@ export default function UserSettingsPage() {
         userService.me().then((res: User) => {
             setName(res.name);
             setEmail(res.email);
+            setIsSSO(res.isSSO);
         }).finally(() => setLoading(false));
     }, [setLoading])
 
@@ -143,28 +145,30 @@ export default function UserSettingsPage() {
                     </div>
                 </>
             </Card>
-            <Card title="Password" closeable>
-                <form className="flex flex-col gap-2" onSubmit={changePassword}>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="current-password" required>Current password</FormLabel>
-                        <Input type="password" name="current-password" id="current-password"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="new-password" required>New password</FormLabel>
-                        <Input type="password" name="new-password" id="new-password"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="repeat-password" required>Repeat new password</FormLabel>
-                        <Input type="password" name="repeat-password" id="repeat-password"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPasswordRepeat(e.target.value)} />
-                    </div>
-                    <div className="flex gap-2">
-                        <Button type="submit">Change</Button>
-                    </div>
-                </form>
-            </Card>
+            {!isSSO &&
+                <Card title="Password" closeable>
+                    <form className="flex flex-col gap-2" onSubmit={changePassword}>
+                        <div className="flex flex-col gap-2">
+                            <FormLabel htmlFor="current-password" required>Current password</FormLabel>
+                            <Input type="password" name="current-password" id="current-password"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)} />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <FormLabel htmlFor="new-password" required>New password</FormLabel>
+                            <Input type="password" name="new-password" id="new-password"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)} />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <FormLabel htmlFor="repeat-password" required>Repeat new password</FormLabel>
+                            <Input type="password" name="repeat-password" id="repeat-password"
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPasswordRepeat(e.target.value)} />
+                        </div>
+                        <div className="flex gap-2">
+                            <Button type="submit">Change</Button>
+                        </div>
+                    </form>
+                </Card>
+            }
             <Modal title="Create token" ref={newTokenModalRef} saveText="Create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">

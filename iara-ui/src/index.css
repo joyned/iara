@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-    --primary-color: var(--color-stone-800);
-    --primary-darker-color: var(--color-stone-900);
+    --primary-color: #1E1F26;
+    --primary-darker-color: #16161b;
+    --primary-lighter-color: #474758;
 
     --text-title: #434343;
 }
@@ -21,6 +22,10 @@
 
 .hover\:bg-primary-darker-color:hover {
     background-color: var(--primary-darker-color);
+}
+
+.hover\:bg-primary-lighter-color:hover {
+    background-color: var(--primary-lighter-color);
 }
 
 .border-primary-color {

@@ -3,7 +3,6 @@ import { BsInfoCircle } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
@@ -72,46 +71,45 @@ export default function PolicyForm() {
     }
 
     return (
-        <>
-            <Card title={id ? name : 'Create policy'}>
-                <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="policy-name" required>Name</FormLabel>
-                        <Input id="policy-name" name="policy-name" type="text" value={name}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+        <div className="flex flex-col gap-5">
+            <h1>Policy</h1>
+            <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="policy-name" required>Name</FormLabel>
+                    <Input id="policy-name" name="policy-name" type="text" value={name}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="policy-description">Description</FormLabel>
+                    <TextArea id="policy-description" name="policy-description" value={description}
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                        rows={5} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="policy-description" required>Rule</FormLabel>
+                    <RuleTextArea id="policy-description" name="policy-description" value={rule}
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setRule(e.target.value)}
+                        rows={5} />
+                    <div className="flex gap-2 items-center w-fit cursor-pointer" onClick={() => modalRef.current.setOpen(true)}>
+                        <BsInfoCircle />
+                        <span>How to write?</span>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="policy-description">Description</FormLabel>
-                        <TextArea id="policy-description" name="policy-description" value={description}
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-                            rows={5} />
+                </div>
+                <div className="flex justify-between">
+                    <div className="flex gap-2">
+                        <Button>Save</Button>
+                        <Button type="button" variant="outline" onClick={() => navigate('/admin/policies')}>Cancel</Button>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="policy-description" required>Rule</FormLabel>
-                        <RuleTextArea id="policy-description" name="policy-description" value={rule}
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setRule(e.target.value)}
-                            rows={5} />
-                        <div className="flex gap-2 items-center w-fit cursor-pointer" onClick={() => modalRef.current.setOpen(true)}>
-                            <BsInfoCircle />
-                            <span>How to write?</span>
-                        </div>
+                    <div className="flex">
+                        <ConfirmDialog onConfirm={onDeletePolicy}>
+                            <Button type="button" variant="danger">Delete policy</Button>
+                        </ConfirmDialog>
                     </div>
-                    <div className="flex justify-between">
-                        <div className="flex gap-2">
-                            <Button>Save</Button>
-                            <Button type="button" variant="outline" onClick={() => navigate('/admin/policies')}>Cancel</Button>
-                        </div>
-                        <div className="flex">
-                            <ConfirmDialog onConfirm={onDeletePolicy}>
-                                <Button type="button" variant="danger">Delete policy</Button>
-                            </ConfirmDialog>
-                        </div>
-                    </div>
-                </form>
-                <Modal title="How to Write Access Control Policies" ref={modalRef} hasSave={false}>
-                    <PolicyRulesInfo />
-                </Modal>
-            </Card>
-        </>
+                </div>
+            </form>
+            <Modal title="How to Write Access Control Policies" ref={modalRef} hasSave={false}>
+                <PolicyRulesInfo />
+            </Modal>
+        </div>
     )
 }

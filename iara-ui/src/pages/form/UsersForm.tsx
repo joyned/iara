@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
+import Checkbox from "../../components/Checkbox";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
@@ -16,7 +16,6 @@ import type { Page } from "../../types/Page";
 import type { Role } from "../../types/Role";
 import type { User } from "../../types/User";
 import { uuid } from "../../utils/UUID";
-import Checkbox from "../../components/Checkbox";
 
 export default function UsersForm() {
     const navigate = useNavigate();
@@ -128,66 +127,66 @@ export default function UsersForm() {
     }
 
     return (
-        <>
-            <Card title={id !== 'new' ? name : 'Create user'}>
-                <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+        <div className="flex flex-col gap-5">
+
+            <h1>User</h1>
+            <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="user-name" required>Name </FormLabel>
+                    <Input id="user-name" name="user-name" type="text" value={name}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="user-email" required>Email </FormLabel>
+                    <Input id="user-email" name="user-email" value={email} type="email"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="user-picture" >Picture</FormLabel>
+                    <Input id="user-picture" name="user-picture" value={picture} type="text"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setPicture(e.target.value)} />
+                </div>
+                {!isSSO &&
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="user-name" required>Name </FormLabel>
-                        <Input id="user-name" name="user-name" type="text" value={name}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="user-email" required>Email </FormLabel>
-                        <Input id="user-email" name="user-email" value={email} type="email"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="user-picture" >Picture</FormLabel>
-                        <Input id="user-picture" name="user-picture" value={picture} type="text"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setPicture(e.target.value)} />
-                    </div>
-                    {!isSSO &&
-                        <div className="flex flex-col gap-2">
-                            <FormLabel>Password</FormLabel>
-                            <ConfirmDialog onConfirm={onUserResetPassword}
-                                description="By confirming, the user password will be reset and a new one will be sent by e-mail.">
-                                <Button type="button" variant="outline">Reset Password</Button>
-                            </ConfirmDialog>
-                        </div>
-                    }
-                    <div className="flex flex-col gap-2">
-                        <FormLabel>Single Sign-On user</FormLabel>
-                        <Checkbox onChange={() => setIsSSO(!isSSO)} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <div className="flex justify-between">
-                            <FormLabel required>Roles</FormLabel>
-                            <Button type="button" onClick={onAddRoleModal}>Add role</Button>
-                        </div>
-                        {roles && roles.map((role: Role) => {
-                            return (
-                                <ListItem name={role.name} key={uuid()} onDelete={() => onDeleteRole(role)}></ListItem>
-                            )
-                        })}
-                    </div>
-                    <div className="flex justify-between">
-                        <div className="flex gap-2">
-                            <Button type="submit">Save</Button>
-                            <Button type="button" variant="outline" onClick={() => navigate('/admin/users')}>Cancel</Button>
-                        </div>
-                        <ConfirmDialog onConfirm={onDeleteUser}>
-                            <Button variant="danger">Delete User</Button>
+                        <FormLabel>Password</FormLabel>
+                        <ConfirmDialog onConfirm={onUserResetPassword}
+                            description="By confirming, the user password will be reset and a new one will be sent by e-mail.">
+                            <Button type="button" variant="outline">Reset Password</Button>
                         </ConfirmDialog>
                     </div>
-                </form>
-                <Modal ref={addRoleModal} title="Add role" saveText="Add" onSave={onAddNewRole}>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="role-select" required>Roles</FormLabel>
-                        <Select options={rolesOptions}
-                            onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedRole(JSON.parse(e.target.value))} />
+                }
+                <div className="flex flex-col gap-2">
+                    <FormLabel>Single Sign-On user</FormLabel>
+                    <Checkbox onChange={() => setIsSSO(!isSSO)} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                        <FormLabel required>Roles</FormLabel>
+                        <Button type="button" onClick={onAddRoleModal}>Add role</Button>
                     </div>
-                </Modal>
-            </Card>
-        </>
+                    {roles && roles.map((role: Role) => {
+                        return (
+                            <ListItem name={role.name} key={uuid()} onDelete={() => onDeleteRole(role)}></ListItem>
+                        )
+                    })}
+                </div>
+                <div className="flex justify-between">
+                    <div className="flex gap-2">
+                        <Button type="submit">Save</Button>
+                        <Button type="button" variant="outline" onClick={() => navigate('/admin/users')}>Cancel</Button>
+                    </div>
+                    <ConfirmDialog onConfirm={onDeleteUser}>
+                        <Button variant="danger">Delete User</Button>
+                    </ConfirmDialog>
+                </div>
+            </form>
+            <Modal ref={addRoleModal} title="Add role" saveText="Add" onSave={onAddNewRole}>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="role-select" required>Roles</FormLabel>
+                    <Select options={rolesOptions}
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedRole(JSON.parse(e.target.value))} />
+                </div>
+            </Modal>
+        </div>
     )
 }

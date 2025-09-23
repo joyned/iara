@@ -19,7 +19,7 @@ export default function Button(props: Props) {
         }
     }
 
-    const baseClasses = 'rounded-sm p-2 cursor-pointer transition-colors duration-200';
+    const baseClasses = 'rounded-lg p-2 min-w-[150px] cursor-pointer transition-colors duration-200';
     const variantClasses = getVariant(variant);
 
     const combinedClasses = `${baseClasses} ${variantClasses} ${className || ''}`

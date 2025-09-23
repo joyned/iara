@@ -39,12 +39,13 @@ export default function YamlEditor(props: Props) {
 
     return (
         <>
-            <div className="relative w-full max-w-4xl">
+            <div className="relative w-full">
                 <div className="relative border border-gray-100 rounded font-monaco text-sm">
                     <textarea id={uuid()}
                         ref={textareaRef}
                         value={props.value}
-                        className="relative w-full h-[300px] p-2.5 font-monaco border-none bg-transparent text-transparent resize-none z-20 whitespace-pre-wrap wrap-break-word"
+                        className="rounded relative w-full h-[300px] p-2.5 font-monaco border-none bg-transparent text-transparent resize-none z-20 
+                        whitespace-pre-wrap wrap-break-word"
                         spellCheck="false"
                         onChange={onWrite}
                         onScroll={handleScroll}
@@ -56,7 +57,7 @@ export default function YamlEditor(props: Props) {
                         }}
                     />
                     <pre ref={preRef}
-                        className="absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-stone-900 text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
+                        className="rounded absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-stone-900 text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
                         style={{
                             fontFamily: 'monospace',
                             fontSize: '14px',

@@ -1,20 +1,18 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import Card from "../components/Card";
 import Checkbox from "../components/Checkbox";
 import FormLabel from "../components/FormLabel";
 import Input from "../components/Input";
-import ListItem from "../components/ListItem";
 import { Modal } from "../components/Modal";
 import Select from "../components/Select";
+import TableList from "../components/TableList";
 import { useLoading } from "../providers/LoadingProvider";
 import { ApplicationTokenService } from "../services/ApplicationTokenService";
 import { PolicyService } from "../services/PolicyService";
 import type { ApplicationToken } from "../types/ApplicationToken";
 import type { Page } from "../types/Page";
 import type { Policy } from "../types/Policy";
-import { uuid } from "../utils/UUID";
 
 export default function ApplicationPageToken() {
     const service = new ApplicationTokenService();
@@ -22,7 +20,7 @@ export default function ApplicationPageToken() {
 
     const { setLoading } = useLoading();
 
-    const [tokens, setTokens] = useState<ApplicationToken[]>();
+    const [tokens, setTokens] = useState<ApplicationToken[]>([]);
 
     const [name, setName] = useState<string>('');
     const [expiresAt, setExpiresAt] = useState<Date | undefined>();
@@ -114,18 +112,9 @@ export default function ApplicationPageToken() {
 
     return (
         <>
-            <Card title="Tokens" subtitle="Manage your Tokens.">
-                <>
-                    {tokens && tokens.map((token: ApplicationToken) => {
-                        return (
-                            <ListItem name={token.name} onDelete={() => token.id && onDelete(token.id)} key={uuid()}></ListItem>
-                        )
-                    })}
-                    <div className="flex mt-5">
-                        <Button type="button" onClick={onCreateClick}>Create</Button>
-                    </div>
-                </>
-            </Card>
+            <TableList title="Tokens" data={tokens} dataLabel="name"
+                onCreate={() => onCreateClick()}
+                onDelete={(id: string) => onDelete(id)} />
             <Modal title="Create token" ref={modalRef} saveText="Create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">

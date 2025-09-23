@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import Button from "../components/Button";
-import Card from "../components/Card";
-import ListItem from "../components/ListItem";
+import TableList from "../components/TableList";
 import { useLoading } from "../providers/LoadingProvider";
 import { UserService } from "../services/UserService";
 import type { Page } from "../types/Page";
 import type { User } from "../types/User";
-import { uuid } from "../utils/UUID";
 
 export default function UsersPage() {
     const navigate = useNavigate();
@@ -26,16 +23,9 @@ export default function UsersPage() {
 
     return (
         <>
-            <Card title="Users">
-                {users.length > 0 && users.map((user: User) => {
-                    return (
-                        <ListItem name={user.name} onClick={() => navigate(`/admin/users/${user.id}`)} key={uuid()} />
-                    )
-                })}
-                <div className="flex mt-5">
-                    <Button onClick={() => navigate(`/admin/users/new`)}>Create</Button>
-                </div>
-            </Card>
+            <TableList title="Roles" data={users} dataLabel="name"
+                onCreate={() => navigate(`/admin/users/new`)}
+                onEdit={(id: string) => navigate(`/admin/users/${id}`)} />
         </>
     )
 }

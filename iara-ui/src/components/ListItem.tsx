@@ -13,8 +13,8 @@ interface Props {
 
 export default function ListItem(props: Props) {
     return (
-        <div className="flex justify-between items-center border-b border-b-gray-200 cursor-pointer hover:bg-gray-100">
-            <span className="w-full flex items-center gap-4 p-4" onClick={props.onClick}>
+        <div className="flex justify-between items-center border-b-4 border-b-gray-200 cursor-pointer hover:bg-gray-100">
+            <span className="w-full flex items-center gap-4 p-4 font-bold" onClick={props.onClick}>
                 {props.icon && props.icon}
                 {props.name}
             </span>

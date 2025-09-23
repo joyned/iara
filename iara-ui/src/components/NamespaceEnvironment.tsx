@@ -1,5 +1,4 @@
-import { useRef, useState, type ChangeEvent } from "react";
-import { IoArrowForward } from "react-icons/io5";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useEnvironment } from "../providers/EnvironmentProvider";
 import { useNamespace } from "../providers/NamespaceProvider";
 import { EnvironmentService } from "../services/EnvironmentService";
@@ -55,22 +54,30 @@ export default function NamespaceEnvironment() {
         setEnvironment(JSON.parse('{}'))
     }
 
+    useEffect(() => {
+        if (!namespace) {
+            onEnvModalOpen();
+        }
+    })
+
     return (
         <div className="mb-5">
             {(namespace && JSON.stringify(environment) !== '{}') && (
-                <div className="w-fit flex items-center gap-1 bg-primary-color p-2 rounded text-white cursor-pointer"
-                    onClick={() => onEnvModalOpen()}>
-                    <span className="font-semibold">{namespace.name}</span>
-                    <IoArrowForward />
-                    <span className="font-semibold">{environment?.name}</span>
-                </div>
+                <>
+                    <div className="w-fit flex items-center gap-1 bg-primary-color rounded-lg text-white cursor-pointer"
+                        onClick={() => onEnvModalOpen()}>
+                        <span className="font-semibold p-3 pl-7 pr-7">{namespace.name}</span>
+                        <span className="text-lg">|</span>
+                        <span className="font-semibold p-3 pl-7 pr-7">{environment?.name}</span>
+                    </div>
+                </>
             )}
             {JSON.stringify(environment) === '{}' && (
-                <span className="w-fit flex items-center gap-1 bg-red-500 p-2 rounded text-white">
+                <span className="w-fit flex items-center gap-1 bg-red-500 p-2 rounded text-white cursor-pointer" onClick={() => onEnvModalOpen()}>
                     Please, select an Environment
                 </span>
             )}
-            <Modal title="Select your Environment" ref={envModalRef} onSave={beforeSaveModal} >
+            <Modal title="Select your Environment" ref={envModalRef} onSave={beforeSaveModal} saveText="Apply">
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-1">
                         <span className="font-medium">Namespace:</span>
