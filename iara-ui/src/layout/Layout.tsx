@@ -6,7 +6,9 @@ import { MdOutlineGeneratingTokens, MdOutlinePolicy } from "react-icons/md";
 import { VscSymbolNamespace } from "react-icons/vsc";
 import { Outlet, useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
+import LogoWhite from '../assets/logo-name-white.svg?react';
 import Nobody from '../assets/nobody.svg?react';
+import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 import NamespaceEnvironment from "../components/NamespaceEnvironment";
 import { useLoading } from "../providers/LoadingProvider";
@@ -14,7 +16,6 @@ import { UserService } from "../services/UserService";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
 import { hasAccessToBatch } from "../utils/PermissionUtils";
-import Footer from "../components/Footer";
 
 export default function Layout() {
     const userService = new UserService();
@@ -74,10 +75,7 @@ export default function Layout() {
             <div className="w-full min-h-16 max-h-16 bg-primary-color">
                 <div className="flex justify-between items-center p-2 pl-5 pr-5">
                     <IoMdMenu className="text-2xl text-white cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)} />
-                    <h1 style={{ color: 'white', fontSize: '32px', margin: '0' }} className="cursor-pointer"
-                        onClick={() => navigate('/kv')}>
-                        IARA CM
-                    </h1>
+                    <LogoWhite className='h-[50px] cursor-pointer' onClick={() => navigate('/kv')} />
                     <div className="flex gap-3 text-white">
                         {name}
                         <IoIosSettings className='text-2xl text-white cursor-pointer' onClick={() => navigate('/user/settings')} />

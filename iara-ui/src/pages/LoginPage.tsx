@@ -1,7 +1,8 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { useNavigate } from "react-router";
-import { LoginService } from "../services/LoginService";
+import LogoWhite from '../assets/logo-name-white.svg?react';
 import Footer from "../components/Footer";
+import { LoginService } from "../services/LoginService";
 
 export default function LoginPage() {
     const service = new LoginService();
@@ -62,9 +63,7 @@ export default function LoginPage() {
     return (
         <div className="w-screen h-screen flex flex-col">
             <div className="flex justify-center items-center w-full min-h-16 max-h-16 bg-primary-color">
-                <h1 style={{ color: 'white', fontSize: '32px', margin: '0' }}>
-                    IARA CM
-                </h1>
+                <LogoWhite className='h-[50px] cursor-pointer' onClick={() => navigate('/kv')} />
             </div>
             <div className="flex justify-center items-center w-full h-full">
                 <div className="flex flex-col gap-10 border-2 border-stone-200 p-5">
