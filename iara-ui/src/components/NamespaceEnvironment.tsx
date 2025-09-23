@@ -1,15 +1,65 @@
+import { useRef, useState, type ChangeEvent } from "react";
 import { IoArrowForward } from "react-icons/io5";
 import { useEnvironment } from "../providers/EnvironmentProvider";
-import { useNamespace } from "../providers/NamespaceProvider"
+import { useNamespace } from "../providers/NamespaceProvider";
+import { EnvironmentService } from "../services/EnvironmentService";
+import eventBus from "../services/EventBusService";
+import { NamespaceService } from "../services/NamespaceService";
+import type { Environment } from "../types/Environment";
+import type { Namespace } from "../types/Namespace";
+import type { Page } from "../types/Page";
+import { Modal } from "./Modal";
+import Select from "./Select";
 
 export default function NamespaceEnvironment() {
-    const { namespace } = useNamespace();
-    const { environment } = useEnvironment();
+    const { namespace, setNamespace } = useNamespace();
+    const { environment, setEnvironment } = useEnvironment();
+
+    const envModalRef = useRef<any>(null);
+
+    const namespaceService = new NamespaceService();
+    const environmentService = new EnvironmentService();
+
+    const [namespaceOptions, setNamespaceOptions] = useState<Namespace[]>();
+    const [environmentOptions, setEnvironmentOptions] = useState<Environment[]>();
+
+    const onEnvModalOpen = () => {
+        if (namespace && namespace.id) {
+            searchEnvironments(namespace.id);
+        }
+
+        namespaceService.search({}, 0, 2000).then((res: Page<Namespace>) => {
+            setNamespaceOptions(res.content);
+        }).finally(() => envModalRef.current.setOpen(true));
+    }
+
+    const searchEnvironments = (namespaceId: string) => {
+        environmentService.search({ namespace: namespaceId }).then((res: Page<Environment>) => {
+            setEnvironmentOptions(res.content);
+        })
+    }
+
+    const beforeSaveModal = (e: ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (JSON.stringify(environment) === '{}') {
+            console.log('Select an Environment')
+        } else {
+            eventBus.emit('namespaceEnvironmentChange', { namespace: namespace, environment: environment })
+            envModalRef.current.setOpen(false);
+        }
+    }
+
+    const onNamespaceSelect = (namespace: Namespace) => {
+        searchEnvironments(namespace.id || '');
+        setNamespace(namespace)
+        setEnvironment(JSON.parse('{}'))
+    }
 
     return (
         <div className="mb-5">
             {(namespace && JSON.stringify(environment) !== '{}') && (
-                <div className="w-fit flex items-center gap-1 bg-primary-color p-2 rounded text-white">
+                <div className="w-fit flex items-center gap-1 bg-primary-color p-2 rounded text-white cursor-pointer"
+                    onClick={() => onEnvModalOpen()}>
                     <span className="font-semibold">{namespace.name}</span>
                     <IoArrowForward />
                     <span className="font-semibold">{environment?.name}</span>
@@ -20,6 +70,20 @@ export default function NamespaceEnvironment() {
                     Please, select an Environment
                 </span>
             )}
+            <Modal title="Select your Environment" ref={envModalRef} onSave={beforeSaveModal} >
+                <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1">
+                        <span className="font-medium">Namespace:</span>
+                        <Select options={namespaceOptions || []} optionLabel="name" value={JSON.stringify(namespace)}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) => onNamespaceSelect(JSON.parse(e.target.value))} />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <div className="font-medium">Environment:</div>
+                        <Select options={environmentOptions || []} optionLabel="name" value={JSON.stringify(environment)}
+                            onChange={(e: ChangeEvent<HTMLSelectElement>) => setEnvironment(JSON.parse(e.target.value))} />
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }
