@@ -78,92 +78,90 @@ export default function Layout() {
                 <div className="flex justify-between items-center p-2 pl-5 pr-5">
                     <div className="relative">
                         <IoMdMenu className="text-2xl text-white cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)} />
-                        {isMenuOpen &&
-                            <div className="absolute flex flex-col gap-5 justify-between w-[300px] -left-6 h-full bg-primary-color z-50 p-5 shadow"
-                                style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)', height: 'calc(100vh - 64px)' }}>
-                                <div className="flex flex-col gap-5">
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex gap-5 p-5 text-white items-center border rounded-2xl">
-                                            {picture ? <img src={picture} alt="user-picture" className="w-10" /> : <Nobody className="w-10" />}
-                                            <div className="flex flex-col">
-                                                <span>{name}</span>
-                                                <span className="text-sm text-gray-300">{email}</span>
-                                            </div>
+                        <div className={`absolute flex flex-col gap-5 justify-between w-[300px] -left-6 h-full bg-primary-color p-5 shadow ${isMenuOpen ? 'z-50' : 'opacity-0 -z-10'}`}
+                            style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)', height: 'calc(100vh - 64px)' }}>
+                            <div className="flex flex-col gap-5">
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex gap-5 p-5 text-white items-center border rounded-2xl">
+                                        {picture ? <img src={picture} alt="user-picture" className="w-10" /> : <Nobody className="w-10" />}
+                                        <div className="flex flex-col">
+                                            <span>{name}</span>
+                                            <span className="text-sm text-gray-300">{email}</span>
                                         </div>
-                                    </div>
-                                    <div className="flex flex-col gap-5 text-white text-md">
-                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                            onClick={() => onNavigate('/kv')}>
-                                            <FaFolder />
-                                            <span>Key/Value</span>
-                                        </div>
-                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                            onClick={() => onNavigate('/secrets')}>
-                                            <FaKey />
-                                            <span>Secret</span>
-                                        </div>
-                                    </div>
-                                    <hr className="text-white" />
-                                    <div className="flex flex-col gap-5 text-white text-md">
-                                        {hasAccessToBatch(roles, '#NAMESPACES') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/namespaces')}>
-                                                <VscSymbolNamespace />
-                                                <span>Namespace</span>
-                                            </div>
-                                        }
-                                        {hasAccessToBatch(roles, '#POLICIES') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/policies')}>
-                                                <MdOutlinePolicy />
-                                                <span>Policy</span>
-                                            </div>
-                                        }
-                                        {hasAccessToBatch(roles, '#USERS') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/users')}>
-                                                <FaUsers />
-                                                <span>User</span>
-                                            </div>
-                                        }
-                                        {hasAccessToBatch(roles, '#ROLES') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/roles')}>
-                                                <FaIdCard />
-                                                <span>Roles</span>
-                                            </div>
-                                        }
-                                        {hasAccessToBatch(roles, '#TOKENS') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/tokens')}>
-                                                <MdOutlineGeneratingTokens />
-                                                <span>Tokens</span>
-                                            </div>
-                                        }
-                                        {hasAccessToBatch(roles, '#GENERAL') &&
-                                            <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                                onClick={() => onNavigate('/admin/general')}>
-                                                <IoIosSettings />
-                                                <span>General</span>
-                                            </div>
-                                        }
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-5 text-white text-md w-full">
-                                    <hr className="text-white" />
-                                    <div className="w-full flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                        onClick={() => onNavigate('/user/settings')}>
-                                        <IoIosSettings />
-                                        <span>Settings</span>
+                                <div className="flex flex-col gap-5 text-white text-md">
+                                    <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                        onClick={() => onNavigate('/kv')}>
+                                        <FaFolder />
+                                        <span>Key/Value</span>
                                     </div>
-                                    <div className="w-full flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
-                                        onClick={logout}>
-                                        <CgLogOut />
-                                        <span>Logout</span>
+                                    <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                        onClick={() => onNavigate('/secrets')}>
+                                        <FaKey />
+                                        <span>Secret</span>
                                     </div>
+                                </div>
+                                <hr className="text-white" />
+                                <div className="flex flex-col gap-5 text-white text-md">
+                                    {hasAccessToBatch(roles, '#NAMESPACES') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/namespaces')}>
+                                            <VscSymbolNamespace />
+                                            <span>Namespace</span>
+                                        </div>
+                                    }
+                                    {hasAccessToBatch(roles, '#POLICIES') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/policies')}>
+                                            <MdOutlinePolicy />
+                                            <span>Policy</span>
+                                        </div>
+                                    }
+                                    {hasAccessToBatch(roles, '#USERS') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/users')}>
+                                            <FaUsers />
+                                            <span>User</span>
+                                        </div>
+                                    }
+                                    {hasAccessToBatch(roles, '#ROLES') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/roles')}>
+                                            <FaIdCard />
+                                            <span>Roles</span>
+                                        </div>
+                                    }
+                                    {hasAccessToBatch(roles, '#TOKENS') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/tokens')}>
+                                            <MdOutlineGeneratingTokens />
+                                            <span>Tokens</span>
+                                        </div>
+                                    }
+                                    {hasAccessToBatch(roles, '#GENERAL') &&
+                                        <div className="flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                            onClick={() => onNavigate('/admin/general')}>
+                                            <IoIosSettings />
+                                            <span>General</span>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                        }
+                            <div className="flex flex-col gap-5 text-white text-md w-full">
+                                <hr className="text-white" />
+                                <div className="w-full flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                    onClick={() => onNavigate('/user/settings')}>
+                                    <IoIosSettings />
+                                    <span>Settings</span>
+                                </div>
+                                <div className="w-full flex gap-4 items-center p-2 pl-4 pr-4 cursor-pointer hover:bg-primary-lighter-color rounded-2xl"
+                                    onClick={logout}>
+                                    <CgLogOut />
+                                    <span>Logout</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <LogoWhite className='h-[50px] cursor-pointer' onClick={() => navigate('/kv')} />
                     <div className="flex gap-3 text-white">
