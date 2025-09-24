@@ -68,7 +68,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             ApplicationParams clientIdParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID");
             ApplicationParams clientSecretParam = applicationParamsService.findByKeyInternal("GOOGLE_SSO_CLIENT_SECRET");
             String googleJwt = googleProxy.exchangeCodeToJwt(clientIdParam.getValue(), clientSecretParam.getValue(), codeToken, redirectUri);
-            String email = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class).get("email").toString();
+            Map<String, Object> claims = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class);
+            String email = claims.get("email").toString();
             Optional<User> optionalUser = userService.findByEmail(email);
 
             if (optionalUser.isEmpty()) {
@@ -76,6 +77,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             } else {
                 User user = optionalUser.get();
                 Set<String> scopes = convertPoliciesIntoScopes(user);
+                if (StringUtils.isNotBlank((String) claims.get("picture"))) {
+                    user.setPicture((String) claims.get("picture"));
+                    userService.persist(user);
+                }
                 return generateToken(email, scopes);
             }
         } catch (Exception e) {
