@@ -113,12 +113,12 @@ export default function KeyValueForm() {
                 <div className="flex justify-between gap-4">
                     <div className="flex gap-4">
                         <Button className="w-[150px]">Save</Button>
-                        {id &&
-                            <ConfirmDialog onConfirm={onDelete}>
-                                <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
-                            </ConfirmDialog>
-                        }
                     </div>
+                    {id &&
+                        <ConfirmDialog onConfirm={onDelete}>
+                            <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
+                        </ConfirmDialog>
+                    }
                 </div>
             </form>
 

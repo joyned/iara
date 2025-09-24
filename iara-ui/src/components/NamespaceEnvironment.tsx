@@ -81,12 +81,12 @@ export default function NamespaceEnvironment() {
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-1">
                         <span className="font-medium">Namespace:</span>
-                        <Select options={namespaceOptions || []} optionLabel="name" value={JSON.stringify(namespace)}
+                        <Select options={namespaceOptions || []} optionlabel="name" value={JSON.stringify(namespace)}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => onNamespaceSelect(JSON.parse(e.target.value))} />
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="font-medium">Environment:</div>
-                        <Select options={environmentOptions || []} optionLabel="name" value={JSON.stringify(environment)}
+                        <Select options={environmentOptions || []} optionlabel="name" value={JSON.stringify(environment)}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => setEnvironment(JSON.parse(e.target.value))} />
                     </div>
                 </div>

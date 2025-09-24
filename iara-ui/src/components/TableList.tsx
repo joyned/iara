@@ -31,7 +31,7 @@ export default function TableList(props: Props) {
                     {props.data.map((d: any) => {
                         return (
                             <ListItem name={d[props.dataLabel]} onClick={() => props.onEdit && props.onEdit(d.id)} key={uuid()}
-                                onDelete={() => props.onDelete && props.onDelete(d.id)} />
+                                onDelete={props.onDelete && (() => props.onDelete && props.onDelete(d.id))} />
                         )
                     })}
                 </div>
