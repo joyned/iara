@@ -57,7 +57,7 @@ export default function YamlEditor(props: Props) {
                         }}
                     />
                     <pre ref={preRef}
-                        className="rounded absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-stone-900 text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
+                        className="rounded absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-code-block text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
                         style={{
                             fontFamily: 'monospace',
                             fontSize: '14px',

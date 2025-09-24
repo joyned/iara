@@ -51,7 +51,7 @@ export default function RuleTextArea(props: Props) {
 
     return (
         <>
-            <div className="relative w-full max-w-4xl">
+            <div className="relative w-full">
                 <div className="relative border border-gray-100 rounded font-monaco text-sm">
                     <textarea id={uuid()}
                         ref={textareaRef}
@@ -67,7 +67,7 @@ export default function RuleTextArea(props: Props) {
                         }}
                     />
                     <pre ref={preRef}
-                        className="absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-stone-900 text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
+                        className="absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-code-block text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
                         style={{
                             fontFamily: 'monospace',
                             fontSize: '14px',

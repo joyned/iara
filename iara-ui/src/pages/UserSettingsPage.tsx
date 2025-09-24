@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import Card from "../components/Card";
 import Checkbox from "../components/Checkbox";
 import FormLabel from "../components/FormLabel";
 import Input from "../components/Input";
 import ListItem from "../components/ListItem";
 import { Modal } from "../components/Modal";
+import Panel from "../components/Panel";
 import { useLoading } from "../providers/LoadingProvider";
 import { ApplicationTokenService } from "../services/ApplicationTokenService";
 import { UserService } from "../services/UserService";
@@ -121,7 +121,7 @@ export default function UserSettingsPage() {
 
     return (
         <div className="flex flex-col gap-10">
-            <Card title="User">
+            <Panel title="User" startClosed={false}>
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-2">
                         <FormLabel htmlFor="user-name" required>Name</FormLabel>
@@ -132,8 +132,8 @@ export default function UserSettingsPage() {
                         <Input id="email-name" name="email-name" value={email} disabled />
                     </div>
                 </div>
-            </Card>
-            <Card title="Tokens" onOpen={onOpenTokens} closeable>
+            </Panel>
+            <Panel title="Tokens" onOpen={onOpenTokens} startClosed>
                 <>
                     {tokens && tokens.map((token: ApplicationToken) => {
                         return (
@@ -144,9 +144,9 @@ export default function UserSettingsPage() {
                         <Button type="button" onClick={() => newTokenModalRef.current.setOpen(true)}>Create</Button>
                     </div>
                 </>
-            </Card>
+            </Panel>
             {!isSSO &&
-                <Card title="Password" closeable>
+                <Panel title="Password" startClosed>
                     <form className="flex flex-col gap-2" onSubmit={changePassword}>
                         <div className="flex flex-col gap-2">
                             <FormLabel htmlFor="current-password" required>Current password</FormLabel>
@@ -167,7 +167,7 @@ export default function UserSettingsPage() {
                             <Button type="submit">Change</Button>
                         </div>
                     </form>
-                </Card>
+                </Panel>
             }
             <Modal title="Create token" ref={newTokenModalRef} saveText="Create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">

@@ -5,6 +5,8 @@
     --primary-darker-color: #16161b;
     --primary-lighter-color: #474758;
 
+    --code-block-color: #2D2D2D;
+
     --text-title: #434343;
 }
 
@@ -18,6 +20,10 @@
 
 .bg-primary-darker-color {
     background-color: var(--primary-darker-color);
+}
+
+.bg-code-block {
+    background-color: var(--code-block-color);
 }
 
 .hover\:bg-primary-darker-color:hover {
