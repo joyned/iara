@@ -58,7 +58,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request, response);
             } else {
-                unauthorized(response, "Token not found.", null);
+                unauthorized(response, "Token not found.", new TokenMissingException("Token not found."));
             }
         } catch (Exception e) {
             log.error("Failed to authenticate.", e);
