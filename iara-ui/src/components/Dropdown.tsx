@@ -17,7 +17,7 @@ interface Props {
 
 export default function Dropdown(props: Props) {
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [variant, setVariant] = useState<string>('');
 
     const handleClick = (item: Item) => {

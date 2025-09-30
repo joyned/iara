@@ -97,33 +97,34 @@ export default function KeyValueForm() {
 
     return (
         <div className="flex flex-col gap-5">
-            <h1>K/V Entry</h1>
+            <h1 className="text-2xl">kv entry</h1>
 
             <form className="flex flex-col gap-5" onSubmit={onSubmit}>
                 <div className="flex flex-col">
-                    <FormLabel htmlFor="kv-key" required>Name</FormLabel>
-                    <Input name="kv-key" id="kv-key" type="text" placeholder="Key" value={key}
+                    <FormLabel htmlFor="kv-key" required>key</FormLabel>
+                    <Input name="kv-key" id="kv-key" type="text" value={key}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setKey(e.target.value)} disabled={!isNew} />
                 </div>
                 <div className="flex flex-col">
-                    <FormLabel htmlFor="kv-value" required>Value</FormLabel>
+                    <FormLabel htmlFor="kv-value" required>value</FormLabel>
                     <YamlEditor rows={10} resize={false} value={value} id="kv-value" name="kv-value"
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)} />
                 </div>
                 <div className="flex justify-between gap-4">
                     <div className="flex gap-4">
-                        <Button className="w-[150px]">Save</Button>
+                        <Button>save</Button>
+                        <Button variant="outline" onClick={() => navigate('/kv')} type="button">back</Button>
                     </div>
                     {id &&
                         <ConfirmDialog onConfirm={onDelete}>
-                            <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
+                            <Button className="w-[150px]" variant="danger" type="button">delete</Button>
                         </ConfirmDialog>
                     }
                 </div>
             </form>
 
             {history.length > 0 &&
-                <Panel title="History" startClosed>
+                <Panel title="history" startClosed>
                     {history.map((h: KeyValueHistory) => {
                         return <>
                             <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} key={uuid()} />

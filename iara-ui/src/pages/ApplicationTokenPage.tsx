@@ -62,17 +62,17 @@ export default function ApplicationPageToken() {
         e.preventDefault();
 
         if (!neverExpires && !expiresAt) {
-            toast.error('Please, select a valid expiration date.');
+            toast.error('please, select a valid expiration date.');
             return;
         }
 
         if (!name || name === '') {
-            toast.error('Please, enter a valid name.');
+            toast.error('please, enter a valid name.');
             return;
         }
 
         if (!policy) {
-            toast.error('Please, select a valid policy.');
+            toast.error('please, select a valid policy.');
             return;
         }
 
@@ -102,9 +102,9 @@ export default function ApplicationPageToken() {
         if (token) {
             try {
                 await navigator.clipboard.writeText(token);
-                toast.success('Token copied to clipboard.');
+                toast.success('token copied to clipboard.');
             } catch (err) {
-                console.error('Failed to copy text:', err);
+                console.error('failed to copy text:', err);
             }
         }
 
@@ -112,42 +112,42 @@ export default function ApplicationPageToken() {
 
     return (
         <>
-            <TableList title="Tokens" data={tokens} dataLabel="name"
+            <TableList title="tokens" data={tokens} dataLabel="name"
                 onCreate={() => onCreateClick()}
                 onDelete={(id: string) => onDelete(id)} />
-            <Modal title="Create token" ref={modalRef} saveText="Create" onSave={onCreateNewToken}>
+            <Modal title="create token" ref={modalRef} saveText="create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="token-name" required>Name</FormLabel>
+                        <FormLabel htmlFor="token-name" required>name</FormLabel>
                         <Input id="token-name" name="token-name" onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="token-policy" required>Policy</FormLabel>
-                        <Select id="token-policy" name="token-policy" options={policies}
+                        <FormLabel htmlFor="token-policy" required>policy</FormLabel>
+                        <Select id="token-policy" name="token-policy" options={policies} value={JSON.stringify(policy)}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => setPolicy(JSON.parse(e.target.value))}></Select>
                     </div>
                     {!neverExpires &&
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="token-expires" required>Expires At</FormLabel>
+                            <FormLabel htmlFor="token-expires" required>expires at</FormLabel>
                             <Input id="token-expires" name="token-expires" type="date" min={getMinDate()}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setExpiresAt(new Date(e.target.value))} />
                         </div>
                     }
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="token-never-expires">Never Expires</FormLabel>
+                        <FormLabel htmlFor="token-never-expires">never expires</FormLabel>
                         <Checkbox id="token-never-expires" name="token-never-expires" onChange={() => setNeverExpires(!neverExpires)} />
                     </div>
                 </div>
             </Modal>
 
-            <Modal title="Token" hasSave={false} ref={tokenModalRef} beforeClose={() => setToken(undefined)} cancelText="Close">
+            <Modal title="token" hasSave={false} ref={tokenModalRef} beforeClose={() => setToken(undefined)} cancelText="close">
                 <div className="flex flex-col gap-5">
-                    <span className="p-1 rounded">Please, save this token. When you close this window, you will not be able to get your token.</span>
+                    <span className="p-1 rounded">please, save this token. when you close this window, you will not be able to get your token.</span>
                     <pre className="overflow-auto bg-stone-700 text-white p-1 rounded">
                         {token}
                     </pre>
                     <div className="flex">
-                        <Button type="button" variant="outline" onClick={copyToClipboard}>Copy to clipboard</Button>
+                        <Button type="button" variant="outline" onClick={copyToClipboard}>copy to clipboard</Button>
                     </div>
                 </div>
             </Modal>

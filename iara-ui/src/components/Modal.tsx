@@ -13,7 +13,7 @@ interface Props {
     hasSave?: boolean;
 }
 
-export const Modal = forwardRef(({ title, saveText = "Save", cancelText = "Cancel", onSave, beforeClose, children, hasSave = true }: Props, ref) => {
+export const Modal = forwardRef(({ title, saveText = "save", cancelText = "cancel", onSave, beforeClose, children, hasSave = true }: Props, ref) => {
     const [modalId] = useState<string>(v1());
     const [open, setOpen] = useState<boolean>(false);
 
@@ -48,7 +48,7 @@ export const Modal = forwardRef(({ title, saveText = "Save", cancelText = "Cance
                             {children}
                         </form>
                         <div className="mt-3">
-                            <div className="flex justify-end gap-0.5">
+                            <div className="flex justify-end gap-2">
                                 {hasSave && <Button type="submit" form={modalId}>{saveText}</Button>}
                                 <Button variant="outline" onClick={onClose}>{cancelText}</Button>
                             </div>

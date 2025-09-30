@@ -23,7 +23,7 @@ export default function RolesPage() {
 
     return (
         <>
-            <TableList title="Roles" data={roles} dataLabel="name"
+            <TableList title="roles" data={roles} dataLabel="name"
                 onCreate={() => navigate(`/admin/roles/new`)}
                 onEdit={(id: string) => navigate(`/admin/roles/${id}`)} />
         </>

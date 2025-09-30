@@ -144,23 +144,23 @@ export default function SecretsForm() {
     return (
         <>
             <div className="flex flex-col gap-5">
-                <h1>Secrets</h1>
+                <h1 className="text-2xl">secrets</h1>
                 <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="secret-name" required>Name </FormLabel>
+                        <FormLabel htmlFor="secret-name" required>name </FormLabel>
                         <Input id="secret-name" name="secret-name" type="text" value={name}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} disabled={!!id} />
                     </div>
                     {!id &&
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="secret-name" required>Value </FormLabel>
+                            <FormLabel htmlFor="secret-name" required>value </FormLabel>
                             <TextArea id="secret-value" name="secret-value" rows={5} value={firstValue}
                                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setFirstValue(e.target.value)} />
                         </div>
                     }
                     {id &&
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="secret-name" required>Version </FormLabel>
+                            <FormLabel htmlFor="secret-name" required>version </FormLabel>
                             {versions && versions.map((version: SecretVersion) => {
                                 return (
                                     <ListItem name={`# ${version.version}`} onClick={() => onViewVersion(version)} key={uuid()}>
@@ -174,32 +174,32 @@ export default function SecretsForm() {
                     <div className="flex justify-between gap-4">
                         {!id &&
                             <div className="flex gap-4">
-                                <Button onClick={() => onSaveVersion()}>Create</Button>
+                                <Button onClick={() => onSaveVersion()}>create</Button>
                             </div>
                         }
                         {id &&
                             <div className="flex gap-4">
-                                <Button onClick={() => onAddVersion()}>Add version</Button>
+                                <Button onClick={() => onAddVersion()}>add version</Button>
                             </div>
                         }
                         <ConfirmDialog onConfirm={onDeleteSecret}>
-                            <Button variant="danger" type="button">Delete</Button>
+                            <Button variant="danger" type="button">delete</Button>
                         </ConfirmDialog>
                     </div>
                 </form>
             </div>
-            <Modal ref={modalRef} title={versionId ? `Version #${String(version)}` : 'Add version'} onSave={() => onSaveVersion()}
-                cancelText={!versionId ? 'Cancel' : 'Close'} hasSave={!versionId}>
+            <Modal ref={modalRef} title={versionId ? `version #${String(version)}` : 'add version'} onSave={() => onSaveVersion()}
+                cancelText={!versionId ? 'cancel' : 'close'} hasSave={!versionId}>
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="version-value" required>Value</FormLabel>
+                        <FormLabel htmlFor="version-value" required>value</FormLabel>
                         <TextArea id="version-value" name="version-value" rows={5} value={value}
                             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
                             disabled={!!versionId} />
                     </div>
                     {!versionId &&
                         <div className="flex items-center gap-2">
-                            <FormLabel htmlFor="version-disable-past">Disable past version?</FormLabel>
+                            <FormLabel htmlFor="version-disable-past">disable past version?</FormLabel>
                             <Checkbox value={disablePastVersion} onChange={(value: boolean) => setDisablePastVersion(value)} />
                         </div>
                     }

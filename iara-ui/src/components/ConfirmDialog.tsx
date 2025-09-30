@@ -52,24 +52,24 @@ export const ConfirmDialog: FC<Props> = forwardRef((props: Props, ref) => {
                         <div className="flex flex-col gap-3">
                             <div className="flex justify-between items-center">
                                 <h1 className="text-lg font-bold">
-                                    {props.title || "Confirm"}
+                                    {props.title || "confirm"}
                                 </h1>
                                 <MdClose className="text-2xl cursor-pointer"
                                     onClick={() => setOpen(false)} />
                             </div>
                             <div className="mt-3">
                                 <span>
-                                    {props.description || "Are you sure you want to delete?"}
+                                    {props.description || "are you sure you want to delete?"}
                                 </span>
                             </div>
                             <div className="flex gap-2 justify-end">
                                 <Button variant="danger"
                                     onClick={() => handleConfirm()} >
-                                    Confirm
+                                    confirm
                                 </Button>
                                 <Button variant="outline"
                                     onClick={() => handleCancel()} >
-                                    Cancel
+                                    cancel
                                 </Button>
                             </div>
                         </div>

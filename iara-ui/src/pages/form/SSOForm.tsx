@@ -39,10 +39,10 @@ export default function SSOForm() {
             if (res.value) {
                 setEnabledId(res.id);
                 setEnabledKey(res.key)
-                setEnabledValue(Boolean(res.value));
+                setEnabledValue(res.value === 'true');
                 setEnabledSecure(res.secure);
 
-                if (Boolean(res.value)) {
+                if (res.value === 'true') {
                     const clientIdPromise = service.find(GOOGLE_SSO_CLIENT_ID_KEY);
                     const secretPromise = service.find(GOOGLE_SSO_CLIENT_SECRET_KEY);
                     Promise.all([clientIdPromise, secretPromise]).then(([clientId, clientSecret]) => {
@@ -97,7 +97,7 @@ export default function SSOForm() {
         Promise.all([enabledPromise, clientPromise]).then(([enabled, clientId]) => {
             setEnabledId(enabled.id);
             setEnabledKey(enabled.key)
-            setEnabledValue(Boolean(enabled.value));
+            setEnabledValue(enabled.value === 'true');
             setEnabledSecure(enabled.secure);
 
             setClientId(clientId.id);
@@ -108,7 +108,7 @@ export default function SSOForm() {
     }
 
     return (
-        <Panel title="Sign-in options" startClosed={false}>
+        <Panel title="sign-in options" startClosed={false}>
             <>
                 <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
@@ -118,23 +118,25 @@ export default function SSOForm() {
                         </div>
                         <Checkbox value={enabledValue} onChange={(value: boolean) => setEnabledValue(value)} />
                     </div>
-                    {enabledValue &&
-                        <form onSubmit={onSubmit} className="flex flex-col gap-4">
-                            <div className="flex flex-col gap-2">
-                                <FormLabel required>Client ID</FormLabel>
-                                <Input value={clientValue}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setClientValue(e.target.value)} />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <FormLabel required>Client Secret</FormLabel>
-                                <Input type="password" value={secretValue}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSecretValue(e.target.value)} />
-                            </div>
-                            <div className="flex mt-5">
-                                <Button>Save</Button>
-                            </div>
-                        </form>
-                    }
+                    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+                        {enabledValue &&
+                            <>
+                                <div className="flex flex-col gap-2">
+                                    <FormLabel required>client id</FormLabel>
+                                    <Input value={clientValue}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setClientValue(e.target.value)} />
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <FormLabel required>client secret</FormLabel>
+                                    <Input type="password" value={secretValue}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setSecretValue(e.target.value)} />
+                                </div>
+                            </>
+                        }
+                        <div className="flex mt-5">
+                            <Button>save</Button>
+                        </div>
+                    </form>
                 </div>
 
             </>

@@ -72,37 +72,37 @@ export default function PolicyForm() {
 
     return (
         <div className="flex flex-col gap-5">
-            <h1>Policy</h1>
+            <h1 className="text-2xl">policy</h1>
             <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
                 <div className="flex flex-col gap-2">
-                    <FormLabel htmlFor="policy-name" required>Name</FormLabel>
+                    <FormLabel htmlFor="policy-name" required>name</FormLabel>
                     <Input id="policy-name" name="policy-name" type="text" value={name}
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <FormLabel htmlFor="policy-description">Description</FormLabel>
+                    <FormLabel htmlFor="policy-description">description</FormLabel>
                     <TextArea id="policy-description" name="policy-description" value={description}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
                         rows={5} />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <FormLabel htmlFor="policy-description" required>Rule</FormLabel>
+                    <FormLabel htmlFor="policy-description" required>rule</FormLabel>
                     <RuleTextArea id="policy-description" name="policy-description" value={rule}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setRule(e.target.value)}
                         rows={5} />
                     <div className="flex gap-2 items-center w-fit cursor-pointer" onClick={() => modalRef.current.setOpen(true)}>
                         <BsInfoCircle />
-                        <span>How to write?</span>
+                        <span>how to write?</span>
                     </div>
                 </div>
                 <div className="flex justify-between">
                     <div className="flex gap-2">
-                        <Button>Save</Button>
-                        <Button type="button" variant="outline" onClick={() => navigate('/admin/policies')}>Cancel</Button>
+                        <Button>save</Button>
+                        <Button type="button" variant="outline" onClick={() => navigate('/admin/policies')}>cancel</Button>
                     </div>
                     <div className="flex">
                         <ConfirmDialog onConfirm={onDeletePolicy}>
-                            <Button type="button" variant="danger">Delete policy</Button>
+                            <Button type="button" variant="danger">delete policy</Button>
                         </ConfirmDialog>
                     </div>
                 </div>

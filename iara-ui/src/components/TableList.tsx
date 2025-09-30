@@ -22,10 +22,10 @@ export default function TableList(props: Props) {
     return (
         <>
             <div className="flex flex-col gap-5">
-                <h1>{props.title}</h1>
+                <h1 className="text-2xl">{props.title}</h1>
                 <div className="flex justify-between">
-                    <Input placeholder="Search" onChange={(e: ChangeEvent<HTMLInputElement>) => props.onSearch && props.onSearch(e.target.value)} />
-                    <Button type="button" className="w-[150px]" onClick={() => props.onCreate && props.onCreate()}>Create</Button>
+                    <Input placeholder="search" onChange={(e: ChangeEvent<HTMLInputElement>) => props.onSearch && props.onSearch(e.target.value)} />
+                    <Button type="button" className="w-[150px]" onClick={() => props.onCreate && props.onCreate()}>create</Button>
                 </div>
                 <div className="flex flex-col gap-4">
                     {props.data.map((d: any) => {

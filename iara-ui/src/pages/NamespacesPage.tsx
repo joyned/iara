@@ -22,7 +22,7 @@ export default function NamespacesPage() {
 
     return (
         <>
-            <TableList title="Namespaces" data={namespaces} dataLabel="name"
+            <TableList title="namespaces" data={namespaces} dataLabel="name"
                 onCreate={() => navigate(`/admin/namespaces/new`)}
                 onEdit={(id: string) => navigate(`/admin/namespaces/${id}`)} />
         </>
