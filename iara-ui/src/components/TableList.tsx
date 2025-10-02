@@ -28,12 +28,13 @@ export default function TableList(props: Props) {
                     <Button type="button" className="w-[150px]" onClick={() => props.onCreate && props.onCreate()}>create</Button>
                 </div>
                 <div className="flex flex-col gap-4">
-                    {props.data.map((d: any) => {
+                    {props.data.length > 0 && props.data.map((d: any) => {
                         return (
                             <ListItem name={d[props.dataLabel]} onClick={() => props.onEdit && props.onEdit(d.id)} key={uuid()}
                                 onDelete={props.onDelete && (() => props.onDelete && props.onDelete(d.id))} />
                         )
                     })}
+                    {props.data.length === 0 && <span>no data found.</span>}
                 </div>
                 <div className="flex justify-end">
                     {props.data.length > 0 && <Pageable totalPages={props.totalPages || 0} page={props.page || 0}
