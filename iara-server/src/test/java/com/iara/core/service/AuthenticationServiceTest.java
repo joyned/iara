@@ -1,12 +1,15 @@
 package com.iara.core.service;
 
 
+import com.iara.config.security.TokenHolder;
 import com.iara.core.entity.ApplicationToken;
 import com.iara.core.entity.User;
 import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.InvalidIaraTokenException;
 import com.iara.core.exception.InvalidJwtException;
 import com.iara.core.model.Authentication;
+import com.iara.core.proxy.GoogleProxy;
+import com.iara.core.service.impl.AuthenticationServiceImpl;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
@@ -30,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AuthenticationServiceTest {
 
     @Autowired
-    AuthenticationService authenticationService;
+    AuthenticationServiceImpl authenticationService;
 
     @Autowired
     UserService userService;
@@ -43,6 +47,15 @@ public class AuthenticationServiceTest {
 
     @Autowired
     ApplicationTokenService applicationTokenService;
+
+    @Autowired
+    TokenHolder tokenHolder;
+
+    @MockitoBean
+    GoogleProxy googleProxy;
+
+    @MockitoBean
+    ApplicationParamsService applicationParamsService;
 
     @BeforeEach
     void init() {
@@ -57,24 +70,24 @@ public class AuthenticationServiceTest {
 
     @Test
     void Given_ValidCredentials_ShouldLogin() {
-        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara");
+        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara", "127.0.0.1");
         assertNotNull(authentication);
         assertNotNull(authentication.getAccessToken());
     }
 
     @Test
     void Given_InvalidCredentials_ShouldThrow() {
-        assertThrows(InvalidCredentialsException.class, () -> authenticationService.doLogin("testing@iara.com", "wrong"));
+        assertThrows(InvalidCredentialsException.class, () -> authenticationService.doLogin("testing@iara.com", "wrong", "127.0.0.1"));
     }
 
     @Test
     void Given_NotExistingUser_ShouldThrow() {
-        assertThrows(InvalidCredentialsException.class, () -> authenticationService.doLogin("worng@iara.com", "iara"));
+        assertThrows(InvalidCredentialsException.class, () -> authenticationService.doLogin("worng@iara.com", "iara", "127.0.0.1"));
     }
 
     @Test
     void Given_ValidToken_ShouldReturnClaims() {
-        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara");
+        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara", "127.0.0.1");
         Claims claims = authenticationService.validateToken(authentication.getAccessToken());
 
         assertNotNull(claims);
@@ -107,6 +120,11 @@ public class AuthenticationServiceTest {
     @Test
     void Given_NonExistingIaraToken_ShouldThrow() {
         assertThrows(InvalidIaraTokenException.class, () -> authenticationService.validateAndGetScopesFromIaraToken("aaaaaaaa"));
+    }
+
+    @Test
+    void Given_AnyToken_ShouldLogoutAndNotThrows() {
+        assertDoesNotThrow(() -> authenticationService.doLogout("aaaaaaaa"));
     }
 
     ApplicationToken createValidToken() {

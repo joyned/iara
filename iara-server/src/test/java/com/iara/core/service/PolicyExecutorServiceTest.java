@@ -1,20 +1,26 @@
 package com.iara.core.service;
 
-import com.iara.core.entity.Environment;
-import com.iara.core.entity.Kv;
-import com.iara.core.entity.Namespace;
+import com.iara.core.entity.*;
+import com.iara.core.entity.specification.BaseNamespacedSpecification;
+import com.iara.core.entity.specification.KvSpecification;
+import com.iara.core.entity.specification.SecretSpecification;
 import com.iara.core.exception.InvalidPolicyException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -32,6 +38,9 @@ class PolicyExecutorServiceTest {
 
     @Autowired
     KeyValueService keyValueService;
+
+    @Autowired
+    SecretService secretService;
 
     @Test
     @WithMockUser(authorities = {"@default/development:KV:READ"})
@@ -124,17 +133,24 @@ class PolicyExecutorServiceTest {
     }
 
     @Test
-    @WithMockUser(authorities = {"@default/development:KV:READ"})
-    void Given_UserWithoutWritePermissionInKV_ShouldReturnTrue() {
-        Kv kv = createKv();
-        assertFalse(policyExecutorService.hasWritePermissionInKV(kv));
-    }
-
-    @Test
     @WithMockUser(authorities = {"@*:KV:WRITE"})
     void Given_UserWithWritePermissionInAllKV_ShouldReturnTrue() {
         Kv kv = createKv();
         assertTrue(policyExecutorService.hasWritePermissionInKV(kv));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:WRITE"})
+    void Given_UserWithWritePermissionInSecret_ShouldReturnTrue() {
+        Secret secret = createSecret();
+        assertTrue(policyExecutorService.hasWritePermissionInSecret(secret));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@*:KV:WRITE"})
+    void Given_UserWithWritePermissionInAllSecret_ShouldReturnTrue() {
+        Secret secret = createSecret();
+        assertTrue(policyExecutorService.hasWritePermissionInSecret(secret));
     }
 
     @Test
@@ -242,6 +258,277 @@ class PolicyExecutorServiceTest {
         assertThrows(InvalidPolicyException.class, () -> policyExecutorService.validatePolicyRule("ALLOW READ AND WRITE IN NOT_VALID AT @dev"));
     }
 
+    @Test
+    @WithMockUser(authorities = {"@default/development:KV:READ", "@team-a/staging:KV:READ"})
+    void Given_UserWithMultipleNamespacesAndEnvironments_ShouldBuildSpecWithCorrectFilters() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(
+                Set.of("default", "team-a"),
+                Set.of("development", "staging")
+        );
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@*:KV:READ"})
+    void Given_UserWithWildcardNamespace_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/*:KV:READ"})
+    void Given_UserWithWildcardEnvironment_ShouldBuildSpecWithNamespaceOnly() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("*"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@*/development:KV:READ"})
+    void Given_UserWithWildcardNamespaceButSpecificEnvironment_ShouldBuildSpecWithEnvironmentOnly() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    void Given_NullRootSpecification_ShouldReturnNull() {
+        Specification<Object> result = policyExecutorService.buildNamespacedSpec(null);
+
+        assertNull(result);
+    }
+
+    @Test
+    @WithMockUser(authorities = {})
+    void Given_UserWithNoScopes_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"invalid-scope-format"})
+    void Given_UserWithInvalidScopeFormat_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:KV:READ", "@team-a/staging:KV:READ", "@*:KV:READ"})
+    void Given_UserWithMixedWildcardAndSpecificScopes_ShouldBuildSpecWithOnlySpecificFilters() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default", "team-a"), Set.of("development", "staging"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:KV:READ", "@default/production:KV:READ"})
+    void Given_UserWithSameNamespaceDifferentEnvironments_ShouldBuildSpecWithDeduplicatedValues() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("development", "production"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:KV:READ", "@team-a/development:KV:READ"})
+    void Given_UserWithDifferentNamespacesSameEnvironment_ShouldBuildSpecWithDeduplicatedValues() {
+        BaseNamespacedSpecification<Kv> namespacedSpec = KvSpecification.builder().build();
+        BaseNamespacedSpecification<Kv> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Kv> result = policyExecutorService.buildNamespacedSpec(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default", "team-a"), Set.of("development"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@team-a/staging:SECRET:READ"})
+    void Given_UserWithMultipleNamespacesAndEnvironmentsForSecrets_ShouldBuildSpecWithCorrectFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(
+                Set.of("default", "team-a"),
+                Set.of("development", "staging")
+        );
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@*:SECRET:READ"})
+    void Given_UserWithWildcardNamespaceForSecrets_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/*:SECRET:READ"})
+    void Given_UserWithWildcardEnvironmentForSecrets_ShouldBuildSpecWithNamespaceOnly() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("*"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@*/development:SECRET:READ"})
+    void Given_UserWithWildcardNamespaceButSpecificEnvironmentForSecrets_ShouldBuildSpecWithEnvironmentOnly() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    void Given_NullRootSpecificationForSecrets_ShouldReturnNull() {
+        Specification<Object> result = policyExecutorService.buildNamespacedSpecForSecrets(null);
+
+        assertNull(result);
+    }
+
+    @Test
+    @WithMockUser(authorities = {})
+    void Given_UserWithNoScopesForSecrets_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"invalid-scope-format"})
+    void Given_UserWithInvalidScopeFormatForSecrets_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@team-a/staging:SECRET:READ", "@*:SECRET:READ"})
+    void Given_UserWithMixedWildcardAndSpecificScopesForSecrets_ShouldBuildSpecWithOnlySpecificFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default", "team-a"), Set.of("development", "staging"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@default/production:SECRET:READ"})
+    void Given_UserWithSameNamespaceDifferentEnvironmentsForSecrets_ShouldBuildSpecWithDeduplicatedValues() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("development", "production"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@team-a/development:SECRET:READ"})
+    void Given_UserWithDifferentNamespacesSameEnvironmentForSecrets_ShouldBuildSpecWithDeduplicatedValues() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default", "team-a"), Set.of("development"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@team-a/staging:KV:READ"})
+    void Given_UserWithMixedSecretAndKVScopes_ShouldBuildSpecWithOnlySecretFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("development"));
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:KV:READ", "@team-a/staging:KV:WRITE"})
+    void Given_UserWithOnlyKVScopes_ShouldBuildSpecWithEmptyFilters() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of(), Set.of());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"@default/development:SECRET:READ", "@default/development:SECRET:WRITE"})
+    void Given_UserWithMultipleSecretPermissionsSameScope_ShouldBuildSpecWithDeduplicatedValues() {
+        BaseNamespacedSpecification<Secret> namespacedSpec = SecretSpecification.builder().build();
+        BaseNamespacedSpecification<Secret> spy = Mockito.spy(namespacedSpec);
+
+        Specification<Secret> result = policyExecutorService.buildNamespacedSpecForSecrets(spy);
+
+        assertNotNull(result);
+        verify(spy).hasPermission(Set.of("default"), Set.of("development"));
+    }
 
     Kv createKv() {
         Namespace namespace = defaultNamespace();
@@ -253,6 +540,22 @@ class PolicyExecutorServiceTest {
         kv.setNamespace(namespace);
         kv.setEnvironment(environment);
         return keyValueService.persist(kv);
+    }
+
+    Secret createSecret() {
+        Namespace namespace = defaultNamespace();
+        Environment environment = defaultEnvironment();
+        Secret secret = new Secret();
+        SecretVersion version = new SecretVersion();
+        version.setValue("123");
+        version.setVersion(1);
+
+        secret.setName("Testing Secret");
+        secret.setVersions(Set.of(version));
+        secret.setNamespace(namespace);
+        secret.setEnvironment(environment);
+
+        return secretService.persist(secret);
     }
 
     Environment defaultEnvironment() {

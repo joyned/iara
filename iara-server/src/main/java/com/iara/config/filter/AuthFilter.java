@@ -2,10 +2,14 @@ package com.iara.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iara.config.GlobalError;
+import com.iara.config.security.TokenHolder;
 import com.iara.core.exception.BaseException;
+import com.iara.core.exception.BlockedRequestException;
+import com.iara.core.exception.InvalidJwtException;
 import com.iara.core.exception.TokenMissingException;
 import com.iara.core.service.AuthenticationService;
 import com.iara.utils.CookieUtils;
+import com.iara.utils.IpUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -29,6 +33,7 @@ import java.util.*;
 public class AuthFilter extends OncePerRequestFilter {
 
     private final AuthenticationService service;
+    private final TokenHolder tokenHolder;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -36,6 +41,22 @@ public class AuthFilter extends OncePerRequestFilter {
         try {
             String token = getTokenFromCookies(request);
             if (StringUtils.isNotBlank(token)) {
+
+                if (tokenHolder.isBlocked(token)) {
+                    unauthorized(response, "This token is invalid.",
+                            new InvalidJwtException("This token is invalid."));
+                    return;
+                }
+
+                String ip = IpUtils.getIp(request);
+                String ownerIp = tokenHolder.getActive(token);
+
+                if (!ip.equals(ownerIp) || StringUtils.isBlank(ownerIp)) {
+                    unauthorized(response, "This tokens does not belong to you.",
+                            new BlockedRequestException("This request was blocked because it is invalid."));
+                    return;
+                }
+
                 Claims claims = service.validateToken(token);
                 List<String> scopes = (List<String>) claims.get("scopes");
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

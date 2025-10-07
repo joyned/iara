@@ -3,10 +3,7 @@ package com.iara.core.service.impl;
 import com.iara.core.entity.Secret;
 import com.iara.core.entity.SecretVersion;
 import com.iara.core.entity.specification.BaseNamespacedSpecification;
-import com.iara.core.exception.DestroyedSecretException;
-import com.iara.core.exception.DuplicatedSecretException;
-import com.iara.core.exception.OperationNotPermittedException;
-import com.iara.core.exception.SecretNotFoundException;
+import com.iara.core.exception.*;
 import com.iara.core.repository.SecretRepository;
 import com.iara.core.repository.SecretVersionRepository;
 import com.iara.core.service.PolicyExecutorService;
@@ -43,10 +40,23 @@ public class SecretServiceImpl implements SecretService {
             throw new OperationNotPermittedException("You are not authorized to perform this action.");
         }
 
+        if (StringUtils.isBlank(entity.getName())) {
+            throw new RequiredParameterException("Secret name is required to save.");
+        }
+
+        if (Objects.isNull(entity.getNamespace()) || Objects.isNull(entity.getEnvironment())) {
+            throw new RequiredParameterException("Neither Namespace and/or Environment can be null.");
+        }
+
         if (StringUtils.isBlank(entity.getId())) {
             Optional<Secret> existed = repository.findByName(entity.getName());
             if (existed.isPresent()) {
                 throw new DuplicatedSecretException("There is a secret with %s name. Please, change the name.", entity.getName());
+            }
+        } else {
+            Optional<Secret> actual = repository.findById(entity.getId());
+            if (actual.isPresent() && !actual.get().getName().equalsIgnoreCase(entity.getName())) {
+                throw new OperationNotPermittedException("You cannot update a Secret name.");
             }
         }
         Secret persisted = repository.save(entity);

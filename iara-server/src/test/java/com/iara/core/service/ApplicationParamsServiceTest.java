@@ -53,4 +53,16 @@ public class ApplicationParamsServiceTest {
     void Given_Delete_ShouldThrow() {
         assertThrows(OperationNotPermittedException.class, () -> applicationParamsService.delete(UUID.randomUUID().toString()));
     }
+
+    @Test
+    void Given_SecureParam_ShouldReturnWithNullValue() {
+        ApplicationParams applicationParams = new ApplicationParams();
+        applicationParams.setKey("TESTING");
+        applicationParams.setValue("123");
+        applicationParams.setSecure(true);
+        applicationParamsService.persist(applicationParams);
+        ApplicationParams param = applicationParamsService.findByKey("TESTING");
+        assertNull(param.getValue());
+    }
+
 }

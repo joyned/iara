@@ -38,8 +38,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> me(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(mapper.toDTO(service.me()));
+    public ResponseEntity<UserDTO> me() {
+        UserDTO res = mapper.toDTO(service.me());
+        res.setId(null);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping

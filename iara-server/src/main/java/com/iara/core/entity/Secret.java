@@ -5,13 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Table
 @Entity
 @Getter
 @Setter
-public class Secret {
+public class Secret implements Serializable {
 
     @Id
     @UuidGenerator
@@ -28,7 +32,8 @@ public class Secret {
     @JoinColumn(name = "namespace_id")
     private Namespace namespace;
 
-    @OneToMany(mappedBy = "secret")
+    @OneToMany(mappedBy = "secret", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @OrderBy("version DESC")
-    private List<SecretVersion> versions;
+    @ElementCollection
+    private Set<SecretVersion> versions = new HashSet<>();
 }

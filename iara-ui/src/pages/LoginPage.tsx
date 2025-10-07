@@ -20,9 +20,9 @@ export default function LoginPage() {
         }).catch(async (err: any) => {
             const body = await err.json();
             if (body.key === "ACCOUNT_NOT_FOUND") {
-                setErrorMessage("You don't have permission to access this resource. Please, contact your manager.");
+                setErrorMessage("you don't have permission to access this resource. please, contact your manager.");
             } else {
-                setErrorMessage('An unknow error occurred. Please, if persist contact your manager.');
+                setErrorMessage('an unknow error occurred. please, if persist contact your manager.');
             }
         });
     };

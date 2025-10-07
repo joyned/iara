@@ -6,11 +6,13 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.NumericBooleanConverter;
 
+import java.io.Serializable;
+
 @Table
 @Entity
 @Getter
 @Setter
-public class SecretVersion {
+public class SecretVersion implements Serializable {
 
     @Id
     @UuidGenerator

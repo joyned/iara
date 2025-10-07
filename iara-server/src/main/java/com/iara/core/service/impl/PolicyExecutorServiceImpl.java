@@ -99,7 +99,7 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
 
             boolean hasPermNamespaceAndEnv =
                     hasPermissionAtEnvironment(scope, secret.getEnvironment()) && hasPermissionAtNamespace(scope, secret.getNamespace());
-            boolean hasPermInKv = scope.split(":")[1].equals("KV");
+            boolean hasPermInKv = scope.split(":")[1].equals("SECRET");
             boolean isWrite = "WRITE".equals(scope.split(":")[scope.split(":").length - 1]);
 
             if (hasPermNamespaceAndEnv && hasPermInKv && isWrite) {
@@ -175,15 +175,17 @@ public class PolicyExecutorServiceImpl implements PolicyExecutorService {
         List<String> scopes = getScopeList();
 
         for (String scope : scopes) {
-            boolean isSecret = "SECRET".equals(scope.split(":")[1]);
-            String namespace = getNamespaceFromScope(scope);
-            String env = getEnvironmentFromScope(scope);
-            if (StringUtils.isNotBlank(namespace) && !namespace.startsWith("@*") && isSecret) {
-                namespaces.add(namespace);
-            }
+            if (scope.split(":").length > 1) {
+                boolean isSecret = "SECRET".equals(scope.split(":")[1]);
+                String namespace = getNamespaceFromScope(scope);
+                String env = getEnvironmentFromScope(scope);
+                if (StringUtils.isNotBlank(namespace) && !namespace.startsWith("@*") && isSecret) {
+                    namespaces.add(namespace);
+                }
 
-            if (StringUtils.isNotBlank(env) && !env.startsWith("@*") && isSecret) {
-                environments.add(env);
+                if (StringUtils.isNotBlank(env) && !env.startsWith("@*") && isSecret) {
+                    environments.add(env);
+                }
             }
         }
         return root.and(((BaseNamespacedSpecification<T>) root).hasPermission(namespaces, environments));

@@ -13,10 +13,12 @@ import { UserService } from "../services/UserService";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
 import { hasAccessToBatch } from "../utils/PermissionUtils";
+import { LoginService } from "../services/LoginService";
 
 export default function Layout() {
     const location = useLocation();
     const userService = new UserService();
+    const loginService = new LoginService();
     const navigate = useNavigate();
 
     const { loading } = useLoading();
@@ -76,7 +78,9 @@ export default function Layout() {
         localStorage.removeItem('access_token');
         localStorage.removeItem('namespace');
         localStorage.removeItem('environment');
-        navigate('/login')
+        loginService.doLogout().finally(() => {
+            navigate('/login')
+        })
     }
 
     const onNavigate = (to: string) => {

@@ -1,12 +1,13 @@
 package com.iara.utils;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CookieUtils {
@@ -37,13 +38,18 @@ public class CookieUtils {
         response.addHeader("Set-Cookie", cookieHeader.toString());
     }
 
-    public Long convertExpiresAtToCookieMaxAge(long expiresAt) {
-        Calendar calendar = Calendar.getInstance();
-        Date now = new Date();
+    public void invalidateCookies(HttpServletRequest request, HttpServletResponse response) {
+        createCookie(request, response, IARA_TOKEN, "", true, -1);
+        createCookie(request, response, IARA_EXPIRES_IN, "", false, -1);
+    }
 
-        calendar.set(Calendar.SECOND, (int) (calendar.get(Calendar.SECOND) + expiresAt));
+    public String getTokenFromCookies(HttpServletRequest request) {
+        if (Objects.isNull(request.getCookies())) {
+            return null;
+        }
+        Optional<Cookie> opCookie = Arrays.stream(request.getCookies()).filter(cookie -> CookieUtils.IARA_TOKEN.equals(cookie.getName())).findFirst();
 
-        return TimeUnit.MILLISECONDS.toSeconds(calendar.getTime().getTime()) -
-                TimeUnit.MILLISECONDS.toSeconds(now.getTime());
+        return opCookie.map(Cookie::getValue).orElse(null);
+
     }
 }

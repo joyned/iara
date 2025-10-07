@@ -52,6 +52,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidKv_ShouldPersist() {
         Kv kv = new Kv();
 
@@ -67,7 +68,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "testing@email.com")
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidKv_ShouldPersistWithHistory() {
         Kv kv = new Kv();
 
@@ -85,6 +86,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidKvWithEmptyValue_ShouldPersist() {
         Kv kv = new Kv();
 
@@ -99,6 +101,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidKvWithNullValue_ShouldPersist() {
         Kv kv = new Kv();
 
@@ -113,7 +116,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "testing@email.com")
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidKv_ShouldUpdate() {
         Kv kv = new Kv();
 
@@ -133,6 +136,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithDuplicatedKey_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -152,6 +156,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithNullKey_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -164,6 +169,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithEmptyKey_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -176,6 +182,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithNoNamespace_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -188,6 +195,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithNoEnvironment_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -200,6 +208,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_InvalidKvWithNoNamespaceAndEnvironment_ShouldThrow() {
         Kv kv = new Kv();
 
@@ -212,6 +221,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_ValidId_ShouldDelete() {
         Kv kv = new Kv();
 
@@ -226,6 +236,7 @@ public class KeyValueServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "testing@email.com", authorities = {"@*:KV:READ"})
     void Given_NonExistingKv_ShouldThrows() {
         assertThrows(KeyValueNotFoundException.class, () -> keyValueService.history(UUID.randomUUID().toString()));
     }

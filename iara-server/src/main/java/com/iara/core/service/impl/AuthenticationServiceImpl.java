@@ -1,6 +1,8 @@
 package com.iara.core.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iara.config.security.TokenHolder;
 import com.iara.core.entity.*;
 import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.InvalidIaraTokenException;
@@ -18,6 +20,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jms.artemis.ArtemisNoOpBindingRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,9 +45,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ApplicationTokenService applicationTokenService;
     private final ApplicationParamsService applicationParamsService;
     private final GoogleProxy googleProxy;
+    private final TokenHolder tokenHolder;
 
     @Override
-    public Authentication doLogin(String email, String password) {
+    public Authentication doLogin(String email, String password, String ip) {
         Optional<User> optionalUser = userService.findByEmail(email);
 
         if (optionalUser.isPresent()) {
@@ -56,19 +60,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
 
             Set<String> scopes = convertPoliciesIntoScopes(user);
-            return generateToken(email, scopes);
+            Authentication authentication = generateToken(email, scopes);
+            tokenHolder.putActive(authentication.getAccessToken(), ip);
+            return authentication;
         } else {
             throw new InvalidCredentialsException("Invalid credentials.");
         }
     }
 
     @Override
-    public Authentication doLoginGoogleSSO(String codeToken, String redirectUri) {
+    public void doLogout(String token) {
+        tokenHolder.addBlocklist(token);
+        tokenHolder.removeActive(token);
+    }
+
+    @Override
+    public Authentication doLoginGoogleSSO(String codeToken, String redirectUri, String ip) {
         try {
             ApplicationParams clientIdParam = applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID");
             ApplicationParams clientSecretParam = applicationParamsService.findByKeyInternal("GOOGLE_SSO_CLIENT_SECRET");
             String googleJwt = googleProxy.exchangeCodeToJwt(clientIdParam.getValue(), clientSecretParam.getValue(), codeToken, redirectUri);
-            Map<String, Object> claims = new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class);
+            Map<String, Object> claims = getClaimsFromJwt(googleJwt);
             String email = claims.get("email").toString();
             Optional<User> optionalUser = userService.findByEmail(email);
 
@@ -81,7 +93,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     user.setPicture((String) claims.get("picture"));
                     userService.persist(user);
                 }
-                return generateToken(email, scopes);
+                Authentication authentication = generateToken(email, scopes);
+                tokenHolder.putActive(authentication.getAccessToken(), ip);
+                return authentication;
             }
         } catch (Exception e) {
             throw new InvalidCredentialsException("You are not authorized to use this application.");
@@ -160,6 +174,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return applicationParamsService.findByKey("GOOGLE_SSO_CLIENT_ID").getValue();
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getClaimsFromJwt(String googleJwt) throws JsonProcessingException {
+        return new ObjectMapper().readValue(new String(Base64.getDecoder().decode(googleJwt.split("\\.")[1])), Map.class);
     }
 
     protected Set<String> convertPoliciesIntoScopes(User user) {

@@ -8,9 +8,11 @@ import java.util.Set;
 
 public interface AuthenticationService {
 
-    Authentication doLogin(String email, String password);
+    Authentication doLogin(String email, String password, String ip);
 
-    Authentication doLoginGoogleSSO(String codeToken, String redirectUri);
+    void doLogout(String token);
+
+    Authentication doLoginGoogleSSO(String codeToken, String redirectUri, String ip);
 
     Authentication generateToken(String email, Set<String> scopes);
 

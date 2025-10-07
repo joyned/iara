@@ -1,6 +1,7 @@
 package com.iara.config;
 
 import com.iara.config.filter.AuthFilter;
+import com.iara.config.security.TokenHolder;
 import com.iara.core.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
 
     private final AuthenticationService service;
+    private final TokenHolder tokenHolder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,7 +34,7 @@ public class SecurityConfiguration {
         http.cors(Customizer.withDefaults());
         http.csrf(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(new AuthFilter(service), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthFilter(service, tokenHolder), UsernamePasswordAuthenticationFilter.class);
 
         http.headers(headersConfigurer ->
                 headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
