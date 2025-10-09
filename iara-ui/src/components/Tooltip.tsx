@@ -14,8 +14,8 @@ export default function Tooltip(props: Props) {
                 {props.children}
                 {isOpen &&
                     <div className="absolute bg-primary-color p-3 text-sm rounded 
-                        border border-primary-darker-color z-50 shadow top-0 left-10/12">
-                        <span>{props.text}</span>
+                        border border-primary-darker-color z-50 shadow top-0 -left-11/12">
+                        <span className="text-white">{props.text}</span>
                     </div>
                 }
             </div>
