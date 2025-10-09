@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
         }
 
         error.setPath(httpServletRequest.getServletPath());
-        error.setMessage(e.getMessage());
+        error.setMessage("An unknow error occurred. If persist, contact your manager.");
 
         log.error(e.getMessage(), e);
 
