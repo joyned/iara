@@ -103,6 +103,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userService.persist(user);
         }
 
+        sessionHolder.remove(session);
+
         return authentication;
     }
 
