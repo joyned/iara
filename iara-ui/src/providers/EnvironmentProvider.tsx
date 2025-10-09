@@ -27,16 +27,9 @@ interface EnvironmentProviderProps {
 export const EnvironmentProvider: React.FC<EnvironmentProviderProps> = ({
     children,
 }) => {
-    const [environment, setEnvironmentState] = useState<Environment | undefined>(() => {
-        if (localStorage.getItem('environment') && atob(localStorage.getItem('environment') || '') !== 'undefined') {
-            return JSON.parse(atob(localStorage.getItem('environment') || ''))
-        }
-
-        return undefined;
-    });
+    const [environment, setEnvironmentState] = useState<Environment | undefined>();
     const setEnvironment = (newValue: Environment | undefined) => {
         setEnvironmentState(newValue);
-        localStorage.setItem('environment', btoa(JSON.stringify(newValue)));
     };
 
     const contextValue: EnvironmentType = {

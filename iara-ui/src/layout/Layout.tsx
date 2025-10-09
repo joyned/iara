@@ -9,11 +9,11 @@ import Dropdown from "../components/Dropdown";
 import Loading from "../components/Loading";
 import NamespaceEnvironment from "../components/NamespaceEnvironment";
 import { useLoading } from "../providers/LoadingProvider";
+import { LoginService } from "../services/LoginService";
 import { UserService } from "../services/UserService";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
 import { hasAccessToBatch } from "../utils/PermissionUtils";
-import { LoginService } from "../services/LoginService";
 
 export default function Layout() {
     const location = useLocation();
@@ -72,7 +72,6 @@ export default function Layout() {
         }
         return response;
     };
-
 
     const logout = () => {
         localStorage.removeItem('access_token');

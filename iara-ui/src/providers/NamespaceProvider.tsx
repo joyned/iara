@@ -27,16 +27,9 @@ interface NamespaceProviderProps {
 export const NamespaceProvider: React.FC<NamespaceProviderProps> = ({
     children,
 }) => {
-    const [namespace, setNamespaceState] = useState<Namespace | undefined>(() => {
-        if (localStorage.getItem('namespace') && atob(localStorage.getItem('namespace') || '') !== 'undefined') {
-            return JSON.parse(atob(localStorage.getItem('namespace') || ''))
-        }
-
-        return undefined;
-    });
+    const [namespace, setNamespaceState] = useState<Namespace | undefined>();
     const setNamespace = (newValue: Namespace | undefined) => {
         setNamespaceState(newValue);
-        localStorage.setItem('namespace', btoa(JSON.stringify(newValue)));
     };
 
     const contextValue: NamespaceType = {
