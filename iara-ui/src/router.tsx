@@ -1,22 +1,22 @@
 import { createBrowserRouter, Navigate } from "react-router";
+import GuardComponent from "./guard/GuardComponent";
 import Layout from "./layout/Layout";
+import ApplicationPageToken from "./pages/ApplicationTokenPage";
 import KeyValueForm from "./pages/form/KeyValueForm";
 import NamespacesForm from "./pages/form/NamespacesForm";
 import PolicyForm from "./pages/form/PolicyForm";
 import RoleForm from "./pages/form/RoleForm";
 import SecretsForm from "./pages/form/SecretsForm";
 import UsersForm from "./pages/form/UsersForm";
+import GeneralSettings from "./pages/GeneralSettingsPage";
 import KeyValuePage from "./pages/KeyValuePage";
-import LoginPage from "./pages/LoginPage";
 import NamespacesPage from "./pages/NamespacesPage";
 import PolicyPage from "./pages/PolicyPage";
+import LoginPage from "./pages/public/LoginPage";
 import RolesPage from "./pages/RolesPage";
 import SecretsPage from "./pages/SecretsPage";
-import UsersPage from "./pages/UsersPage";
-import GeneralSettings from "./pages/GeneralSettingsPage";
-import GuardComponent from "./guard/GuardComponent";
-import ApplicationPageToken from "./pages/ApplicationTokenPage";
 import UserSettingsPage from "./pages/UserSettingsPage";
+import UsersPage from "./pages/UsersPage";
 
 export const router = createBrowserRouter([
     {

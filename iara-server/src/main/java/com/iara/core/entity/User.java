@@ -34,6 +34,16 @@ public class User implements Serializable {
     @Column
     private String picture;
 
+    @Column(name = "otp_auth_url")
+    private String otpAuthUrl;
+
+    @Column(name = "otp_base32")
+    private String otpBase32;
+
+    @Column(name = "otp_enabled")
+    @Convert(converter = NumericBooleanConverter.class)
+    private Boolean otpEnabled = false;
+
     @Column(name = "is_sso")
     @Convert(converter = NumericBooleanConverter.class)
     private Boolean isSSO = false;

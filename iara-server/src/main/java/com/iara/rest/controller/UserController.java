@@ -59,6 +59,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/reset-otp")
+    @PreAuthorize("hasAuthority('#*:WRITE') or hasAuthority('#USERS:WRITE')")
+    public ResponseEntity<Void> resetOtp(@PathVariable String id) {
+        service.resetOtp(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordDTO dto) {
         service.changePassword(dto.getOldPassword(), dto.getNewPassword());

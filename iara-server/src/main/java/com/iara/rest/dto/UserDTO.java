@@ -14,4 +14,5 @@ public class UserDTO {
     private String picture;
     private List<RoleDTO> roles;
     private Boolean isSSO = false;
+    private Boolean otpEnabled = false;
 }

@@ -82,6 +82,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void resetOtp(String id) {
+        Optional<User> optionalUser = repository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            if (Objects.nonNull(user.getIsSSO()) && user.getIsSSO()) {
+                throw new UserModificationException("The following user %s is a SSO user. 2FA cannot be reset.", user.getEmail());
+            }
+
+            user.setOtpEnabled(false);
+            user.setOtpBase32(null);
+            user.setOtpAuthUrl(null);
+            repository.save(user);
+        }
+    }
+
+    @Override
     public void changePassword(String oldPassword, String newPassword) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> optionalUser = findByEmail(userEmail);

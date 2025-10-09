@@ -24,16 +24,18 @@ public class GlobalExceptionHandler {
             error.setStatus(Objects.requireNonNull(AnnotationUtils.findAnnotation
                     (e.getClass(), ResponseStatus.class)).code().value());
             error.setKey("GENERIC");
+            error.setMessage("An unknow error occurred. If persist, contact your manager.");
         } else if (e instanceof BaseException) {
             error.setKey(((BaseException) e).getKey());
             error.setStatus(((BaseException) e).getStatus());
+            error.setMessage(e.getMessage());
         } else {
             error.setKey("GENERIC");
             error.setStatus(500);
+            error.setMessage("An unknow error occurred. If persist, contact your manager.");
         }
 
         error.setPath(httpServletRequest.getServletPath());
-        error.setMessage("An unknow error occurred. If persist, contact your manager.");
 
         log.error(e.getMessage(), e);
 

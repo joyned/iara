@@ -4,15 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iara.config.security.TokenHolder;
 import com.iara.core.entity.*;
-import com.iara.core.exception.InvalidCredentialsException;
-import com.iara.core.exception.InvalidIaraTokenException;
-import com.iara.core.exception.InvalidJwtException;
+import com.iara.core.exception.*;
 import com.iara.core.model.Authentication;
+import com.iara.core.model.OTPConfig;
 import com.iara.core.proxy.GoogleProxy;
-import com.iara.core.service.ApplicationParamsService;
-import com.iara.core.service.ApplicationTokenService;
-import com.iara.core.service.AuthenticationService;
-import com.iara.core.service.UserService;
+import com.iara.core.service.*;
+import com.iara.core.topt.TOTPGenerator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +17,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jms.artemis.ArtemisNoOpBindingRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +42,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ApplicationParamsService applicationParamsService;
     private final GoogleProxy googleProxy;
     private final TokenHolder tokenHolder;
+    private final TwoFactorAuthService twoFactorAuthService;
+
+    private final Map<String, Authentication> sessionHolder = new LinkedHashMap<>();
 
     @Override
-    public Authentication doLogin(String email, String password, String ip) {
+    public OTPConfig doLogin(String email, String password, String ip) {
+        OTPConfig otpConfig = new OTPConfig();
         Optional<User> optionalUser = userService.findByEmail(email);
 
         if (optionalUser.isPresent()) {
@@ -59,13 +59,51 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new InvalidCredentialsException("Invalid credentials.");
             }
 
+            if (!user.getOtpEnabled()) {
+                user = twoFactorAuthService.register(user.getEmail());
+                otpConfig.setOtpUrl(user.getOtpAuthUrl());
+            }
+
             Set<String> scopes = convertPoliciesIntoScopes(user);
-            Authentication authentication = generateToken(email, scopes);
+            Authentication authentication = generateToken(email, scopes, user);
             tokenHolder.putActive(authentication.getAccessToken(), ip);
-            return authentication;
+            String session = UUID.randomUUID().toString();
+            sessionHolder.put(session, authentication);
+
+            otpConfig.setSession(session);
+            return otpConfig;
         } else {
             throw new InvalidCredentialsException("Invalid credentials.");
         }
+    }
+
+    @Override
+    public Authentication otpVerify(String code, String session, String ip) {
+        Authentication authentication = sessionHolder.get(session);
+
+        if (Objects.isNull(authentication)) {
+            throw new SessionNotFoundException("Session %s was not found.", session);
+        }
+
+        String sessionIp = tokenHolder.getActive(authentication.getAccessToken());
+
+        if (!sessionIp.equals(ip)) {
+            throw new BlockedRequestException("This request was blocked because it is invalid.");
+        }
+
+        User user = authentication.getUser();
+        boolean isValid = twoFactorAuthService.verify(code, user.getOtpBase32());
+
+        if (!isValid) {
+            throw new OTPException("Fail to validate your code.");
+        }
+
+        if (!user.getOtpEnabled()) {
+            user.setOtpEnabled(true);
+            userService.persist(user);
+        }
+
+        return authentication;
     }
 
     @Override
@@ -93,7 +131,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     user.setPicture((String) claims.get("picture"));
                     userService.persist(user);
                 }
-                Authentication authentication = generateToken(email, scopes);
+                Authentication authentication = generateToken(email, scopes, user);
                 tokenHolder.putActive(authentication.getAccessToken(), ip);
                 return authentication;
             }
@@ -103,7 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Authentication generateToken(String email, Set<String> scopes) {
+    public Authentication generateToken(String email, Set<String> scopes, User user) {
         try {
             SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
             Calendar calendar = Calendar.getInstance();
@@ -121,7 +159,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .signWith(key)
                     .compact();
 
-            return new Authentication(token, tokenExpiration / 1000);
+            return new Authentication(token, tokenExpiration / 1000, user);
         } catch (Exception e) {
             throw new InvalidCredentialsException("An error occurred while generating the access token. %s", e.getMessage());
         }
