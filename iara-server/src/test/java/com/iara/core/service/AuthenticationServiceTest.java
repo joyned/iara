@@ -7,10 +7,9 @@ import com.iara.core.entity.User;
 import com.iara.core.exception.InvalidCredentialsException;
 import com.iara.core.exception.InvalidIaraTokenException;
 import com.iara.core.exception.InvalidJwtException;
-import com.iara.core.model.Authentication;
+import com.iara.core.model.OTPConfig;
 import com.iara.core.proxy.GoogleProxy;
 import com.iara.core.service.impl.AuthenticationServiceImpl;
-import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +56,9 @@ public class AuthenticationServiceTest {
     @MockitoBean
     ApplicationParamsService applicationParamsService;
 
+    @MockitoBean
+    TwoFactorAuthService twoFactorAuthService;
+
     @BeforeEach
     void init() {
         User user = new User();
@@ -64,15 +66,18 @@ public class AuthenticationServiceTest {
         user.setEmail("testing@iara.com");
         user.setPassword("iara");
         user.setRoles(roleService.search(null, Pageable.unpaged()).toSet());
+        user.setOtpEnabled(true);
+        user.setOtpBase32("123ABCD");
+        user.setOtpAuthUrl("topt://");
 
         userService.persist(user);
     }
 
     @Test
     void Given_ValidCredentials_ShouldLogin() {
-        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara", "127.0.0.1");
-        assertNotNull(authentication);
-        assertNotNull(authentication.getAccessToken());
+        OTPConfig otpConfig = authenticationService.doLogin("testing@iara.com", "iara", "127.0.0.1");
+        assertNotNull(otpConfig);
+        assertNotNull(otpConfig.getSession());
     }
 
     @Test
@@ -83,15 +88,6 @@ public class AuthenticationServiceTest {
     @Test
     void Given_NotExistingUser_ShouldThrow() {
         assertThrows(InvalidCredentialsException.class, () -> authenticationService.doLogin("worng@iara.com", "iara", "127.0.0.1"));
-    }
-
-    @Test
-    void Given_ValidToken_ShouldReturnClaims() {
-        Authentication authentication = authenticationService.doLogin("testing@iara.com", "iara", "127.0.0.1");
-        Claims claims = authenticationService.validateToken(authentication.getAccessToken());
-
-        assertNotNull(claims);
-        assertEquals("testing@iara.com", claims.getSubject());
     }
 
     @Test
