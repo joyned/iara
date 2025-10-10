@@ -17,6 +17,9 @@ export class UserService implements BaseService<User> {
     resetPassword(id: string): Promise<void> {
         return HttpService.doPost(`v1/user/${id}/reset-password`, {});
     }
+    resetOtp(id: string): Promise<void> {
+        return HttpService.doPost(`v1/user/${id}/reset-otp`, {});
+    }
     me(): Promise<User> {
         return HttpService.doGet('v1/user/me');
     }

@@ -30,6 +30,7 @@ export default function UsersForm() {
     const [picture, setPicture] = useState<string | undefined>();
     const [roles, setRoles] = useState<Role[]>([]);
     const [isSSO, setIsSSO] = useState<boolean>(false);
+    const [otpEnabled, setOtpEnabled] = useState<boolean>(false);
 
     const [rolesOptions, setRolesOptions] = useState<Role[]>([]);
     const [selectedRole, setSelectedRole] = useState<Role>();
@@ -48,7 +49,8 @@ export default function UsersForm() {
                 setEmail(res.content[0].email);
                 setPicture(res.content[0].picture)
                 setRoles(res.content[0].roles);
-                setIsSSO(res.content[0].isSSO)
+                setIsSSO(res.content[0].isSSO);
+                setOtpEnabled(res.content[0].otpEnabled)
             }).finally(() => setLoading(false));
         }
     }, [params.id, setLoading]);
@@ -62,7 +64,8 @@ export default function UsersForm() {
             email: email,
             picture: picture,
             roles: roles,
-            isSSO: isSSO
+            isSSO: isSSO,
+            otpEnabled: otpEnabled
         }
 
         setLoading(true);
@@ -87,6 +90,15 @@ export default function UsersForm() {
             setLoading(true);
             service.resetPassword(id).then(() => {
                 toast.success("User password reseted.")
+            }).finally(() => setLoading(false));
+        }
+    }
+
+    const onUserResetOtp = () => {
+        if (id) {
+            setLoading(true);
+            service.resetOtp(id).then(() => {
+                toast.success("User OTP reseted.")
             }).finally(() => setLoading(false));
         }
     }
@@ -149,6 +161,15 @@ export default function UsersForm() {
                             <Input id="user-picture" name="user-picture" value={picture} type="text"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPicture(e.target.value)} />
                         </div>
+                        {!isSSO &&
+                            <div className="flex flex-col gap-2">
+                                <FormLabel>OTP</FormLabel>
+                                <ConfirmDialog onConfirm={onUserResetOtp}
+                                    description="By confirming, the user OTP will be reset and a new one will be required on login.">
+                                    <Button type="button" variant="outline">Reset OTP</Button>
+                                </ConfirmDialog>
+                            </div>
+                        }
                         {!isSSO &&
                             <div className="flex flex-col gap-2">
                                 <FormLabel>Password</FormLabel>

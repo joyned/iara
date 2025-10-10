@@ -7,4 +7,5 @@ export interface User {
     picture?: string;
     roles: Role[];
     isSSO: boolean;
+    otpEnabled: boolean;
 }
