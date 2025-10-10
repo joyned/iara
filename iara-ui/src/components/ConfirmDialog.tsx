@@ -54,11 +54,11 @@ export const ConfirmDialog: FC<Props> = forwardRef((props: Props, ref) => {
                                 <h1 className="text-lg font-bold">
                                     {props.title || "Confirm"}
                                 </h1>
-                                <MdClose className="text-2xl cursor-pointer"
+                                <MdClose className="text-2xl cursor-pointer text-white"
                                     onClick={() => setOpen(false)} />
                             </div>
                             <div className="mt-3">
-                                <span>
+                                <span className="text-white">
                                     {props.description || "Are you sure you want to delete?"}
                                 </span>
                             </div>
