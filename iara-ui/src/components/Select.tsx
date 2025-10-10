@@ -8,8 +8,8 @@ interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export default function Select(props: Props) {
     return (
-        <select {...props} className="p-1.5 pl-3 pr-3 border border-stone-200 rounded-sm">
-            <option defaultChecked>select an option...</option>
+        <select {...props} className="p-1.5 pl-3 pr-3 bg-primary-lighter-color text-white rounded-sm">
+            <option defaultChecked>Select an option...</option>
             {props.options && props.options.length > 0 && props.options.map((opt: any) => {
                 return (
                     <option value={JSON.stringify(opt)} key={uuid()}>{opt[props.optionlabel || 'name']}</option>

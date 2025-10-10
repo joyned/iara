@@ -18,6 +18,7 @@ import type { Page } from "../../types/Page";
 import type { Secret } from "../../types/Secret";
 import type { SecretVersion } from "../../types/SecretVersion";
 import { uuid } from "../../utils/UUID";
+import Card from "../../components/Card";
 
 export default function SecretsForm() {
     const params = useParams();
@@ -142,69 +143,73 @@ export default function SecretsForm() {
     }
 
     return (
-        <>
-            <div className="flex flex-col gap-5">
-                <h1 className="text-2xl">secrets</h1>
-                <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="secret-name" required>name </FormLabel>
-                        <Input id="secret-name" name="secret-name" type="text" value={name}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} disabled={!!id} />
-                    </div>
-                    {!id &&
+        <div className="flex flex-col gap-5">
+            <h1 className="text-2xl">Secrets</h1>
+            <Card>
+                <div className="flex flex-col gap-5">
+                    <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="secret-name" required>value </FormLabel>
-                            <TextArea id="secret-value" name="secret-value" rows={5} value={firstValue}
-                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setFirstValue(e.target.value)} />
+                            <FormLabel htmlFor="secret-name" required>Name</FormLabel>
+                            <Input id="secret-name" name="secret-name" type="text" value={name}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} disabled={!!id} />
                         </div>
-                    }
-                    {id &&
-                        <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="secret-name" required>version </FormLabel>
-                            {versions && versions.map((version: SecretVersion) => {
-                                return (
-                                    <ListItem name={`# ${version.version}`} onClick={() => onViewVersion(version)} key={uuid()}>
-                                        {(version.disabled && !version.destroyed) && <TiDeleteOutline className="text-yellow-500 text-3xl" />}
-                                        {version.destroyed && <TiDeleteOutline className="text-red-500 text-3xl" />}
-                                    </ListItem>
-                                )
-                            })}
-                        </div>
-                    }
-                    <div className="flex justify-between gap-4">
                         {!id &&
-                            <div className="flex gap-4">
-                                <Button onClick={() => onSaveVersion()}>create</Button>
+                            <div className="flex flex-col gap-2">
+                                <FormLabel htmlFor="secret-name" required>Value </FormLabel>
+                                <TextArea id="secret-value" name="secret-value" rows={5} value={firstValue}
+                                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setFirstValue(e.target.value)} />
                             </div>
                         }
                         {id &&
-                            <div className="flex gap-4">
-                                <Button onClick={() => onAddVersion()}>add version</Button>
+                            <div className="flex flex-col gap-2">
+                                <FormLabel htmlFor="secret-name" required>Version</FormLabel>
+                                {versions && versions.map((version: SecretVersion) => {
+                                    return (
+                                        <ListItem name={`# ${version.version}`} onClick={() => onViewVersion(version)} key={uuid()}>
+                                            {(version.disabled && !version.destroyed) && <TiDeleteOutline className="text-yellow-500 text-3xl" />}
+                                            {version.destroyed && <TiDeleteOutline className="text-red-500 text-3xl" />}
+                                        </ListItem>
+                                    )
+                                })}
                             </div>
                         }
-                        <ConfirmDialog onConfirm={onDeleteSecret}>
-                            <Button variant="danger" type="button">delete</Button>
-                        </ConfirmDialog>
-                    </div>
-                </form>
-            </div>
-            <Modal ref={modalRef} title={versionId ? `version #${String(version)}` : 'add version'} onSave={() => onSaveVersion()}
+                        <div className="flex justify-between gap-4">
+                            {!id &&
+                                <div className="flex gap-4">
+                                    <Button onClick={() => onSaveVersion()}>Create</Button>
+                                    <Button variant="outline" onClick={() => navigate('/secrets')} type="button">Back</Button>
+                                </div>
+                            }
+                            {id &&
+                                <div className="flex gap-4">
+                                    <Button onClick={() => onAddVersion()}>Add Version</Button>
+                                    <Button variant="outline" onClick={() => navigate('/secrets')} type="button">Back</Button>
+                                </div>
+                            }
+                            <ConfirmDialog onConfirm={onDeleteSecret}>
+                                <Button variant="danger" type="button">Delete</Button>
+                            </ConfirmDialog>
+                        </div>
+                    </form>
+                </div>
+            </Card>
+            <Modal ref={modalRef} title={versionId ? `Version #${String(version)}` : 'Add version'} onSave={() => onSaveVersion()}
                 cancelText={!versionId ? 'cancel' : 'close'} hasSave={!versionId}>
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="version-value" required>value</FormLabel>
+                        <FormLabel htmlFor="version-value" required>Value</FormLabel>
                         <TextArea id="version-value" name="version-value" rows={5} value={value}
                             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)}
                             disabled={!!versionId} />
                     </div>
                     {!versionId &&
                         <div className="flex items-center gap-2">
-                            <FormLabel htmlFor="version-disable-past">disable past version?</FormLabel>
+                            <FormLabel htmlFor="version-disable-past">Disable past version?</FormLabel>
                             <Checkbox value={disablePastVersion} onChange={(value: boolean) => setDisablePastVersion(value)} />
                         </div>
                     }
                 </div>
             </Modal>
-        </>
+        </div>
     )
 }

@@ -16,6 +16,7 @@ import type { Page } from "../../types/Page";
 import type { Policy } from "../../types/Policy";
 import type { Role } from "../../types/Role";
 import { uuid } from "../../utils/UUID";
+import Card from "../../components/Card";
 
 export default function RoleForm() {
     const params = useParams();
@@ -123,48 +124,52 @@ export default function RoleForm() {
 
     return (
         <div className="flex flex-col gap-5">
-            <h1 className="text-2xl">role</h1>
-            <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
-                <div className="flex flex-col gap-2">
-                    <FormLabel htmlFor="role-name" required>name</FormLabel>
-                    <Input id="role-name" name="role-name" type="text" value={name}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
-                </div>
-                <div className="flex flex-col gap-2">
-                    <FormLabel htmlFor="role-description">description</FormLabel>
-                    <TextArea id="role-description" name="role-description" value={description}
-                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)} />
-                </div>
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                        <FormLabel required>policies</FormLabel>
-                        <div className="flex">
-                            <Button type="button" onClick={onAddPolicy}>add policy</Button>
+            <h1 className="text-2xl">Role</h1>
+            <Card>
+                <div className="flex flex-col gap-5">
+                    <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+                        <div className="flex flex-col gap-2">
+                            <FormLabel htmlFor="role-name" required>Name</FormLabel>
+                            <Input id="role-name" name="role-name" type="text" value={name}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
                         </div>
-                    </div>
-                    {policies && policies.map((policy: Policy) => {
-                        return (
-                            <ListItem name={policy.name} onDelete={() => onRemovePolicy(policy)} key={uuid()} />
-                        )
-                    })}
+                        <div className="flex flex-col gap-2">
+                            <FormLabel htmlFor="role-description">Description</FormLabel>
+                            <TextArea id="role-description" name="role-description" value={description}
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)} />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                                <FormLabel required>Policies</FormLabel>
+                                <div className="flex">
+                                    <Button type="button" onClick={onAddPolicy}>Add policy</Button>
+                                </div>
+                            </div>
+                            {policies && policies.map((policy: Policy) => {
+                                return (
+                                    <ListItem name={policy.name} onDelete={() => onRemovePolicy(policy)} key={uuid()} />
+                                )
+                            })}
+                        </div>
+                        <div className="flex justify-between">
+                            <div className="flex gap-2">
+                                <Button>Save</Button>
+                                <Button variant="outline" type="button" onClick={() => navigate('/admin/roles')}>Back</Button>
+                            </div>
+                            <ConfirmDialog onConfirm={() => onDeleteRole()}>
+                                <Button variant="danger" type="button">Delete</Button>
+                            </ConfirmDialog>
+                        </div>
+                    </form>
+                    <Modal title="Add policy" ref={modalRef} onSave={onAddNewPolicy}>
+                        <div className="flex flex-col gap-2">
+                            <FormLabel required>Policy</FormLabel>
+                            <Select options={policiesOptions}
+                                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedPolicy(JSON.parse(e.target.value))} />
+                        </div>
+                    </Modal>
                 </div>
-                <div className="flex justify-between">
-                    <div className="flex gap-2">
-                        <Button>save</Button>
-                        <Button variant="outline" type="button" onClick={() => navigate('/admin/roles')}>back</Button>
-                    </div>
-                    <ConfirmDialog onConfirm={() => onDeleteRole()}>
-                        <Button variant="danger" type="button">delete role</Button>
-                    </ConfirmDialog>
-                </div>
-            </form>
-            <Modal title="add policy" ref={modalRef} onSave={onAddNewPolicy}>
-                <div className="flex flex-col gap-2">
-                    <FormLabel required>policy</FormLabel>
-                    <Select options={policiesOptions}
-                        onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedPolicy(JSON.parse(e.target.value))} />
-                </div>
-            </Modal>
+            </Card>
         </div>
     )
 }

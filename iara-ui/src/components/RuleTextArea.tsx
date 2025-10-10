@@ -52,7 +52,7 @@ export default function RuleTextArea(props: Props) {
     return (
         <>
             <div className="relative w-full">
-                <div className="relative border border-gray-100 rounded font-monaco text-sm">
+                <div className="relative rounded font-monaco text-sm">
                     <textarea id={uuid()}
                         ref={textareaRef}
                         value={props.value}

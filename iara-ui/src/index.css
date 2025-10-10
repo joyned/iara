@@ -1,18 +1,28 @@
 @import "tailwindcss";
 
 :root {
-    --primary-color: #2C2C2C;
-    --primary-darker-color: #16161b;
-    --primary-lighter-color: #404040;
+    --primary-color: #191C24;
+    --primary-darker-color: #0F1015;
+    --primary-lighter-color: #22242E;
 
     --code-block-color: #2D2D2D;
 
     --text-title: #434343;
+
+    --light-purple: #6c7293;
 }
 
 body {
-    background-color: #EBEBEB;
+    background-color: #100f0f;
     font-family: 'Roboto', sans-serif;
+}
+
+.text-light-purple {
+    color: var(--light-purple);
+}
+
+.bg-light-purple {
+    background-color: var(--light-purple);
 }
 
 .bg-low-opacity {
@@ -51,13 +61,17 @@ body {
     border-color: var(--primary-darker-color);
 }
 
+.border-primary-lighter-color {
+    border-color: var(--primary-lighter-color);
+}
+
 .text-title {
     font-family: "Syncopate", sans-serif;
 }
 
 h1 {
     font-weight: bold;
-    color: var(--primary-lighter-color);
+    color: white;
 }
 
 .code-block {
@@ -69,6 +83,16 @@ h1 {
 
 input:focus {
     outline: none;
+}
+
+input::placeholder {
+    color: #FFFFFF;
+    font-size: 0.875rem;
+}
+
+textarea:focus {
+  outline: none;
+  border: none;
 }
 
 .font-monaco {
@@ -89,9 +113,13 @@ input:focus {
 }
 
 /*Checkbox*/
+.checkbox-wrapper-2 {
+    display: flex;
+}
+
 .checkbox-wrapper-2 .ikxBAC {
     appearance: none;
-    background-color: #dfe1e4;
+    background-color: #4c5069;
     border-radius: 72px;
     border-style: none;
     flex-shrink: 0;
@@ -131,12 +159,13 @@ input:focus {
 }
 
 .checkbox-wrapper-2 .ikxBAC:hover {
-    background-color: #c9cbcd;
+    background-color: #696f91;
     transition-duration: 0s;
+    cursor: pointer;
 }
 
 .checkbox-wrapper-2 .ikxBAC:checked {
-    background-color: var(--primary-color);
+    background-color: #272936;
 }
 
 .checkbox-wrapper-2 .ikxBAC:checked::after {

@@ -6,7 +6,7 @@ interface Props extends LabelHTMLAttributes<HTMLLabelElement> {
 
 export default function FormLabel(props: Props) {
     return (
-        <label {...props}>
+        <label {...props} className="text-sm text-white">
             {props.children}
             {props.required && <span className="text-red-500"> *</span>}
         </label>

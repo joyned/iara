@@ -1,3 +1,4 @@
+import SensitiveCheckForm from "./form/SensitiveCheckForm";
 import SSOForm from "./form/SSOForm";
 
 export default function GeneralSettings() {
@@ -5,6 +6,7 @@ export default function GeneralSettings() {
         <>
             <div className="flex flex-col gap-10">
                 <SSOForm />
+                <SensitiveCheckForm />
             </div>
         </>
     )

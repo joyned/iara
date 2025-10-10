@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
+import Card from "../components/Card";
 import Checkbox from "../components/Checkbox";
 import FormLabel from "../components/FormLabel";
 import Input from "../components/Input";
 import ListItem from "../components/ListItem";
 import { Modal } from "../components/Modal";
-import Panel from "../components/Panel";
 import { useLoading } from "../providers/LoadingProvider";
 import { ApplicationTokenService } from "../services/ApplicationTokenService";
 import { UserService } from "../services/UserService";
@@ -121,19 +121,19 @@ export default function UserSettingsPage() {
 
     return (
         <div className="flex flex-col gap-10">
-            <Panel title="user" startClosed={false}>
+            <Card title="User">
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="user-name" required>name</FormLabel>
+                        <FormLabel htmlFor="user-name" required>Name</FormLabel>
                         <Input id="user-name" name="user-name" value={name} disabled />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="email-name" required>email</FormLabel>
+                        <FormLabel htmlFor="email-name" required>Email</FormLabel>
                         <Input id="email-name" name="email-name" value={email} disabled />
                     </div>
                 </div>
-            </Panel>
-            <Panel title="tokens" onOpen={onOpenTokens} startClosed>
+            </Card>
+            <Card title="Tokens" onOpen={onOpenTokens} closeable>
                 <>
                     {tokens && tokens.map((token: ApplicationToken) => {
                         return (
@@ -144,9 +144,9 @@ export default function UserSettingsPage() {
                         <Button type="button" onClick={() => newTokenModalRef.current.setOpen(true)}>create</Button>
                     </div>
                 </>
-            </Panel>
+            </Card>
             {!isSSO &&
-                <Panel title="password" startClosed>
+                <Card title="Password" closeable>
                     <form className="flex flex-col gap-2" onSubmit={changePassword}>
                         <div className="flex flex-col gap-2">
                             <FormLabel htmlFor="current-password" required>current password</FormLabel>
@@ -167,9 +167,9 @@ export default function UserSettingsPage() {
                             <Button type="submit">change</Button>
                         </div>
                     </form>
-                </Panel>
+                </Card>
             }
-            <Modal title="create token" ref={newTokenModalRef} saveText="create" onSave={onCreateNewToken}>
+            <Modal title="Create token" ref={newTokenModalRef} saveText="create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">
                         <FormLabel htmlFor="token-name" required>name</FormLabel>

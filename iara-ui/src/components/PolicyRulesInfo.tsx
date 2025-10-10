@@ -2,7 +2,7 @@ import { GoDotFill } from "react-icons/go";
 
 export default function PolicyRulesInfo() {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-white">
             <span>
                 The policies you provided define permissions for different resources within a system.
                 They follow a strict syntax to grant specific access levels. Here’s a breakdown of the structure and meaning:

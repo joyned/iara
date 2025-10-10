@@ -13,7 +13,7 @@ interface Props {
     hasSave?: boolean;
 }
 
-export const Modal = forwardRef(({ title, saveText = "save", cancelText = "cancel", onSave, beforeClose, children, hasSave = true }: Props, ref) => {
+export const Modal = forwardRef(({ title, saveText = "Save", cancelText = "Cancel", onSave, beforeClose, children, hasSave = true }: Props, ref) => {
     const [modalId] = useState<string>(v1());
     const [open, setOpen] = useState<boolean>(false);
 
@@ -39,12 +39,12 @@ export const Modal = forwardRef(({ title, saveText = "save", cancelText = "cance
         <>
             {open &&
                 <div className="absolute flex justify-center items-center w-full h-full top-0 left-0 z-50 bg-low-opacity">
-                    <div className="p-2 w-[700px] bg-white rounded max-h-10/12 overflow-auto">
-                        <div className="flex justify-between items-center border-b border-b-stone-400 pb-3 pt-1">
+                    <div className="p-2 w-[700px] bg-primary-color rounded max-h-10/12 overflow-auto">
+                        <div className="flex justify-between items-center border-b border-b-stone-400 p-4">
                             <h1>{title}</h1>
-                            <CgClose className="cursor-pointer" onClick={onClose} />
+                            <CgClose className="cursor-pointer text-white" onClick={onClose} />
                         </div>
-                        <form id={modalId} onSubmit={onSave} className="p-3">
+                        <form id={modalId} onSubmit={onSave} className="p-4">
                             {children}
                         </form>
                         <div className="mt-3">

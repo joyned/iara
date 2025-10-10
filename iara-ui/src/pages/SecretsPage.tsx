@@ -36,7 +36,7 @@ export default function SecretsPage() {
 
     return (
         <>
-            <TableList title="secrets" data={secrets} dataLabel="name"
+            <TableList title="Secrets" data={secrets} dataLabel="name"
                 onCreate={() => navigate(`/secrets/new`)}
                 onEdit={(id: string) => navigate(`/secrets/${id}`)} />
         </>

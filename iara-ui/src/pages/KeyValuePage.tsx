@@ -48,7 +48,7 @@ export default function KeyValuePage() {
 
     return (
         <>
-            <TableList title="kv entries" data={keyValues} dataLabel="key"
+            <TableList title="KV Entries" data={keyValues} dataLabel="key"
                 onCreate={() => navigate(`/kv/new`)}
                 onEdit={(id: string) => navigate(`/kv/${id}`)} />
         </>

@@ -10,6 +10,7 @@ import type { Namespace } from "../types/Namespace";
 import type { Page } from "../types/Page";
 import { Modal } from "./Modal";
 import Select from "./Select";
+import FormLabel from "./FormLabel";
 
 export default function NamespaceEnvironment() {
     const { setLoading } = useLoading();
@@ -78,27 +79,32 @@ export default function NamespaceEnvironment() {
         <div className="mb-5">
             {(namespace && JSON.stringify(environment) !== '{}') && (
                 <>
-                    <div className="w-fit flex items-center bg-primary-color rounded-lg text-white cursor-pointer"
+                    <div className="w-fit flex items-center bg-primary-color rounded text-white cursor-pointer"
                         onClick={() => onEnvModalOpen()}>
-                        <span className="font-semibold p-2 pl-7 pr-7 border-r border-white">{namespace.name}</span>
-                        <span className="font-semibold p-2 pl-7 pr-7 border-l border-white">{environment?.name}</span>
+                        <span className="text-md p-2 pl-7 pr-7 border-r border-white">{namespace.name}</span>
+                        <span className="text-md p-2 pl-7 pr-7 border-l border-white">{environment?.name}</span>
                     </div>
                 </>
             )}
-            {JSON.stringify(environment) === '{}' && (
+            {(selectedNamespace && !selectedEnvironment) && (
                 <span className="w-fit flex items-center gap-1 bg-red-500 p-2 rounded text-white cursor-pointer" onClick={() => onEnvModalOpen()}>
-                    please, select an environment
+                    Please, select an environment
                 </span>
             )}
-            <Modal title="select your environment" ref={envModalRef} onSave={beforeSaveModal} saveText="apply">
+            {!selectedNamespace && (
+                <span className="w-fit flex items-center gap-1 bg-red-500 p-2 rounded text-white cursor-pointer" onClick={() => onEnvModalOpen()}>
+                    Please, select an namespace
+                </span>
+            )}
+            <Modal title="Select your environment" ref={envModalRef} onSave={beforeSaveModal} beforeClose={() => beforeSaveModal} saveText="Apply">
                 <div className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-1">
-                        <span className="font-medium">namespace:</span>
+                    <div className="flex flex-col gap-2">
+                        <FormLabel className="font-medium" required>Namespace</FormLabel>
                         <Select options={namespaceOptions || []} optionlabel="name" value={JSON.stringify(selectedNamespace)}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => onNamespaceSelect(JSON.parse(e.target.value))} />
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <div className="font-medium">environment:</div>
+                    <div className="flex flex-col gap-2">
+                        <FormLabel className="font-medium" required>Environment</FormLabel>
                         <Select options={environmentOptions || []} optionlabel="name" value={JSON.stringify(selectedEnvironment)}
                             onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedEnvironment(JSON.parse(e.target.value))} />
                     </div>

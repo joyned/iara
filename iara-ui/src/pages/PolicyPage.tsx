@@ -22,7 +22,7 @@ export default function PolicyPage() {
 
     return (
         <>
-            <TableList title="policies" data={policies} dataLabel="name"
+            <TableList title="Policies" data={policies} dataLabel="name"
                 onCreate={() => navigate(`/admin/policies/new`)}
                 onEdit={(id: string) => navigate(`/admin/policies/${id}`)} />
         </>

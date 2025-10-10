@@ -31,10 +31,10 @@ export default function Card(props: Props) {
 
     return (
         <>
-            <div className="flex shadow-2xl border border-stone-200 rounded-sm w-full">
-                <div className="p-4 w-full">
+            <div className="flex shadow-2xl rounded-sm w-full bg-primary-color">
+                <div className="w-full" style={{padding: '1.75rem 1.5625rem'}}>
                     {props.title &&
-                        <div className="flex justify-between items-center"
+                        <div className="flex justify-between items-center text-white"
                             style={{ cursor: closeable ? 'pointer' : '' }}
                             onClick={handleOpen}>
                             <h1>{props.title}</h1>

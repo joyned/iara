@@ -1,10 +1,10 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { FaGoogle } from "react-icons/fa";
 import Button from "../../components/Button";
+import Card from "../../components/Card";
 import Checkbox from "../../components/Checkbox";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
-import Panel from "../../components/Panel";
 import { useLoading } from "../../providers/LoadingProvider";
 import { ApplicationParamsService } from "../../services/ApplicationParamsService";
 import type { ApplicationParams } from "../../types/ApplicationParams";
@@ -108,11 +108,11 @@ export default function SSOForm() {
     }
 
     return (
-        <Panel title="sign-in options" startClosed={false}>
+        <Card title="Sign-in Options" closeable>
             <>
                 <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
-                        <div className="flex items-baseline">
+                        <div className="flex items-baseline text-white">
                             <FaGoogle />
                             <span>oogle</span>
                         </div>
@@ -140,6 +140,6 @@ export default function SSOForm() {
                 </div>
 
             </>
-        </Panel>
+        </Card>
     )
 }

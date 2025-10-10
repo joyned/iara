@@ -11,15 +11,15 @@ export default function Button(props: Props) {
     const getVariant = (variant: string) => {
         switch (variant) {
             case 'outline':
-                return 'bg-transparent border';
+                return 'bg-transparent border border-white text-white';
             case 'danger':
                 return 'bg-red-600 text-white border-red-600'
             default:
-                return 'border-primary-color bg-primary-color text-white hover:bg-primary-darker-color';
+                return 'border-primary-color bg-primary-darker-color text-white';
         }
     }
 
-    const baseClasses = 'rounded-lg p-2 min-w-[150px] cursor-pointer transition-colors duration-200';
+    const baseClasses = 'text-sm rounded-lg p-2 min-w-[150px] cursor-pointer transition-colors duration-200';
     const variantClasses = getVariant(variant);
 
     const combinedClasses = `${baseClasses} ${variantClasses} ${className || ''}`

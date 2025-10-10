@@ -1,8 +1,9 @@
 import type { ChangeEvent } from "react";
+import { uuid } from "../utils/UUID";
 import Button from "./Button";
+import Card from "./Card";
 import Input from "./Input";
 import ListItem from "./ListItem";
-import { uuid } from "../utils/UUID";
 import Pageable from "./Pageable";
 
 interface Props {
@@ -20,27 +21,31 @@ interface Props {
 
 export default function TableList(props: Props) {
     return (
-        <>
-            <div className="flex flex-col gap-5">
-                <h1 className="text-2xl">{props.title}</h1>
-                <div className="flex justify-between">
-                    <Input placeholder="search" onChange={(e: ChangeEvent<HTMLInputElement>) => props.onSearch && props.onSearch(e.target.value)} />
-                    <Button type="button" className="w-[150px]" onClick={() => props.onCreate && props.onCreate()}>create</Button>
-                </div>
-                <div className="flex flex-col gap-4">
-                    {props.data.length > 0 && props.data.map((d: any) => {
-                        return (
-                            <ListItem name={d[props.dataLabel]} onClick={() => props.onEdit && props.onEdit(d.id)} key={uuid()}
-                                onDelete={props.onDelete && (() => props.onDelete && props.onDelete(d.id))} />
-                        )
-                    })}
-                    {props.data.length === 0 && <span>no data found.</span>}
-                </div>
-                <div className="flex justify-end">
-                    {props.data.length > 0 && <Pageable totalPages={props.totalPages || 0} page={props.page || 0}
-                        onPage={(page: number) => props.onPage && props.onPage(page)}></Pageable>}
-                </div>
+        <div className="flex flex-col gap-5">
+            <div className="flex justify-between items-center">
+                <h1 className="text-1xl">{props.title}</h1>
+                <Button type="button" variant="outline" onClick={() => props.onCreate && props.onCreate()}>Create</Button>
             </div>
-        </>
+            <Card>
+                <div className="flex flex-col gap-5">
+                    <div className="flex justify-between">
+                        <Input placeholder="Search" onChange={(e: ChangeEvent<HTMLInputElement>) => props.onSearch && props.onSearch(e.target.value)} />
+                    </div>
+                    <div className="flex flex-col gap-4">
+                        {props.data.length > 0 && props.data.map((d: any) => {
+                            return (
+                                <ListItem name={d[props.dataLabel]} onClick={() => props.onEdit && props.onEdit(d.id)} key={uuid()}
+                                    onDelete={props.onDelete && (() => props.onDelete && props.onDelete(d.id))} />
+                            )
+                        })}
+                        {props.data.length === 0 && <span className="text-white text-sm">No data found.</span>}
+                    </div>
+                    <div className="flex justify-end">
+                        {props.data.length > 0 && <Pageable totalPages={props.totalPages || 0} page={props.page || 0}
+                            onPage={(page: number) => props.onPage && props.onPage(page)}></Pageable>}
+                    </div>
+                </div>
+            </Card>
+        </div>
     )
 }
