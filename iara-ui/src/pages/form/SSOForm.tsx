@@ -122,19 +122,19 @@ export default function SSOForm() {
                         {enabledValue &&
                             <>
                                 <div className="flex flex-col gap-2">
-                                    <FormLabel required>client id</FormLabel>
+                                    <FormLabel required>Client ID</FormLabel>
                                     <Input value={clientValue}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => setClientValue(e.target.value)} />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <FormLabel required>client secret</FormLabel>
+                                    <FormLabel required>Client Secret</FormLabel>
                                     <Input type="password" value={secretValue}
                                         onChange={(e: ChangeEvent<HTMLInputElement>) => setSecretValue(e.target.value)} />
                                 </div>
                             </>
                         }
                         <div className="flex mt-5">
-                            <Button>save</Button>
+                            <Button>Save</Button>
                         </div>
                     </form>
                 </div>
