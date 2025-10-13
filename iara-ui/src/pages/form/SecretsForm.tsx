@@ -194,7 +194,7 @@ export default function SecretsForm() {
                 </div>
             </Card>
             <Modal ref={modalRef} title={versionId ? `Version #${String(version)}` : 'Add version'} onSave={() => onSaveVersion()}
-                cancelText={!versionId ? 'cancel' : 'close'} hasSave={!versionId}>
+                cancelText={!versionId ? 'Cancel' : 'Close'} hasSave={!versionId}>
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
                         <FormLabel htmlFor="version-value" required>Value</FormLabel>

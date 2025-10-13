@@ -141,7 +141,7 @@ export default function UserSettingsPage() {
                         )
                     })}
                     <div className="flex mt-5">
-                        <Button type="button" onClick={() => newTokenModalRef.current.setOpen(true)}>create</Button>
+                        <Button type="button" onClick={() => newTokenModalRef.current.setOpen(true)}>Create</Button>
                     </div>
                 </>
             </Card>
@@ -149,53 +149,53 @@ export default function UserSettingsPage() {
                 <Card title="Password" closeable>
                     <form className="flex flex-col gap-2" onSubmit={changePassword}>
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="current-password" required>current password</FormLabel>
+                            <FormLabel htmlFor="current-password" required>Current password</FormLabel>
                             <Input type="password" name="current-password" id="current-password"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="new-password" required>new password</FormLabel>
+                            <FormLabel htmlFor="new-password" required>New password</FormLabel>
                             <Input type="password" name="new-password" id="new-password"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="repeat-password" required>repeat new password</FormLabel>
+                            <FormLabel htmlFor="repeat-password" required>Repeat new password</FormLabel>
                             <Input type="password" name="repeat-password" id="repeat-password"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPasswordRepeat(e.target.value)} />
                         </div>
                         <div className="flex gap-2">
-                            <Button type="submit">change</Button>
+                            <Button type="submit">Change</Button>
                         </div>
                     </form>
                 </Card>
             }
-            <Modal title="Create token" ref={newTokenModalRef} saveText="create" onSave={onCreateNewToken}>
+            <Modal title="Create token" ref={newTokenModalRef} saveText="Create" onSave={onCreateNewToken}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="token-name" required>name</FormLabel>
+                        <FormLabel htmlFor="token-name" required>Name</FormLabel>
                         <Input id="token-name" name="token-name" onChange={(e: ChangeEvent<HTMLInputElement>) => setTokenName(e.target.value)} />
                     </div>
                     {!neverExpires &&
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="token-expires" required>expires at</FormLabel>
+                            <FormLabel htmlFor="token-expires" required>Expires at</FormLabel>
                             <Input id="token-expires" name="token-expires" type="date" min={getMinDate()}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setExpiresAt(new Date(e.target.value))} />
                         </div>
                     }
                     <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="token-never-expires">never expires</FormLabel>
+                        <FormLabel htmlFor="token-never-expires">Never expires</FormLabel>
                         <Checkbox id="token-never-expires" name="token-never-expires" onChange={() => setNeverExpires(!neverExpires)} />
                     </div>
                 </div>
             </Modal>
-            <Modal title="token" hasSave={false} ref={tokenModalRef} beforeClose={() => setToken(undefined)} cancelText="close">
+            <Modal title="token" hasSave={false} ref={tokenModalRef} beforeClose={() => setToken(undefined)} cancelText="Close">
                 <div className="flex flex-col gap-5">
-                    <span className="p-1 rounded">please, save this token. when you close this window, you will not be able to get your token.</span>
+                    <span className="p-1 rounded text-white">Please, save this token. When you close this window, you will not be able to get your token.</span>
                     <pre className="overflow-auto bg-stone-700 text-white p-1 rounded">
                         {token}
                     </pre>
                     <div className="flex">
-                        <Button type="button" variant="outline" onClick={copyToClipboard}>copy to clipboard</Button>
+                        <Button type="button" variant="outline" onClick={copyToClipboard}>Copy to clipboard</Button>
                     </div>
                 </div>
             </Modal>

@@ -7,6 +7,7 @@ import type { OTPConfig } from "../../types/OTPConfig";
 // @ts-ignore
 import { QRCode } from "react-qr-code";
 import FormLabel from "../../components/FormLabel";
+import Input from "../../components/Input";
 
 export default function LoginPage() {
     const service = new LoginService();
@@ -114,7 +115,7 @@ export default function LoginPage() {
                             </div>
 
                             <div className="flex">
-                                <button className="w-full bg-primary-darker-color text-white p-2 rounded cursor-pointer">login</button>
+                                <button className="w-full bg-primary-darker-color text-white p-2 rounded cursor-pointer">Login</button>
                             </div>
 
                             <div className="flex gap-5 justify-end">
@@ -129,19 +130,36 @@ export default function LoginPage() {
                         </form>
                     }
                     {(isOtp && OTPUrl) &&
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <span>Please, install Google Authenticator or any other 2FA app.</span>
-                            <span>After installing, scan the QR Code and enter the code below to activate your 2FA.</span>
-                            <QRCode value={OTPUrl} bgColor={"#EBEBEB"} />
+                        <div className="flex flex-col gap-5 items-start justify-start">
+                            <div className="flex flex-col gap-2">
+                                <span className="text-title font-bold text-1xl">Two-Factor Authentication (2FA)</span>
+                                <hr className="color-white w-full" />
+                                <span className="text-sm">
+                                    1. Install Google Authentication (iOS - Android) or Authy (iOS - Android)
+                                </span>
+                                <span className="text-sm">
+                                    2. In the authenticator app, select "+" icon.
+                                </span>
+                                <span className="text-sm">
+                                    3. Select "Scan a barcode (or QR code)" and use phone's camera to scan this barcode.
+                                </span>
+                            </div>
+                            <div className="w-full flex flex-col gap-2">
+                                <span className="text-title font-bold text-1xl">Scan QRCode</span>
+                                <hr className="color-white w-full" />
+                                <div className="w-full flex justify-center">
+                                    <QRCode value={OTPUrl} bgColor={"#EBEBEB"} />
+                                </div>
+                            </div>
                         </div>
                     }
 
                     {(isOtp) &&
-                        <form className="flex flex-col gap-5" onSubmit={verifyOtp} >
+                        <form className="flex flex-col gap-2" onSubmit={verifyOtp} >
+                            <span className="text-1xl">Verify the code</span>
                             <div className="flex flex-col gap-2">
-                                <label htmlFor="email">MFA Code</label>
-                                <input className="border border-gray-400 rounded p-2 w-full bg-transparent"
-                                    id="code" name="code" type="text" maxLength={6} value={otpCode}
+                                <Input className="w-full"
+                                    id="code" name="code" type="text" maxLength={6} value={otpCode} autoComplete="off"
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setOtpCode(e.target.value)} />
                             </div>
 
