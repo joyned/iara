@@ -1,6 +1,6 @@
 export default function Loading() {
     return (
-        <div className="absolute top-0 flex justify-center items-center w-full h-full bg-low-opacity z-50">
+        <div className="fixed top-0 flex justify-center items-center w-full h-full bg-low-opacity z-50">
             <div className="w-[30px]">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
                     <rect fill="#2D2D2D" stroke="#2D2D2D"
