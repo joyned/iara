@@ -118,7 +118,7 @@ export default function Layout() {
                             <div className="flex flex-col gap-5">
                                 <div className="flex gap-5">
                                     {picture ?
-                                        <img src={picture} alt="profile-picture" className="w-[48px]" />
+                                        <div className="w-[48px] h-[48px] rounded-full bg-cover bg-center" style={{ backgroundImage: `url("${picture}")` }} />
                                         :
                                         <BiSolidUserCircle className="text-white text-5xl" />
                                     }
