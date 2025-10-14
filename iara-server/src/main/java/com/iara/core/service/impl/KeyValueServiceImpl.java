@@ -83,12 +83,14 @@ public class KeyValueServiceImpl implements KeyValueService {
     }
 
     @Override
+    @Transactional
     public void delete(String id) {
         Optional<Kv> optionalKv = repository.findById(id);
         if (optionalKv.isPresent()) {
             if (!policyExecutorService.hasWritePermissionInKV(optionalKv.get())) {
                 throw new OperationNotPermittedException("You are not authorized to perform this action.");
             }
+            keyValueHistoryRepository.deleteByKeyValue(optionalKv.get());
             repository.deleteById(id);
         }
     }

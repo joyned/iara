@@ -11,4 +11,7 @@ import java.util.List;
 public interface KeyValueHistoryRepository extends JpaRepository<KvHistory, String> {
 
     List<KvHistory> findByKeyValueOrderByUpdatedAtDesc(Kv kv);
+
+    void deleteByKeyValue(Kv keyValue);
+
 }
