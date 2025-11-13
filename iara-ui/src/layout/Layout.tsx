@@ -25,7 +25,7 @@ export default function Layout() {
     const { loading } = useLoading();
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(window.innerWidth > 1150);
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1150);
+    const [_, setIsMobile] = useState<boolean>(window.innerWidth < 1150);
     const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
     const [adminSubmenu, setAdminSubmenu] = useState<boolean>(false);
 

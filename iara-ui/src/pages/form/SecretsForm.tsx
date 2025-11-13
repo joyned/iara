@@ -107,12 +107,13 @@ export default function SecretsForm() {
 
     const onViewVersion = (version: SecretVersion) => {
         if (id && version.id) {
+            setLoading(true);
             service.getSecretValue(id, version.id).then((res: string) => {
                 setVersionId(version.id);
                 setVersion(version.version);
                 setValue(res);
                 modalRef.current.setOpen(true);
-            });
+            }).finally(() => setLoading(false));
         }
     }
 
@@ -202,7 +203,7 @@ export default function SecretsForm() {
                     {!versionId &&
                         <div className="flex items-center gap-2">
                             <FormLabel htmlFor="version-disable-past">Disable past version?</FormLabel>
-                            <Checkbox value={disablePastVersion} onChange={(value: boolean) => setDisablePastVersion(value)} />
+                            <Checkbox checked={disablePastVersion} onChange={(e: ChangeEvent<HTMLInputElement>) => setDisablePastVersion(Boolean(e.target.value))} />
                         </div>
                     }
                 </div>

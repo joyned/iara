@@ -179,7 +179,7 @@ export default function UsersForm() {
                     }
                     <div className="flex flex-col gap-2">
                         <FormLabel>Single Sign-on User</FormLabel>
-                        <Checkbox value={isSSO} onChange={() => setIsSSO(!isSSO)} />
+                        <Checkbox checked={isSSO} onChange={() => setIsSSO(!isSSO)} />
                     </div>
                     <div className="flex flex-col gap-2">
                         <div className="flex justify-between">
