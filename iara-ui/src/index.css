@@ -41,7 +41,8 @@ a,
 button,
 td,
 th,
-input {
+input,
+select {
     font-size: 14px;
 }
 
@@ -90,7 +91,7 @@ input:focus {
 
 input::placeholder {
     color: var(--color-gray-700);
-    font-size: 0.875rem;
+    font-size: 14px;
 }
 
 textarea:focus {

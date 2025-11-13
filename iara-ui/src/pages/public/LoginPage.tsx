@@ -7,7 +7,6 @@ import type { OTPConfig } from "../../types/OTPConfig";
 // @ts-ignore
 import { QRCode } from "react-qr-code";
 import FormLabel from "../../components/FormLabel";
-import Input from "../../components/Input";
 
 export default function LoginPage() {
     const service = new LoginService();
@@ -89,11 +88,11 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="w-screen h-screen flex flex-col text-white">
+        <div className="w-screen h-screen flex flex-col text-white bg-repeat-round" style={{backgroundImage: `url('login-bg.jpg')`}}>
             <div className="flex justify-center items-center w-full h-full">
-                <div className="flex flex-col gap-5 p-10 sm:w-2/3 md:w-2/3 lg:w-1/3 bg-primary-color rounded">
+                <div className="flex flex-col gap-5 p-10 sm:w-2/3 md:w-2/3 lg:w-1/3 rounded">
                     <div className="flex justify-start">
-                        <span className="text-title text-3xl">IARA</span>
+                        <h1 className="text-title">IARA</h1>
                     </div>
                     {errorMessage &&
                         <div className="flex bg-red-500 text-white p-3">
@@ -114,8 +113,8 @@ export default function LoginPage() {
                                     value={password} onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} />
                             </div>
 
-                            <div className="flex">
-                                <button className="w-full bg-primary-darker-color text-white p-2 rounded cursor-pointer">Login</button>
+                            <div className="mt-5 flex justify-center">
+                                <button className="w-1/3 border border-gray-400 text-white p-2 rounded cursor-pointer">Login</button>
                             </div>
 
                             <div className="flex gap-5 justify-end">
@@ -158,13 +157,13 @@ export default function LoginPage() {
                         <form className="flex flex-col gap-2" onSubmit={verifyOtp} >
                             <span className="text-1xl">Verify the code</span>
                             <div className="flex flex-col gap-2">
-                                <Input className="w-full"
+                                <input className="border border-gray-400 rounded p-2 w-full bg-transparent"
                                     id="code" name="code" type="text" maxLength={6} value={otpCode} autoComplete="off"
                                     onChange={(e: ChangeEvent<HTMLInputElement>) => setOtpCode(e.target.value)} />
                             </div>
 
-                            <div className="flex">
-                                <button className="w-full bg-primary-darker-color text-white p-2 rounded cursor-pointer">Verify</button>
+                            <div className="mt-5 flex justify-center">
+                                <button className="w-1/3 border border-gray-400 text-white p-2 rounded cursor-pointer">Verify</button>
                             </div>
                         </form>
                     }
