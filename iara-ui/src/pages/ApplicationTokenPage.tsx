@@ -141,7 +141,7 @@ export default function ApplicationPageToken() {
             </Modal>
 
             <Modal title="Token" hasSave={false} ref={tokenModalRef} beforeClose={() => setToken(undefined)} cancelText="Close">
-                <div className="flex flex-col gap-5 text-white">
+                <div className="flex flex-col gap-5">
                     <span className="p-1 rounded">Please, save this token. When you close this window, you will not be able to get your token.</span>
                     <pre className="overflow-auto bg-stone-700 text-white p-1 rounded">
                         {token}

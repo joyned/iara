@@ -13,13 +13,13 @@ interface Props {
 
 export default function ListItem(props: Props) {
     return (
-        <div className="flex justify-between items-center border-b-4  cursor-pointer hover:bg-primary-lighter-color text-sm"
+        <div className="flex justify-between items-center border-b-1 cursor-pointer hover:bg-primary-lighter-color text-sm hover:bg-gray-100"
             style={{ borderBottomColor: 'var(--primary-lighter-color)' }}>
-            <span className="w-full flex items-center gap-4 p-4 text-white" onClick={props.onClick}>
+            <span className="w-full flex items-center gap-4 p-4" onClick={props.onClick}>
                 {props.icon && props.icon}
                 {props.name}
             </span>
-            <div className="flex gap-4 mr-5 text-white">
+            <div className="flex gap-4 mr-5">
                 {props.children && props.children}
                 {props.onDelete &&
                     <ConfirmDialog onConfirm={props.onDelete}>

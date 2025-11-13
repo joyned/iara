@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { BiSolidUserCircle } from "react-icons/bi";
-import { FaCaretDown, FaFolder, FaIdCard, FaKey, FaUsers } from "react-icons/fa";
-import { IoIosSettings, IoMdLogOut, IoMdMenu } from "react-icons/io";
-import { MdOutlineGeneratingTokens, MdOutlinePolicy } from "react-icons/md";
+import { BiMenu } from "react-icons/bi";
+import { FaAngleDown, FaAngleUp, FaFolder, FaIdCard, FaKey, FaUsers } from "react-icons/fa";
+import { FaCircleUser } from "react-icons/fa6";
+import { IoIosSettings, IoMdLogOut } from "react-icons/io";
+import { MdAdminPanelSettings, MdOutlineGeneratingTokens, MdOutlinePolicy } from "react-icons/md";
 import { VscSymbolNamespace } from "react-icons/vsc";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
-import Dropdown from "../components/Dropdown";
 import Loading from "../components/Loading";
+import NamespaceEnvironment from "../components/NamespaceEnvironment";
 import { useLoading } from "../providers/LoadingProvider";
 import { LoginService } from "../services/LoginService";
 import { UserService } from "../services/UserService";
 import type { Role } from "../types/Role";
 import type { User } from "../types/User";
 import { hasAccessToBatch } from "../utils/PermissionUtils";
-import NamespaceEnvironment from "../components/NamespaceEnvironment";
 
 export default function Layout() {
     const location = useLocation();
@@ -26,9 +26,10 @@ export default function Layout() {
 
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(window.innerWidth > 1150);
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 1150);
+    const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
+    const [adminSubmenu, setAdminSubmenu] = useState<boolean>(false);
 
     const [name, setName] = useState<string>();
-    const [email, setEmail] = useState<string>();
     const [picture, setPicture] = useState<string>();
     const [roles, setRoles] = useState<Role[]>([]);
 
@@ -51,7 +52,6 @@ export default function Layout() {
     useEffect(() => {
         userService.me().then((res: User) => {
             setName(res.name);
-            setEmail(res.email);
             setPicture(res.picture);
             setRoles(res.roles);
         });
@@ -92,13 +92,6 @@ export default function Layout() {
         })
     }
 
-    const onNavigate = (to: string) => {
-        navigate(to);
-        if (isMobile) {
-            setIsMenuOpen(false);
-        }
-    }
-
     const hasAccessAnyAdminResource = () => {
         return hasAccessToBatch(roles, '#NAMESPACES') || hasAccessToBatch(roles, '#POLICIES') ||
             hasAccessToBatch(roles, '#USERS') || hasAccessToBatch(roles, '#ROLES') || hasAccessToBatch(roles, '#TOKENS') ||
@@ -106,137 +99,127 @@ export default function Layout() {
     }
 
     return (
-        <>
+        <main>
             <ToastContainer />
             {loading && <Loading />}
-            <div className="fixed top-0 flex items-center w-full min-h-13 max-h-13 bg-primary-color">
-                <div className="w-full flex justify-between items-center pl-5 pr-5">
-                    <div className="relative">
-                        <IoMdMenu className="text-2xl text-white cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)} />
-                        <div className={`flex flex-col gap-5 justify-between w-[244px] -left-6 h-full bg-primary-color p-5 shadow 
-                            ${isMenuOpen ? 'absolute' : 'hidden'}`} style={{ transition: '300ms cubic-bezier(0.25, 0.8, 0.25, 1)', height: 'calc(100vh - 40px)' }}>
-                            <div className="flex flex-col gap-5">
-                                <div className="flex gap-5">
-                                    {picture ?
-                                        <div className="w-[48px] h-[48px] rounded-full bg-cover bg-center" style={{ backgroundImage: `url("${picture}")` }} />
-                                        :
-                                        <BiSolidUserCircle className="text-white text-5xl" />
-                                    }
-                                    <div className="flex flex-col text-white">
-                                        <span className="text-lg">{name}</span>
-                                        <span className="text-xs text-light-purple">{email}</span>
-                                    </div>
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-light-purple font-bold">Menu</span>
-                                </div>
-                                <div className="flex flex-col gap-1 text-sm text-light-purple">
-                                    <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/kv') && 'bg-primary-darker-color text-white'}`}
-                                        onClick={() => onNavigate('/kv')}>
-                                        <div className="bg-primary-lighter-color p-3 rounded-full">
-                                            <FaFolder className="text-sm" />
+            <header className="fixed top-0 w-full h-12 max-h-12 bg-primary-color">
+                <div className="h-full w-full flex justify-between items-center pl-5 pr-5">
+                    <div className="flex items-center justify-center gap-5 text-white">
+                        <BiMenu className="text-2xl cursor-pointer"
+                            style={{ color: 'white' }}
+                            onClick={() => setIsMenuOpen(!isMenuOpen)} />
+                        <h1 className="text-title text-2xl">IARA KV</h1>
+                    </div>
+                    <div className="relative flex items-center justify-center gap-2 text-white cursor-pointer"
+                        onClick={() => setUserMenuOpen(!userMenuOpen)}>
+                        {!picture && <FaCircleUser className="text-2xl" style={{ color: 'white' }} />}
+                        {picture && <div className="w-8 h-8 rounded-full bg-cover bg-center" style={{ backgroundImage: `url("${picture}")` }} />}
+                        <span>{name}</span>
+                        <FaAngleDown style={{ color: 'white' }} />
+                        {userMenuOpen &&
+                            <div className="absolute -bottom-[100px] -right-2 bg-white text-color border border-gray-200 rounded">
+                                {userDropdown.map((val: any) => {
+                                    return (
+                                        <div className="flex gap-2 px-5 py-3 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => val.onClick && val.onClick() || val.to && navigate(val.to)}>
+                                            {val.icon}
+                                            <span>{val.name}</span>
                                         </div>
-                                        <span>KV</span>
-                                    </div>
-                                    <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/secrets') && 'bg-primary-darker-color text-white'}`}
-                                        onClick={() => onNavigate('/secrets')}>
-                                        <div className="bg-primary-lighter-color p-3 rounded-full">
-                                            <FaKey className="text-sm" />
-                                        </div>
-                                        <span>Secrets</span>
-                                    </div>
-                                </div>
-                                {hasAccessAnyAdminResource() && <hr className="text-white" />}
-                                <div className="flex flex-col gap-1 text-white text-sm text-light-purple">
-                                    {hasAccessToBatch(roles, '#NAMESPACES') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/namespaces') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/namespaces')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <VscSymbolNamespace className="text-sm" />
-                                            </div>
-                                            <span>Namespaces</span>
-                                        </div>
-                                    }
-                                    {hasAccessToBatch(roles, '#POLICIES') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/policies') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/policies')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <MdOutlinePolicy className="text-sm" />
-                                            </div>
-                                            <span>Policy</span>
-                                        </div>
-                                    }
-                                    {hasAccessToBatch(roles, '#USERS') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/users') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/users')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <FaUsers className="text-sm" />
-                                            </div>
-                                            <span>User</span>
-                                        </div>
-                                    }
-                                    {hasAccessToBatch(roles, '#ROLES') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/roles') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/roles')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <FaIdCard className="text-sm" />
-                                            </div>
-                                            <span>Roles</span>
-                                        </div>
-                                    }
-                                    {hasAccessToBatch(roles, '#TOKENS') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/tokens') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/tokens')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <MdOutlineGeneratingTokens className="text-sm" />
-                                            </div>
-                                            <span>Tokens</span>
-                                        </div>
-                                    }
-                                    {hasAccessToBatch(roles, '#GENERAL') &&
-                                        <div className={`flex gap-4 items-center p-2 rounded-lg cursor-pointer 
-                                                    hover:bg-primary-darker-color hover:text-white 
-                                                    ${match('/admin/general') && 'bg-primary-darker-color text-white'}`}
-                                            onClick={() => onNavigate('/admin/general')}>
-                                            <div className="bg-primary-lighter-color p-3 rounded-full">
-                                                <IoIosSettings className="text-sm" />
-                                            </div>
-                                            <span>General</span>
-                                        </div>
-                                    }
+                                    )
+                                })}
+                            </div>
+                        }
+                    </div>
+                </div>
+            </header>
+
+            <aside className={`fixed w-[280px] top-12 h-full bg-light-gray border-r border-r-stone-300 transition ${isMenuOpen ? 'opacity-100 z-50' : 'opacity-0 -z-50'}`}>
+                <div className={`flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/kv') && 'bg-white'}`}
+                    onClick={() => navigate('/kv')}>
+                    <div className="flex items-center gap-2">
+                        <FaFolder className="text-lg" />
+                        <span>KV</span>
+                    </div>
+                </div>
+                <div className={`flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/secrets') && 'bg-white'}`}
+                    onClick={() => navigate('/secrets')}>
+                    <div className="flex items-center gap-2">
+                        <FaKey className="text-lg" />
+                        <span>Secrets</span>
+                    </div>
+                </div>
+
+                <div className={`flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white}`}
+                    onClick={() => setAdminSubmenu(!adminSubmenu)}>
+                    <div className="flex items-center gap-2">
+                        <MdAdminPanelSettings className="text-lg" />
+                        <span>Admin</span>
+                    </div>
+                    {adminSubmenu ? <FaAngleUp /> : <FaAngleDown />}
+                </div>
+                {adminSubmenu && hasAccessAnyAdminResource() &&
+                    <>
+                        {hasAccessToBatch(roles, '#NAMESPACES') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/namespaces') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/namespaces')}>
+                                <div className="flex items-center gap-2">
+                                    <VscSymbolNamespace className="text-lg" />
+                                    <span>Namespaces</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <span className="text-title text-white text-4xl cursor-pointer" onClick={() => navigate('/kv')}>IARA</span>
-
-                    <Dropdown items={userDropdown}>
-                        <div className="flex items-center gap-3 text-white">
-                            {name}
-                            <FaCaretDown />
-                        </div>
-                    </Dropdown>
-                </div>
-            </div>
-
-            <div className={`m-10 mt-[92px] ${isMobile && ''} ${isMenuOpen ? 'ml-[280px]' : ''}`}>
+                        }
+                        {hasAccessToBatch(roles, '#POLICIES') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/policies') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/policies')}>
+                                <div className="flex items-center gap-2">
+                                    <MdOutlinePolicy className="text-lg" />
+                                    <span>Policy</span>
+                                </div>
+                            </div>
+                        }
+                        {hasAccessToBatch(roles, '#USERS') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/users') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/users')}>
+                                <div className="flex items-center gap-2">
+                                    <FaUsers className="text-lg" />
+                                    <span>User</span>
+                                </div>
+                            </div>
+                        }
+                        {hasAccessToBatch(roles, '#ROLES') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/roles') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/roles')}>
+                                <div className="flex items-center gap-2">
+                                    <FaIdCard className="text-lg" />
+                                    <span>Roles</span>
+                                </div>
+                            </div>
+                        }
+                        {hasAccessToBatch(roles, '#TOKENS') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/tokens') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/tokens')}>
+                                <div className="flex items-center gap-2">
+                                    <MdOutlineGeneratingTokens className="text-lg" />
+                                    <span>Tokens</span>
+                                </div>
+                            </div>
+                        }
+                        {hasAccessToBatch(roles, '#GENERAL') &&
+                            <div className={`pl-7 bg-gray-200 flex items-center justify-between border-b border-b-stone-300 h-[45px] px-3 cursor-pointer hover:bg-white ${match('/admin/general') && 'bg-white'}`}
+                                onClick={() => navigate('/admin/general')}>
+                                <div className="flex items-center gap-2">
+                                    <IoIosSettings className="text-lg" />
+                                    <span>General</span>
+                                </div>
+                            </div>
+                        }
+                    </>
+                }
+            </aside>
+            <div id="content" className={`z-50 h-screen pt-15 px-7 transition ${isMenuOpen && 'ml-[280px]'}`}>
                 <NamespaceEnvironment />
                 <Outlet />
             </div>
-        </>
+        </main>
     )
 }

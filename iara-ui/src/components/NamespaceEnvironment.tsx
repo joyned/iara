@@ -79,7 +79,7 @@ export default function NamespaceEnvironment() {
         <div className="mb-5">
             {(namespace && JSON.stringify(environment) !== '{}') && (
                 <>
-                    <div className="w-fit flex items-center bg-primary-color rounded text-white cursor-pointer"
+                    <div className="w-fit flex items-center bg-gray-500 rounded text-white cursor-pointer"
                         onClick={() => onEnvModalOpen()}>
                         <span className="text-md p-2 pl-7 pr-7 border-r border-white">{namespace.name}</span>
                         <span className="text-md p-2 pl-7 pr-7 border-l border-white">{environment?.name}</span>

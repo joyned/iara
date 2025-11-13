@@ -1,28 +1,56 @@
 @import "tailwindcss";
 
 :root {
-    --primary-color: #191C24;
-    --primary-darker-color: #0F1015;
-    --primary-lighter-color: #22242E;
+    --primary-color: #404B5D;
 
-    --code-block-color: #2D2D2D;
+    --light-gray: #EBEFF0;
 
-    --text-title: #434343;
+    --text-color: #657179;
 
-    --light-purple: #6c7293;
+    --code-block-color: #373c43;
 }
 
 body {
-    background-color: #100f0f;
+    background-color: white;
     font-family: 'Roboto', sans-serif;
+
+    font-weight: 300;
+
+    color: var(--text-color);
+    border-color: var(--text-color);
 }
 
-.text-light-purple {
-    color: var(--light-purple);
+
+h1 {
+    font-size: 20px;
+    font-weight: 400;
 }
 
-.bg-light-purple {
-    background-color: var(--light-purple);
+h2 {
+    font-size: 18px;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+span,
+p,
+label,
+a,
+button,
+td,
+th,
+input {
+    font-size: 14px;
+}
+
+svg {
+    color: var(--text-color);
+}
+
+.text-color {
+    color: var(--text-color);
 }
 
 .bg-low-opacity {
@@ -33,45 +61,20 @@ body {
     background-color: var(--primary-color);
 }
 
-.bg-primary-darker-color {
-    background-color: var(--primary-darker-color);
-}
-
-.bg-primary-lighter-color {
-    background-color: var(--primary-lighter-color);
+.bg-light-gray {
+    background-color: var(--light-gray);
 }
 
 .bg-code-block {
     background-color: var(--code-block-color);
 }
 
-.hover\:bg-primary-darker-color:hover {
-    background-color: var(--primary-darker-color);
-}
-
-.hover\:bg-primary-lighter-color:hover {
-    background-color: var(--primary-lighter-color);
-}
-
 .border-primary-color {
     border-color: var(--primary-color);
 }
 
-.border-primary-darker-color {
-    border-color: var(--primary-darker-color);
-}
-
-.border-primary-lighter-color {
-    border-color: var(--primary-lighter-color);
-}
-
 .text-title {
     font-family: "Syncopate", sans-serif;
-}
-
-h1 {
-    font-weight: bold;
-    color: white;
 }
 
 .code-block {
@@ -86,13 +89,13 @@ input:focus {
 }
 
 input::placeholder {
-    color: #FFFFFF;
+    color: var(--color-gray-700);
     font-size: 0.875rem;
 }
 
 textarea:focus {
-  outline: none;
-  border: none;
+    outline: none;
+    border: none;
 }
 
 .font-monaco {
@@ -113,13 +116,10 @@ textarea:focus {
 }
 
 /*Checkbox*/
-.checkbox-wrapper-2 {
-    display: flex;
-}
 
-.checkbox-wrapper-2 .ikxBAC {
+.checkbox {
     appearance: none;
-    background-color: #4c5069;
+    background-color: var(--light-gray);
     border-radius: 72px;
     border-style: none;
     flex-shrink: 0;
@@ -129,7 +129,7 @@ textarea:focus {
     width: 30px;
 }
 
-.checkbox-wrapper-2 .ikxBAC::before {
+.checkbox::before {
     bottom: -6px;
     content: "";
     left: -6px;
@@ -138,13 +138,13 @@ textarea:focus {
     top: -6px;
 }
 
-.checkbox-wrapper-2 .ikxBAC,
-.checkbox-wrapper-2 .ikxBAC::after {
+.checkbox,
+.checkbox::after {
     transition: all 100ms ease-out;
 }
 
-.checkbox-wrapper-2 .ikxBAC::after {
-    background-color: #fff;
+.checkbox::after {
+    background-color: white;
     border-radius: 50%;
     content: "";
     height: 14px;
@@ -154,31 +154,31 @@ textarea:focus {
     width: 14px;
 }
 
-.checkbox-wrapper-2 input[type=checkbox] {
+input[type=checkbox] {
     cursor: default;
 }
 
-.checkbox-wrapper-2 .ikxBAC:hover {
-    background-color: #696f91;
+.checkbox:hover {
+    background-color: var(--light-gray);
     transition-duration: 0s;
     cursor: pointer;
 }
 
-.checkbox-wrapper-2 .ikxBAC:checked {
-    background-color: #272936;
+.checkbox:checked {
+    background-color: var(--primary-color);
 }
 
-.checkbox-wrapper-2 .ikxBAC:checked::after {
+.checkbox:checked::after {
     background-color: #fff;
     left: 13px;
 }
 
-.checkbox-wrapper-2 :focus:not(.focus-visible) {
+.checkbox :focus:not(.focus-visible) {
     outline: 0;
 }
 
-.checkbox-wrapper-2 .ikxBAC:checked:hover {
-    background-color: var(--primary-darker-color);
+.checkbox:checked:hover {
+    background-color: var(--primary-color);
 }
 
 .fade-in {

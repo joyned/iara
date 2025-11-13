@@ -39,14 +39,14 @@ export const Modal = forwardRef(({ title, saveText = "Save", cancelText = "Cance
         <>
             {open &&
                 <div className="fixed flex justify-center items-center w-full h-full top-0 left-0 z-50 bg-low-opacity">
-                    <div className="p-2 w-[700px] bg-primary-color rounded max-h-10/12 overflow-auto">
+                    <div className="p-2 w-[700px] bg-white rounded max-h-10/12 overflow-auto">
                         <div className="flex justify-between items-center border-b border-b-stone-400 p-4">
-                            <h1>{title}</h1>
+                            <h2>{title}</h2>
                             <CgClose className="cursor-pointer text-white" onClick={onClose} />
                         </div>
                         <form id={modalId} onSubmit={onSave} className="p-4">
                             {children}
-                        </form>
+                        </form>{/*  */}
                         <div className="mt-3">
                             <div className="flex justify-end gap-2">
                                 {hasSave && <Button type="submit" form={modalId}>{saveText}</Button>}

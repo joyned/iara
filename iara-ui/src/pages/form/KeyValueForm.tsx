@@ -100,31 +100,29 @@ export default function KeyValueForm() {
         <div className="flex flex-col gap-5">
             <h1 className="text-2xl">KV Entry</h1>
 
-            <Card>
-                <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="kv-key" required>Key</FormLabel>
-                        <Input name="kv-key" id="kv-key" type="text" value={key}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setKey(e.target.value)} disabled={!isNew} />
+            <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="kv-key" required>Key</FormLabel>
+                    <Input name="kv-key" id="kv-key" type="text" value={key}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setKey(e.target.value)} disabled={!isNew} />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <FormLabel htmlFor="kv-value" required>Value</FormLabel>
+                    <YamlEditor rows={10} resize={false} value={value} id="kv-value" name="kv-value"
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)} />
+                </div>
+                <div className="flex justify-between gap-4">
+                    <div className="flex gap-4">
+                        <Button type="submit">Save</Button>
+                        <Button variant="outline" onClick={() => navigate('/kv')} type="button">Back</Button>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <FormLabel htmlFor="kv-value" required>Value</FormLabel>
-                        <YamlEditor rows={10} resize={false} value={value} id="kv-value" name="kv-value"
-                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setValue(e.target.value)} />
-                    </div>
-                    <div className="flex justify-between gap-4">
-                        <div className="flex gap-4">
-                            <Button type="submit">Save</Button>
-                            <Button variant="outline" onClick={() => navigate('/kv')} type="button">Back</Button>
-                        </div>
-                        {id &&
-                            <ConfirmDialog onConfirm={onDelete}>
-                                <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
-                            </ConfirmDialog>
-                        }
-                    </div>
-                </form>
-            </Card>
+                    {id &&
+                        <ConfirmDialog onConfirm={onDelete}>
+                            <Button className="w-[150px]" variant="danger" type="button">Delete</Button>
+                        </ConfirmDialog>
+                    }
+                </div>
+            </form>
 
             {history.length > 0 &&
                 <Card title="History">

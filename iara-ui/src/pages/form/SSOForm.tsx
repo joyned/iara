@@ -1,10 +1,10 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import { FaGoogle } from "react-icons/fa";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import Checkbox from "../../components/Checkbox";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
+import Panel from "../../components/Panel";
 import { useLoading } from "../../providers/LoadingProvider";
 import { ApplicationParamsService } from "../../services/ApplicationParamsService";
 import type { ApplicationParams } from "../../types/ApplicationParams";
@@ -108,15 +108,15 @@ export default function SSOForm() {
     }
 
     return (
-        <Card title="Sign-in Options" closeable>
+        <Panel title="Sign-in Options" startClosed>
             <>
                 <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
-                        <div className="flex items-baseline text-white">
+                        <div className="flex items-baseline">
                             <FaGoogle />
                             <span>oogle</span>
                         </div>
-                        <Checkbox value={enabledValue} onChange={(value: boolean) => setEnabledValue(value)} />
+                        <Checkbox checked={enabledValue} onChange={(e: ChangeEvent<HTMLInputElement>) => setEnabledValue(Boolean(e.target.value))} />
                     </div>
                     <form onSubmit={onSubmit} className="flex flex-col gap-4">
                         {enabledValue &&
@@ -140,6 +140,6 @@ export default function SSOForm() {
                 </div>
 
             </>
-        </Card>
+        </Panel>
     )
 }

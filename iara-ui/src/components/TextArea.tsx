@@ -9,7 +9,7 @@ export default function TextArea(props: Props) {
         <>
             <textarea {...props}
                 style={{ resize: props.resize ? 'vertical' : 'none' }}
-                className="p-1.5 pl-3 pr-3 bg-primary-lighter-color text-white rounded-sm" />
+                className="p-1.5 pl-3 pr-3 bg-light-gray rounded-sm" />
         </>
     )
 }

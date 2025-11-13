@@ -2,10 +2,10 @@ import { useState, type ChangeEvent } from "react";
 import { BsTrash } from "react-icons/bs";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import Checkbox from "../../components/Checkbox";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
+import Panel from "../../components/Panel";
 import Tooltip from "../../components/Tooltip";
 
 export default function SensitiveCheckForm() {
@@ -31,17 +31,17 @@ export default function SensitiveCheckForm() {
     }
 
     return (
-        <Card title="Sentive Checker" closeable>
+        <Panel title="Sentive Checker" startClosed>
             <>
-                <div className="flex flex-col gap-2 text-white">
+                <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
                         <div className="flex gap-2">
                             <div className="flex items-baseline">
                                 <span>Enable</span>
                             </div>
-                            <Checkbox value={enabled} onChange={(value: boolean) => setEnabled(value)} />
+                            <Checkbox checked={enabled} onChange={(e: ChangeEvent<HTMLInputElement>) => setEnabled(Boolean(e.target.value))} />
                         </div>
-                        <Tooltip text="this feature analyse all configuration that has been saved in KV to check if there are any sensitive data.">
+                        <Tooltip text="This feature analyse all configuration that has been saved in KV to check if there are any sensitive data.">
                             <span className="flex gap-2 items-center">
                                 <IoInformationCircleOutline />
                                 About
@@ -54,7 +54,7 @@ export default function SensitiveCheckForm() {
                                 {patterns.length > 0 && <FormLabel required>Patterns to watch</FormLabel>}
                                 {patterns.length > 0 && patterns.map((pattern: string, index: number) => {
                                     return (
-                                        <div className="flex justify-between items-center bg-primary-darker-color text-white p-2 rounded">
+                                        <div className="flex justify-between items-center bg-primary-darker-color p-2 rounded">
                                             <pre>
                                                 {index + 1} - {pattern}
                                             </pre>
@@ -63,26 +63,26 @@ export default function SensitiveCheckForm() {
                                     )
                                 })}
                                 <div className="flex">
-                                    {!isAdding && <Button type="button" variant="outline" onClick={() => setIsAdding(true)}>add new pattern</Button>}
+                                    {!isAdding && <Button type="button" variant="outline" onClick={() => setIsAdding(true)}>Add new pattern</Button>}
                                     {isAdding &&
                                         <div className="flex flex-col gap-2 w-full">
                                             <FormLabel required>New pattern</FormLabel>
                                             <Input className="w-full" value={newPattern}
                                                 onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPattern(e.target.value)} />
                                             <div className="flex justify-end">
-                                                <Button type="button" variant="outline" onClick={onAddNewPattern}>add</Button>
+                                                <Button type="button" variant="outline" onClick={onAddNewPattern}>Add</Button>
                                             </div>
                                         </div>
                                     }
                                 </div>
                             </div>
                             <div className="flex">
-                                <Button>save</Button>
+                                <Button>Save</Button>
                             </div>
                         </div>
                     }
                 </div>
             </>
-        </Card>
+        </Panel>
     )
 }

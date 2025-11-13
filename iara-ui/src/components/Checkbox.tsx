@@ -1,17 +1,15 @@
+import type { InputHTMLAttributes } from "react";
 
-interface Props {
-    value?: boolean;
-    onChange?: (value: boolean) => void;
-    id?: string;
-    name?: string;
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
 }
 
 
 export default function Checkbox(props: Props) {
     return (
-        <div className="checkbox-wrapper-2">
-            <input className="sc-gJwTLC ikxBAC" type="checkbox" checked={props.value} id={props.id} name={props.name}
-                onChange={() => props.onChange && props.onChange(!props.value)}></input>
-        </div>
+        <label className="flex items-center gap-2 w-fit cursor-pointer" htmlFor={props.name}>
+            <input className="checkbox" type="checkbox" name={props.name} id={props.id} checked={props.checked} />
+            {props.label}
+        </label>
     )
 }

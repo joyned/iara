@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
@@ -142,58 +141,56 @@ export default function NamespacesForm() {
     return (
         <div className="flex flex-col gap-5">
             <h1 className="text-2xl">Namespace</h1>
-            <Card>
-                <div className="flex flex-col gap-5">
-                    <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+            <div className="flex flex-col gap-5">
+                <form className="flex flex-col gap-5" onSubmit={onFormSubmit}>
+                    <div className="flex flex-col gap-2">
+                        <FormLabel htmlFor="namespace-name" required>Name</FormLabel>
+                        <Input id="namespace-name" name="namespace-name" type="text" value={name}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <FormLabel htmlFor="namespace-description">Description</FormLabel>
+                        <TextArea id="namespace-description" name="namespace-description" value={description}
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+                            rows={5} />
+                    </div>
+                    <div className="flex flex-col gap-5">
+                        <div className="flex justify-between">
+                            <FormLabel required>Environments</FormLabel>
+                            <Button type="button" onClick={() => onAdd()}>Add environment</Button>
+                        </div>
+                        {(environments && environments.length > 0) && environments.map((env: Environment) => {
+                            return (
+                                <ListItem name={env.name} onClick={() => onEdit(env)} key={uuid()}
+                                    onDelete={() => onDeleteEnvironment(env)} />
+                            )
+                        })}
+                        <div className="flex justify-between">
+                            <div className="flex gap-2">
+                                <Button type="submit">Save</Button>
+                                <Button type="button" variant="outline" onClick={() => navigate('/admin/namespaces')}>Back</Button>
+                            </div>
+                            <ConfirmDialog onConfirm={onDeleteNamespace}>
+                                <Button variant="danger">Delete</Button>
+                            </ConfirmDialog>
+                        </div>
+                    </div>
+                </form>
+                <Modal title={envId ? envName : 'Register environment'} onSave={onSaveEnv} saveText={envId ? 'Save' : 'Add'} ref={modalRef}>
+                    <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="namespace-name" required>Name</FormLabel>
-                            <Input id="namespace-name" name="namespace-name" type="text" value={name}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
+                            <FormLabel htmlFor="env-name" required>Name</FormLabel>
+                            <Input id="env-name" name="env-name" type="text" value={envName}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setEnvName(e.target.value)} />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <FormLabel htmlFor="namespace-description">Description</FormLabel>
-                            <TextArea id="namespace-description" name="namespace-description" value={description}
-                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
-                                rows={5} />
+                            <FormLabel htmlFor="env-description">Description</FormLabel>
+                            <Input id="env-description" name="env-description" type="text" value={envDescription}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => setEnvDescription(e.target.value)} />
                         </div>
-                        <div className="flex flex-col gap-5">
-                            <div className="flex justify-between">
-                                <FormLabel required>Environments</FormLabel>
-                                <Button type="button" onClick={() => onAdd()}>Add environment</Button>
-                            </div>
-                            {(environments && environments.length > 0) && environments.map((env: Environment) => {
-                                return (
-                                    <ListItem name={env.name} onClick={() => onEdit(env)} key={uuid()}
-                                        onDelete={() => onDeleteEnvironment(env)} />
-                                )
-                            })}
-                            <div className="flex justify-between">
-                                <div className="flex gap-2">
-                                    <Button type="submit">Save</Button>
-                                    <Button type="button" variant="outline" onClick={() => navigate('/admin/namespaces')}>Back</Button>
-                                </div>
-                                <ConfirmDialog onConfirm={onDeleteNamespace}>
-                                    <Button variant="danger">Delete</Button>
-                                </ConfirmDialog>
-                            </div>
-                        </div>
-                    </form>
-                    <Modal title={envId ? envName : 'Register environment'} onSave={onSaveEnv} saveText={envId ? 'Save' : 'Add'} ref={modalRef}>
-                        <div className="flex flex-col gap-3">
-                            <div className="flex flex-col gap-2">
-                                <FormLabel htmlFor="env-name" required>Name</FormLabel>
-                                <Input id="env-name" name="env-name" type="text" value={envName}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEnvName(e.target.value)} />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <FormLabel htmlFor="env-description">Description</FormLabel>
-                                <Input id="env-description" name="env-description" type="text" value={envDescription}
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEnvDescription(e.target.value)} />
-                            </div>
-                        </div>
-                    </Modal>
-                </div>
-            </Card>
+                    </div>
+                </Modal>
+            </div>
         </div>
     )
 }

@@ -8,7 +8,7 @@ interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export default function Select(props: Props) {
     return (
-        <select {...props} className="p-1.5 pl-3 pr-3 bg-primary-lighter-color text-white rounded-sm">
+        <select {...props} className="p-3 pl-3 pr-3  bg-light-gray rounded-sm">
             <option defaultChecked>Select an option...</option>
             {props.options && props.options.length > 0 && props.options.map((opt: any) => {
                 return (
