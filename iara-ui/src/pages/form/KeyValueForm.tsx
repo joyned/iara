@@ -2,12 +2,12 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../../components/Button";
-import Card from "../../components/Card";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import FormLabel from "../../components/FormLabel";
 import Input from "../../components/Input";
 import ListItem from "../../components/ListItem";
 import { Modal } from "../../components/Modal";
+import Panel from "../../components/Panel";
 import YamlEditor from "../../components/YamlEditor";
 import { useEnvironment } from "../../providers/EnvironmentProvider";
 import { useLoading } from "../../providers/LoadingProvider";
@@ -125,7 +125,7 @@ export default function KeyValueForm() {
             </form>
 
             {history.length > 0 &&
-                <Card title="History">
+                <Panel title="History" startClosed>
                     {history.map((h: KeyValueHistory) => {
                         return <>
                             <ListItem name={new Date(h.updatedAt).toLocaleString()} onClick={() => onOpenHistory(h)} key={uuid()} />
@@ -145,7 +145,7 @@ export default function KeyValueForm() {
                             </div>
                         </div>
                     </Modal>
-                </Card>
+                </Panel>
             }
         </div>
     )

@@ -23,7 +23,7 @@ public class KvHistory implements Serializable {
     @JoinColumn(name = "kv_id")
     private Kv keyValue;
 
-    @Column(name = "\"value\"")
+    @Column(name = "\"value\"", length = 10485760)
     private String value;
 
     @Convert(converter = DateConverter.class)

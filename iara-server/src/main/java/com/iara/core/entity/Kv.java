@@ -20,7 +20,7 @@ public class Kv implements Serializable {
     @Column(name = "\"key\"")
     private String key;
 
-    @Column(name = "\"value\"")
+    @Column(name = "\"value\"", length = 10485760)
     private String value;
 
     @ManyToOne

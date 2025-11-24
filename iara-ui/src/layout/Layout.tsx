@@ -102,7 +102,7 @@ export default function Layout() {
         <main>
             <ToastContainer />
             {loading && <Loading />}
-            <header className="fixed top-0 w-full h-12 max-h-12 bg-primary-color">
+            <header className="fixed top-0 w-full h-12 max-h-12 bg-primary-color z-[100]">
                 <div className="h-full w-full flex justify-between items-center pl-5 pr-5">
                     <div className="flex items-center justify-center gap-5 text-white">
                         <BiMenu className="text-2xl cursor-pointer"

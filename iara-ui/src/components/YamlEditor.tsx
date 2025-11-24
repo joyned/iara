@@ -23,9 +23,9 @@ export default function YamlEditor(props: Props) {
         if (!preRef.current) return;
 
         let html = props.value;
-        const regex = new RegExp(`([^:]*):`, 'g');
+        const regex = new RegExp(`^([^:\n]*):`, 'gm');
 
-        html = html.replace(regex, `<span class="text-red-500">$1</span>:`);
+        html = html.replaceAll(regex, `<span class="text-red-500">$1</span>:`);
 
         preRef.current.innerHTML = html;
     }
@@ -44,7 +44,7 @@ export default function YamlEditor(props: Props) {
                     <textarea id={uuid()}
                         ref={textareaRef}
                         value={props.value}
-                        className="rounded relative w-full h-[300px] p-2.5 font-monaco border-none bg-transparent text-transparent resize-none z-20 
+                        className="rounded relative w-full h-[600px] p-2.5 font-monaco border-none bg-transparent text-transparent resize-none z-20 
                         whitespace-pre-wrap wrap-break-word"
                         spellCheck="false"
                         onChange={onWrite}
@@ -57,7 +57,7 @@ export default function YamlEditor(props: Props) {
                         }}
                     />
                     <pre ref={preRef}
-                        className="rounded absolute top-0 left-0 w-full h-[300px] p-2.5 border-none bg-code-block text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
+                        className="rounded absolute top-0 left-0 w-full h-[600px] p-2.5 border-none bg-code-block text-white overflow-auto whitespace-pre-wrap wrap-break-word z-10"
                         style={{
                             fontFamily: 'monospace',
                             fontSize: '14px',

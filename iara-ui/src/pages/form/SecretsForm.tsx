@@ -185,9 +185,11 @@ export default function SecretsForm() {
                                 <Button variant="outline" onClick={() => navigate('/secrets')} type="button">Back</Button>
                             </div>
                         }
-                        <ConfirmDialog onConfirm={onDeleteSecret}>
-                            <Button variant="danger" type="button">Delete</Button>
-                        </ConfirmDialog>
+                        {id &&
+                            <ConfirmDialog onConfirm={onDeleteSecret}>
+                                <Button variant="danger" type="button">Delete</Button>
+                            </ConfirmDialog>
+                        }
                     </div>
                 </form>
             </div>
