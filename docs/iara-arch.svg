@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="mermaid-diagram-0-1764802110727-svg" width="100%" style="max-width: 742.078125px;" viewBox="-8 -8 742.078125 167.23460388183594" role="graphics-document document" aria-roledescription="flowchart-v2" xmlns:xlink="http://www.w3.org/1999/xlink"><style>#mermaid-diagram-0-1764802110727-svg{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:16px;fill:#ccc;}#mermaid-diagram-0-1764802110727-svg .error-icon{fill:#a44141;}#mermaid-diagram-0-1764802110727-svg .error-text{fill:#ddd;stroke:#ddd;}#mermaid-diagram-0-1764802110727-svg .edge-thickness-normal{stroke-width:2px;}#mermaid-diagram-0-1764802110727-svg .edge-thickness-thick{stroke-width:3.5px;}#mermaid-diagram-0-1764802110727-svg .edge-pattern-solid{stroke-dasharray:0;}#mermaid-diagram-0-1764802110727-svg .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-diagram-0-1764802110727-svg .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-diagram-0-1764802110727-svg .marker{fill:lightgrey;stroke:lightgrey;}#mermaid-diagram-0-1764802110727-svg .marker.cross{stroke:lightgrey;}#mermaid-diagram-0-1764802110727-svg svg{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:16px;}#mermaid-diagram-0-1764802110727-svg .label{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;color:#ccc;}#mermaid-diagram-0-1764802110727-svg .cluster-label text{fill:#F9FFFE;}#mermaid-diagram-0-1764802110727-svg .cluster-label span,#mermaid-diagram-0-1764802110727-svg p{color:#F9FFFE;}#mermaid-diagram-0-1764802110727-svg .label text,#mermaid-diagram-0-1764802110727-svg span,#mermaid-diagram-0-1764802110727-svg p{fill:#ccc;color:#ccc;}#mermaid-diagram-0-1764802110727-svg .node rect,#mermaid-diagram-0-1764802110727-svg .node circle,#mermaid-diagram-0-1764802110727-svg .node ellipse,#mermaid-diagram-0-1764802110727-svg .node polygon,#mermaid-diagram-0-1764802110727-svg .node path{fill:#1f2020;stroke:#81B1DB;stroke-width:1px;}#mermaid-diagram-0-1764802110727-svg .flowchart-label text{text-anchor:middle;}#mermaid-diagram-0-1764802110727-svg .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-diagram-0-1764802110727-svg .node .label{text-align:center;}#mermaid-diagram-0-1764802110727-svg .node.clickable{cursor:pointer;}#mermaid-diagram-0-1764802110727-svg .arrowheadPath{fill:lightgrey;}#mermaid-diagram-0-1764802110727-svg .edgePath .path{stroke:lightgrey;stroke-width:2.0px;}#mermaid-diagram-0-1764802110727-svg .flowchart-link{stroke:lightgrey;fill:none;}#mermaid-diagram-0-1764802110727-svg .edgeLabel{background-color:hsl(0, 0%, 34.4117647059%);text-align:center;}#mermaid-diagram-0-1764802110727-svg .edgeLabel rect{opacity:0.5;background-color:hsl(0, 0%, 34.4117647059%);fill:hsl(0, 0%, 34.4117647059%);}#mermaid-diagram-0-1764802110727-svg .labelBkg{background-color:rgba(87.75, 87.75, 87.75, 0.5);}#mermaid-diagram-0-1764802110727-svg .cluster rect{fill:hsl(180, 1.5873015873%, 28.3529411765%);stroke:rgba(255, 255, 255, 0.25);stroke-width:1px;}#mermaid-diagram-0-1764802110727-svg .cluster text{fill:#F9FFFE;}#mermaid-diagram-0-1764802110727-svg .cluster span,#mermaid-diagram-0-1764802110727-svg p{color:#F9FFFE;}#mermaid-diagram-0-1764802110727-svg div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;font-size:12px;background:hsl(20, 1.5873015873%, 12.3529411765%);border:1px solid rgba(255, 255, 255, 0.25);border-radius:2px;pointer-events:none;z-index:100;}#mermaid-diagram-0-1764802110727-svg .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#ccc;}#mermaid-diagram-0-1764802110727-svg :root{--mermaid-font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;}
+
+            /* Base text styling */
+            text {
+                fill: #333333 !important;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+                font-size: 14px !important;
+            }
+            
+            /* Dark mode text styling */
+            .dark text {
+                fill: #e5e7eb !important;
+            }
+            
+            /* Node styling */
+            .node rect, .node circle, .node ellipse, .node polygon {
+                fill: #ffffff !important;
+                stroke: #333333 !important;
+                stroke-width: 2px !important;
+            }
+            
+            /* Dark mode node styling */
+            .dark .node rect, .dark .node circle, .dark .node ellipse, .dark .node polygon {
+                fill: #374151 !important;
+                stroke: #e5e7eb !important;
+            }
+            
+            /* Edge/arrow styling */
+            .edgePath path {
+                stroke: #333333 !important;
+                stroke-width: 2px !important;
+                fill: none !important;
+            }
+            
+            /* Dark mode edge styling */
+            .dark .edgePath path {
+                stroke: #e5e7eb !important;
+            }
+            
+            /* Arrow markers */
+            marker path {
+                fill: #333333 !important;
+                stroke: #333333 !important;
+            }
+            
+            /* Dark mode arrow markers */
+            .dark marker path {
+                fill: #e5e7eb !important;
+                stroke: #e5e7eb !important;
+            }
+            
+            /* Class diagram specific */
+            .classBox {
+                fill: #ffffff !important;
+                stroke: #333333 !important;
+                stroke-width: 2px !important;
+            }
+            
+            /* Dark mode class diagram */
+            .dark .classBox {
+                fill: #374151 !important;
+                stroke: #e5e7eb !important;
+            }
+            
+            .classTitle {
+                fill: #333333 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Dark mode class title */
+            .dark .classTitle {
+                fill: #e5e7eb !important;
+            }
+            
+            /* Flowchart specific */
+            .flowchart-link {
+                stroke: #333333 !important;
+                stroke-width: 2px !important;
+            }
+            
+            /* Dark mode flowchart */
+            .dark .flowchart-link {
+                stroke: #e5e7eb !important;
+            }
+            
+            /* Labels */
+            .edgeLabel {
+                background-color: #ffffff !important;
+                fill: #333333 !important;
+            }
+            
+            /* Dark mode labels */
+            .dark .edgeLabel {
+                background-color: #374151 !important;
+                fill: #e5e7eb !important;
+            }
+            
+            /* Subgraph styling */
+            .cluster rect {
+                fill: #f9f9f9 !important;
+                stroke: #666666 !important;
+                stroke-width: 1px !important;
+            }
+            
+            /* Dark mode subgraph */
+            .dark .cluster rect {
+                fill: #1f2937 !important;
+                stroke: #6b7280 !important;
+            }
+            
+            .cluster text {
+                fill: #333333 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Dark mode cluster text */
+            .dark .cluster text {
+                fill: #e5e7eb !important;
+            }
+            
+            /* Ensure all text is visible */
+            tspan {
+                fill: inherit !important;
+            }
+            
+            /* Dark mode specific overrides */
+            .dark .label {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .labelBox {
+                fill: #374151 !important;
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .messageText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .noteText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .note {
+                fill: #fbbf24 !important;
+                stroke: #d97706 !important;
+            }
+            
+            .dark .actor {
+                fill: #374151 !important;
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .actor-line {
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .signalText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .signal {
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .sequenceNumber {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .sectionTitle {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .section {
+                fill: #1f2937 !important;
+                stroke: #6b7280 !important;
+            }
+            
+            .dark .loopText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .loopLine {
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .noteText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .activationText {
+                fill: #e5e7eb !important;
+            }
+            
+            .dark .activationBorder {
+                stroke: #e5e7eb !important;
+            }
+            
+            .dark .activationBorder2 {
+                stroke: #e5e7eb !important;
+            }
+        </style><g><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-pointEnd" class="marker flowchart" viewBox="0 0 10 10" refX="6" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-pointStart" class="marker flowchart" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-circleEnd" class="marker flowchart" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-circleStart" class="marker flowchart" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"/></marker><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-crossEnd" class="marker cross flowchart" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"/></marker><marker id="mermaid-diagram-0-1764802110727-svg_flowchart-crossStart" class="marker cross flowchart" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"/></marker><g class="root"><g class="clusters"><g class="cluster default flowchart-label" id="server"><rect style="" rx="0" ry="0" x="310.1875" y="0" width="415.890625" height="151.23460388183594"/><g class="cluster-label" transform="translate(487.6484375, 0)"><foreignObject width="60.96875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">Backend</span></div></foreignObject></g></g><g class="cluster default flowchart-label" id="client"><rect style="" rx="0" ry="0" x="0" y="9.117301940917969" width="128.28125" height="133"/><g class="cluster-label" transform="translate(43.0625, 9.117301940917969)"><foreignObject width="42.15625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">Client</span></div></foreignObject></g></g></g><g class="edgePaths"><path d="M103.281,75.617L107.448,75.617C111.615,75.617,119.948,75.617,139.273,75.617C158.599,75.617,188.917,75.617,219.234,75.617C249.552,75.617,279.87,75.617,298.312,75.617C316.754,75.617,323.321,75.617,326.604,75.617L329.888,75.617" id="L-B-S-0" class=" edge-thickness-normal edge-pattern-solid flowchart-link LS-B LE-S" style="fill:none;" marker-end="url(#mermaid-diagram-0-1764802110727-svg_flowchart-pointEnd)"/><path d="M462.781,75.617L469.212,75.617C475.643,75.617,488.505,75.617,500.484,75.617C512.463,75.617,523.558,75.617,529.105,75.617L534.653,75.617" id="L-S-DB-0" class=" edge-thickness-normal edge-pattern-solid flowchart-link LS-S LE-DB" style="fill:none;" marker-end="url(#mermaid-diagram-0-1764802110727-svg_flowchart-pointEnd)"/></g><g class="edgeLabels"><g class="edgeLabel" transform="translate(219.234375, 75.61730194091797)"><g class="label" transform="translate(-65.953125, -12)"><foreignObject width="131.90625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">HTTPS/HTTP REST</span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(501.3671875, 75.61730194091797)"><g class="label" transform="translate(-13.5859375, -12)"><foreignObject width="27.171875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="edgeLabel">JPA</span></div></foreignObject></g></g></g><g class="nodes"><g class="node default default flowchart-label" id="flowchart-S-1" data-node="true" data-id="S" transform="translate(398.984375, 75.61730194091797)"><rect class="basic label-container" style="" rx="0" ry="0" x="-63.796875" y="-31.5" width="127.59375" height="63"/><g class="label" style="" transform="translate(-56.296875, -24)"><rect/><foreignObject width="112.59375" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">Spring Boot API<br />iara-server</span></div></foreignObject></g></g><g class="node default default flowchart-label" id="flowchart-DB-2" label-offset-y="14.078200087374398" data-node="true" data-id="DB" transform="translate(620.515625, 75.61730194091797)"><path style="" d="M 0,14.078200087374398 a 80.5625,14.078200087374398 0,0,0 161.125 0 a 80.5625,14.078200087374398 0,0,0 -161.125 0 l 0,53.0782000873744 a 80.5625,14.078200087374398 0,0,0 161.125 0 l 0,-53.0782000873744" transform="translate(-80.5625,-40.6173001310616)"/><g class="label" style="" transform="translate(-73.0625, -12)"><rect/><foreignObject width="146.125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">PostgreSQL / SQLite</span></div></foreignObject></g></g><g class="node default default flowchart-label" id="flowchart-B-0" data-node="true" data-id="B" transform="translate(64.140625, 75.61730194091797)"><rect class="basic label-container" style="" rx="0" ry="0" x="-39.140625" y="-31.5" width="78.28125" height="63"/><g class="label" style="" transform="translate(-31.640625, -24)"><rect/><foreignObject width="63.28125" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; white-space: nowrap;"><span class="nodeLabel">React UI<br />Vite + TS</span></div></foreignObject></g></g></g></g></g></svg>
